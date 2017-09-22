@@ -1,0 +1,56 @@
+<template>
+  <div class="farm-cell farm-cell-green" @click="showCellMessage($event)" ref="cell">
+    <div class="farm-tree" v-if="hasTree" @click></div>
+  </div>
+</template>
+<script>
+export default {
+  name: 'farm-cell',
+  props: ['cell'],
+  data () {
+    return {
+    }
+  },
+  mounted () {
+  },
+  components: {
+  },
+  methods: {
+    showCellMessage () {
+      Bus.$emit('openCellMessageModal',this.cell, this.$refs.cell)
+    }
+  },
+  computed: {
+    hasTree () {
+      return this.cell.tree !==null && this.cell.tree !== undefined 
+    }
+  }
+}
+</script>
+<style scoped lang="less" type="text/less">
+.farm-cell {
+  width: 25%;
+  height: 25%;
+  position: absolute;
+  background-size: 100% 100%;
+  .farm-tree {
+    position: absolute;
+    left: 17%;
+    bottom: 50%;
+    width: 50%;
+    height: 120%;
+    background-image: url('~@/assets/shu.png');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+  }
+}
+.farm-cell-green {
+  background-image: url('~@/assets/de03.png');
+}
+.farm-cell-yellow {
+  background-image: url('~@/assets/de01.png');
+}
+.farm-cell-red {
+  background-image: url('~@/assets/de02.png');
+}
+</style>
