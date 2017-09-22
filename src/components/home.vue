@@ -152,6 +152,7 @@ export default {
       this.requireLandsData()
     }
   },
+  
   mounted () {
     this.cellMessageEvent()
     this.kaidiModalEvent()

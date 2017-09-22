@@ -54,7 +54,7 @@ export default {
       btnCancel.style.height = btnSure.style.height = height + 'px'
       btnCancel.style.lineHeight = btnSure.style.lineHeight = height + 'px'
     },
-    
+
     cancel (e) {
       Bus.$emit('closeShouhuoModal')
     },
@@ -64,7 +64,7 @@ export default {
       .then(function (respones) {
         Bus.$emit('openTipModal', response.data.msg)
         Bus.$emit('refreshData')
-      })
+      }.bind(this))
       .catch(function (err) {
         if(err && err.response) {
           if(err.response.status === 422) {
