@@ -28,22 +28,22 @@
     <!-- 土地信息模态窗 -->
     <cell-message-modal
     :showModal="showCellMesssageModal"
-    :cell="currentCell"
+    :cell.sync="currentCell"
     :fertilizer="fertilizer" ref="cellMessageModal"></cell-message-modal>
     <!-- 开地模态窗 -->
     <kaidi-modal
     :showModal="showKaidiModal"
-    :cell="currentCell"
+    :cell.sync="currentCell"
     :zIndex="getZIndex"></kaidi-modal>
     <!-- 增重模态窗 -->
     <zengzhong-modal
     :showModal="showZengzhongModal"
-    :cell="currentCell"
+    :cell.sync="currentCell"
     :zIndex="getZIndex"></zengzhong-modal>
     <!-- 收获模态窗 -->
     <shouhuo-modal
     :showModal="showShouhuoModal"
-    :cell="currentCell"
+    :cell.sync="currentCell"
     :zIndex="getZIndex"></shouhuo-modal>
     <!-- 消息模态窗 -->
     <xiaoxi-modal
@@ -152,7 +152,7 @@ export default {
       this.requireLandsData()
     }
   },
-  
+
   mounted () {
     this.cellMessageEvent()
     this.kaidiModalEvent()
@@ -309,11 +309,11 @@ export default {
       Bus.$on('openShouhuoModal', function(){
         if(this.currentCell.land) {
           if(this.currentCell.tree) {
-            if((this.currentCell.tree.fruit - this.currentCell.land.min_fruit) == 0) {
-              Bus.$emit('openTipModal', '没有可收获的果子~')
-            }else{
+            // if((this.currentCell.tree.fruit - this.currentCell.land.min_fruit) == 0) {
+            //   Bus.$emit('openTipModal', '没有可收获的果子~')
+            // }else{
               this.showShouhuoModal = true
-            }
+            // }
           }else{
             Bus.$emit('openTipModal', '无果树可收获~')
           }

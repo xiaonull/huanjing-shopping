@@ -60,9 +60,8 @@ export default {
     },
     sure (e) {
       Bus.$emit('closeShouhuoModal')
-      pick(this.cell.tree.id)
-      .then(function (respones) {
-        Bus.$emit('openTipModal', response.data.msg)
+      pick(this.cell.tree.id).then(function (respones) {
+        // Bus.$emit('openTipModal', response.data.msg)
         Bus.$emit('refreshData')
       }.bind(this))
       .catch(function (err) {
