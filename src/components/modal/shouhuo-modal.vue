@@ -54,6 +54,7 @@ export default {
       btnCancel.style.height = btnSure.style.height = height + 'px'
       btnCancel.style.lineHeight = btnSure.style.lineHeight = height + 'px'
     },
+    
     cancel (e) {
       Bus.$emit('closeShouhuoModal')
     },
