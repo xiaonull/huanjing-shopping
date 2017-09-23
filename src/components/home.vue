@@ -32,35 +32,25 @@
     :fertilizer="fertilizer" ref="cellMessageModal"></cell-message-modal>
     <!-- 开地模态窗 -->
     <kaidi-modal
-    :showModal="showKaidiModal"
-    :cell.sync="currentCell"
-    :zIndex="getZIndex"></kaidi-modal>
+    :cell.sync="currentCell"></kaidi-modal>
     <!-- 增重模态窗 -->
     <zengzhong-modal
-    :showModal="showZengzhongModal"
-    :cell.sync="currentCell"
-    :zIndex="getZIndex"></zengzhong-modal>
+    :cell.sync="currentCell"></zengzhong-modal>
     <!-- 收获模态窗 -->
     <shouhuo-modal
-    :showModal="showShouhuoModal"
-    :cell.sync="currentCell"
-    :zIndex="getZIndex"></shouhuo-modal>
+    :cell.sync="currentCell"></shouhuo-modal>
     <!-- 消息模态窗 -->
     <xiaoxi-modal
     :showModal="showXiaoxiModal"
-    :news="news"
-    :zIndex="getZIndex"></xiaoxi-modal>
+    :news="news"></xiaoxi-modal>
     <!-- 游戏大厅模态窗 -->
     <youxidating-modal
-    :showModal="showYouxidatingModal"
-    :zIndex="getZIndex"></youxidating-modal>
+    :showModal="showYouxidatingModal"></youxidating-modal>
     <!-- 商城模态窗 -->
     <shangcheng-modal
-    :showModal="showShangchengModal"
-    :zIndex="getZIndex"></shangcheng-modal>
+    :showModal="showShangchengModal"></shangcheng-modal>
     <!-- 操作提示模态窗 -->
-    <tip-modal
-    :zIndex="getZIndex"></tip-modal>
+    <tip-modal></tip-modal>
     <!-- 账户信息模态窗 -->
     <account-modal
     :showModal="showAccountModal"
@@ -70,25 +60,24 @@
     :userImage="userImage"
     :weixin="weixin"
     :parentId="parentId"
-    :zIndex="getZIndex"
     ></account-modal>
     <!-- 选择头像模态窗 -->
     <choose-image-modal
-    :showModal="showChooseImageModal"
-    :zIndex="getZIndex"></choose-image-modal>
+    :showModal="showChooseImageModal"></choose-image-modal>
     <!-- 修改密码模态窗 -->
     <password-modal
     :showModal="showPasswordModal"
-    :passwordType="passwordType"
-    :zIndex="getZIndex"></password-modal>
+    :passwordType="passwordType"></password-modal>
     <!-- 激活中心模态窗 -->
     <jihuo-modal
-    :showModal="showJihuoModal"
-    :zIndex="getZIndex"></jihuo-modal>
+    :showModal="showJihuoModal"></jihuo-modal>
     <!-- 设置模态窗 -->
     <shezhi-modal
-    :showModal="showShezhiModal"
-    :zIndex="getZIndex"></shezhi-modal>
+    :showModal="showShezhiModal"></shezhi-modal>
+    <!-- 好友列表模态窗 -->
+    <friends-modal></friends-modal>
+    <!-- 交易所模态窗 -->
+    <jiaoyi-modal></jiaoyi-modal>
   </div>
 </template>
 <script>
@@ -111,6 +100,8 @@ import ChooseImageModal from '@/components/modal/choose-image-modal'
 import PasswordModal from '@/components/modal/password-modal'
 import JihuoModal from '@/components/modal/jihuo-modal'
 import ShezhiModal from '@/components/modal/shezhi-modal'
+import FriendsModal from '@/components/modal/friends-modal'
+import JiaoyiModal from '@/components/modal/jiaoyi-modal'
 import {getToken, getUserDate, getLandsData, fertilizer, irrigation, news} from '@/js/allAxiosRequire'
 import util from '@/js/util'
 export default {
@@ -119,8 +110,6 @@ export default {
     return {
       // 消息数据
       news: [],
-      // 模态框的z-index
-      zIndex: 10,
       // 用户信息
       userData: {},
       // 土地信息
@@ -128,10 +117,7 @@ export default {
       // 密码类型
       passwordType: '',
       currentCell: {},
-      showKaidiModal: true,
-      showZengzhongModal: true,
       showCellMesssageModal: true,
-      showShouhuoModal: true,
       showXiaoxiModal: true,
       showYouxidatingModal: true,
       showShangchengModal: true,
@@ -152,14 +138,10 @@ export default {
       this.requireLandsData()
     }
   },
-
   mounted () {
     this.cellMessageEvent()
-    this.kaidiModalEvent()
-    this.zengzhongModalEvent()
     this.shifeiEvent()
     this.jiaoshuiEvent()
-    this.shouhuoEvent()
     this.xiaoxiEvent()
     this.youxidatingEvent()
     this.shangchengEvent()
@@ -189,7 +171,9 @@ export default {
     ChooseImageModal,
     PasswordModal,
     JihuoModal,
-    ShezhiModal
+    ShezhiModal,
+    FriendsModal,
+    JiaoyiModal
   },
   methods: {
     requireUserData () {
@@ -303,34 +287,12 @@ export default {
         this.showXiaoxiModal = false
       }.bind(this))
     },
-    // 收获模态框事件绑定
-    shouhuoEvent () {
-      this.showShouhuoModal = false
-      Bus.$on('openShouhuoModal', function(){
-        if(this.currentCell.land) {
-          if(this.currentCell.tree) {
-            // if((this.currentCell.tree.fruit - this.currentCell.land.min_fruit) == 0) {
-            //   Bus.$emit('openTipModal', '没有可收获的果子~')
-            // }else{
-              this.showShouhuoModal = true
-            // }
-          }else{
-            Bus.$emit('openTipModal', '无果树可收获~')
-          }
-        }else{
-          Bus.$emit('openTipModal', '请先选择土地~')
-        }
-      }.bind(this))
-      Bus.$on('closeShouhuoModal', function(){
-        this.showShouhuoModal = false
-      }.bind(this))
-    },
     // 施肥操作事件绑定
     shifeiEvent () {
       Bus.$on('shifei', function(){
         fertilizer()
         .then(function (respones) {
-          Bus.$emit('openTipModal', '您已经成功施肥~')
+          Bus.$emit('openTipModal', respones.data.msg)
         })
         .catch(function (err) {
           if(err && err.response) {
@@ -370,34 +332,6 @@ export default {
         this.currentCell = {}
       }.bind(this))
     },
-    // 开地模态框事件绑定
-    kaidiModalEvent () {
-      this.showKaidiModal = false
-      Bus.$on('openKaidiModal', function(){
-        if(this.currentCell.land) {
-          this.showKaidiModal = true
-        }else{
-          Bus.$emit('openTipModal', '请先选择土地~')
-        }
-      }.bind(this))
-      Bus.$on('closeKaidiModal', function(){
-        this.showKaidiModal = false
-      }.bind(this))
-    },
-    // 增种模态框事件绑定
-    zengzhongModalEvent () {
-      this.showZengzhongModal = false
-      Bus.$on('openZengzhongModal', function(){
-        if(this.currentCell.land) {
-          this.showZengzhongModal = !this.showZengzhongModal
-        }else{
-          Bus.$emit('openTipModal', '请先选择土地~')
-        }
-      }.bind(this))
-      Bus.$on('closeZengzhongModal', function(){
-        this.showZengzhongModal = false
-      }.bind(this))
-    },
     // 更新用户，土地数据事件绑定
     refreshDataEvent () {
       Bus.$on('refreshData', function(){
@@ -411,13 +345,9 @@ export default {
       let modal = this.$refs.cellMessageModal.$el
       modal.style.left = offset.left - ($(modal).width() * .12) + 'px'
       modal.style.top = offset.top - $(modal).height()  + 'px'
-    },
+    }
   },
   computed: {
-    // 获取模态框z-index
-    getZIndex () {
-      return ++this.zIndex
-    },
     // 小精灵数量
     small_spirit () {
       return this.userData.small_spirit || 0
@@ -487,6 +417,23 @@ export default {
 }
 </script>
 <style lang="less" type="text/less">
+// 模态框mask样式
+.modal-mask {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  .modal {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    color: #fff;
+  }
+}
 .home-bg {
   width: 100%;
   height: 100%;
@@ -497,6 +444,17 @@ export default {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    .modal-close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      background-image: url('~@/assets/close.png');
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+    }
   }
 }
 </style>

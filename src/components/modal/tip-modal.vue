@@ -47,7 +47,7 @@ export default {
   top: 70%;
   background-color: rgba(0, 0, 0, 0.4);
   transform: translateX(-50%);
-  z-index: 20;
+  z-index: 1000;
   font-size: 0.75rem;
   color: #fff;
   line-height: 2;

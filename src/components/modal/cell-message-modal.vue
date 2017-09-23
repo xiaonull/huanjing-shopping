@@ -2,8 +2,8 @@
   <div class="cell-message-modal" ref="cellMessageModal" :class="{'hide': !showModal}" @click="close($event)">
     <div class="cell-name">{{ cellName }}</div>
     <div class="cell-xinxi">土地信息：{{ xinxi }}</div>
-    <div class="cell-bozhongliang">播种量：{{ noTree ? '无' : bozhongliang }}</div>
-    <div class="cell-shifei">施肥：{{ noTree ? '无' : shifei }}</div>
+    <div class="cell-bozhongliang">播种量：</div>
+    <div class="cell-shifei">施肥：</div>
   </div>
 </template>
 <script>
@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     cellName () {
-      return this.cell.name || ''
+      return this.cell.land.name || ''
     },
     xinxi () {
       return (this.cell.land && (this.cell.land.min_fruit && this.cell.land.max_fruit) && (this.cell.land.min_fruit + '—' + this.cell.land.max_fruit)) || ''

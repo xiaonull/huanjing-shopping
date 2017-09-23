@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     hasTree () {
-      return this.cell.tree !==null && this.cell.tree !== undefined 
+      return this.cell && this.cell.tree
     }
   }
 }

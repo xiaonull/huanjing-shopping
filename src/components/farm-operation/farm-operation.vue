@@ -28,7 +28,7 @@ export default {
       Bus.$emit('openKaidiModal')
     },
     zengzhong (e) {
-      Bus.$emit('openZengzhongModal')
+      Bus.$emit('toggleZengzhongModal')
     },
     shifei (e) {
       Bus.$emit('shifei')

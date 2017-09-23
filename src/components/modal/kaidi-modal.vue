@@ -1,9 +1,9 @@
 <template>
-  <div class="kaidi-modal modal" ref="kaidiModal" :class="{'hide': !showModal}">
+  <div class="kaidi-modal modal" ref="kaidiModal"v-show="showModal">
     <div class="modal-header" ref="modalHeader">
       <div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
     </div>
-    <div class="modal-content">确认要开垦并种下300颗果子吗？</div>
+    <div class="modal-content">确认要开垦并种下{{ minFruit }}颗果子吗？</div>
     <div class="modal-footer" ref="modalFooter">
       <div class="modal-footer-btn-cancel" @click="cancel($event)" ref="btnCancel">取消</div>
       <div class="modal-footer-btn-sure" @click="sure($event)" ref="btnSure">确认</div>
@@ -14,17 +14,27 @@
 import {assart} from '@/js/allAxiosRequire'
 export default {
   name: 'kaidi-modal',
-  props: ['showModal', 'cell'],
+  props: ['cell'],
   data () {
     return {
+      showModal: true
     }
   },
   mounted () {
     this.setHeaderFooterHeight()
     this.setBtncloseWidth()
     this.setFooterBtnHeight()
+    this.bindModalEvent()
   },
   components: {
+  },
+  computed: {
+    minFruit () {
+      if(this.cell.xy){
+        return this.cell.land.min_fruit
+      }
+      return ''
+    }
   },
   methods: {
     setHeaderFooterHeight () {
@@ -45,10 +55,10 @@ export default {
       btnCancel.style.lineHeight = btnSure.style.lineHeight = height + 'px'
     },
     cancel (e) {
-      Bus.$emit('closeKaidiModal')
+      this.showModal = false
     },
     sure (e) {
-      Bus.$emit('closeKaidiModal')
+      this.showModal = false
       assart(this.cell.xy)
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
@@ -63,8 +73,25 @@ export default {
       })
     },
     close () {
-      Bus.$emit('closeKaidiModal')
-    }
+      this.showModal = false
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openKaidiModal', function(){
+        if(this.cell.xy === undefined) {
+          Bus.$emit('openTipModal', '请先选择土地')
+        }else{
+          if(this.cell.tree) {
+            Bus.$emit('openTipModal', '该土地已开地')
+          }else{
+            this.showModal = true
+          }
+        }
+      }.bind(this))
+      Bus.$on('closeKaidiModal', function(){
+        this.showKaidiModal = false
+      }.bind(this))
+    },
   }
 }
 </script>

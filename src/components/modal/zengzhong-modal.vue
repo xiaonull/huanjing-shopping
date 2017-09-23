@@ -1,5 +1,5 @@
 <template>
-  <div class="zengzhong-modal" ref="zengzhongModal" :class="{'hide': !showModal}">
+  <div class="zengzhong-modal" ref="zengzhongModal" v-show="showModal">
     <div class="modal-content"><div class="title">数量：</div><input class="zengzhong-number" type="text" v-model="seedNum" ref="number"></div>
     <div class="modal-footer" ref="modalFooter">
       <div class="modal-footer-btn-sure" @click="sure($event)" ref="btnSure">确认</div>
@@ -10,16 +10,18 @@
 import {seeding} from '@/js/allAxiosRequire'
 export default {
   name: 'zengzhong-modal',
-  props: ['showModal','cell'],
+  props: ['cell'],
   data () {
     return {
-      seedNum: 0 
+      seedNum: 0,
+      showModal: true
     }
   },
   mounted () {
     this.setHeaderFooterHeight()
     this.setBtnBorder()
     this.setNumberHeight()
+    this.bindModalEvent()
   },
   components: {
   },
@@ -39,10 +41,9 @@ export default {
       let number = this.$refs.number
       let height  = $(number).parent().height()
       number.style.height = number.style.lineHeight = number.style.borderRadius = height + 'px'
-
     },
     sure (e) {
-      Bus.$emit('closeZengzhongModal')
+      this.showModal = false
       seeding(this.cell.tree.id, this.seedNum)
       .then(function () {
         Bus.$emit('openTipModal', '成功增种~')
@@ -55,7 +56,22 @@ export default {
           }
         }
       })
-    }
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('toggleZengzhongModal', function(){
+        if(this.cell.xy === undefined) {
+          Bus.$emit('openTipModal', '请先选择土地')
+        }else{
+          if(!this.cell.tree) {
+            Bus.$emit('openTipModal', '该土地还未开地，不能增种')
+          }else{
+            this.seedNum = 0
+            this.showModal = !this.showModal
+          }
+        }
+      }.bind(this))
+    },
   }
 }
 </script>

@@ -163,3 +163,163 @@ export function setHead (imageSrc) {
     }
   })
 }
+
+
+// 获取好友列表
+export function getFriends () {
+  let url = 'friends'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 一键采蜜操作
+export function oneGather () {
+  let url = 'one-gather'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 单个采蜜操作
+export function simplyGather (friendId) {
+  let url = 'gather/' + friendId
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 定向交易=》待收米
+export function dxSell () {
+  let url = 'user/trade/dxsell'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 定向交易=》我要买
+export function dxBuy () {
+  let url = 'user/trade/dxbuy'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 自由交易=》抢购
+export function zyBuy () {
+  let url = 'user/trade/zybuy'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 自由交易=》抢购单
+export function zySell () {
+  let url = 'user/trade/zysell'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 交易记录 =》购买记录
+export function recordBuy () {
+  let url = 'user/trade-log/buy'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 交易记录 =》出售记录
+export function recordSell () {
+  let url = 'user/trade-log/dxsell'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 交易记录 =》委托记录
+export function recordBy () {
+  let url = 'user/trade-log/zysell'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 交易记录 =》取消记录
+export function recordCancel () {
+  let url = 'user/trade-log/cancel'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 并发请求交易大厅的数据
+//返回的数序： 待收米 我要买 抢购 抢购单 购买记录 出售记录 委托记录 取消记录
+export function jiaoyiAllData () {
+  return axios.all(dxSell(), dxBuy(), zyBuy(), zySell(), recordBuy(), recordSell(), recordBy(), recordCancel())
+}
+
+
+// 注册
+export function register (phone, code, actcode, password, safe_password, nick, wx_name) {
+  let url = 'register'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      phone,
+      code,
+      actcode,
+      password,
+      safe_password,
+      nick,
+      wx_name
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 获取注册验证码
+export function registerSms (phone) {
+  let url = 'register-sms'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      phone,
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}

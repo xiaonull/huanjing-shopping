@@ -15,6 +15,7 @@ export default {
 </script>
 
 <style>
+/* @import '~@/less/reset.less' */
 html,
 body{
   font-size: 16px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="shouhuo-modal modal" ref="shouhuoModal" :class="{'hide': !showModal}">
+  <div class="shouhuo-modal modal" ref="shouhuoModal" v-show="showModal">
     <div class="modal-header" ref="modalHeader">
       <div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
     </div>
@@ -14,24 +14,24 @@
 import {pick} from '@/js/allAxiosRequire'
 export default {
   name: 'shouhuo-modal',
-  props: ['showModal', 'cell'],
+  props: ['cell'],
   data () {
     return {
+      showModal: true
     }
   },
   mounted () {
     this.setHeaderFooterHeight()
     this.setBtncloseWidth()
     this.setFooterBtnHeight()
+    this.bindModalEvent()
   },
   components: {
   },
   computed: {
     fruit () {
-      if(this.cell && this.cell.tree && this.cell.land){
-        if(this.cell.land){
-          return this.cell.tree.fruit - this.cell.land.min_fruit
-        }
+      if(this.cell.xy && this.cell.tree){
+        return this.cell.tree.fruit - this.cell.land.min_fruit
       }
       return 0
     }
@@ -54,16 +54,16 @@ export default {
       btnCancel.style.height = btnSure.style.height = height + 'px'
       btnCancel.style.lineHeight = btnSure.style.lineHeight = height + 'px'
     },
-
     cancel (e) {
       Bus.$emit('closeShouhuoModal')
     },
     sure (e) {
       Bus.$emit('closeShouhuoModal')
-      pick(this.cell.tree.id).then(function (respones) {
-        // Bus.$emit('openTipModal', response.data.msg)
+      pick(this.cell.tree.id)
+      .then(function (respones) {
+        Bus.$emit('openTipModal', respones.data.msg)
         Bus.$emit('refreshData')
-      }.bind(this))
+      })
       .catch(function (err) {
         if(err && err.response) {
           if(err.response.status === 422) {
@@ -74,7 +74,29 @@ export default {
     },
     close () {
       Bus.$emit('closeShouhuoModal')
-    }
+    },
+    // 收获模态框事件绑定
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openShouhuoModal', function(){
+        if(this.cell.xy === undefined) {
+          Bus.$emit('openTipModal', '请先选择土地')
+        }else{
+          if(!this.cell.tree) {
+            Bus.$emit('openTipModal', '该土地还为开地')
+          }else{
+            if(this.cell.tree.fruit === this.cell.land.min_fruit){
+              Bus.$emit('openTipModal', '无果子可收获')
+            }else{
+              this.showModal = true
+            }
+          }
+        }
+      }.bind(this))
+      Bus.$on('closeShouhuoModal', function(){
+        this.showModal = false
+      }.bind(this))
+    },
   }
 }
 </script>

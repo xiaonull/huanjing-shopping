@@ -1,6 +1,6 @@
 <template>
 	<div class="farm" ref="farm">
-    <cell v-for="(item, index) in lands" :cell="item" :key="item.xy"></cell>
+    <cell v-for="(item, index) in lands" :cell="item"></cell>
 	</div>
 </template>
 <script>

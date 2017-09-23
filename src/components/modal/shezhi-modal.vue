@@ -9,7 +9,7 @@
           <div class="cell-key-word">音乐</div>
         </div>
         <div class="cell-value">
-          <div class="switch-bg">
+          <div class="switch-bg"  @click="clickSound" :class="{'switch-close': !sound}">
             <div class="switch-cir"></div>
           </div>
         </div>
@@ -20,7 +20,7 @@
           <div class="cell-key-word">音效</div>
         </div>
         <div class="cell-value">
-          <div class="switch-bg">
+          <div class="switch-bg"  @click="clickSoundEffect" :class="{'switch-close': !soundEffect}">
             <div class="switch-cir"></div>
           </div>
         </div>
@@ -34,11 +34,13 @@ export default {
   props: ['showModal'],
   data () {
     return {
+      sound: true,
+      soundEffect: true
     }
   },
   mounted () {
-    this.setCloseBtnHW()
     this.setHeadLineheight()
+    this.setCloseBtnHW()
   },
   components: {
   },
@@ -56,6 +58,12 @@ export default {
     },
     close () {
       Bus.$emit('closeShezhiModal')
+    },
+    clickSound () {
+      this.sound = !this.sound
+    },
+    clickSoundEffect () {
+      this.soundEffect = !this.soundEffect
     }
   }
 }
@@ -131,12 +139,19 @@ export default {
           height: 58%;
           background-color: #4cc75d;
           .switch-cir {
+            position: absolute;
             height: 100%;
-            width:32%;
+            width: 50%;
+            right: 0;
             background-color: #fff;
             box-sizing: border-box;
-            border-radius: 50%;
-            border: 2px solid transparent;
+          }
+          &.switch-close {
+            background-color: #eee;
+            .switch-cir {
+              right: auto;
+              left: auto;
+            }
           }
         }
       }
