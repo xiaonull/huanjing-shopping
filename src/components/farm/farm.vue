@@ -11,7 +11,10 @@ export default {
     'lands': {
       type: Array,
       default () {
-        return []
+        let emptyLandsArray = []
+        for (var i = 0; i < 15; i++) {
+          emptyLandsArray.push(new Object())
+        }
       }
     }
   },

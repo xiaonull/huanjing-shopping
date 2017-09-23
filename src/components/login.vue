@@ -37,6 +37,10 @@
       <div class="deng-footer">
       </div>
     </div>
+    <!-- <div class="modal-mask denglu" v-show="loginType == 'denglu'">
+      <div class="denglu-modal">
+      </div>
+    </div> -->
     <div class="modal-mask zhuce" v-show="loginType == 'zhuce'">
       <div class="zhuce-modal">
         <div class="modal-head">注册</div>
@@ -126,8 +130,8 @@ export default {
       DLSencondPassword: '',
       DLWeixin: '',
       DLYanzheng: '',
-      dengluAccount: '',
-      dengluPassword: ''
+      dengluAccount: '17076610773',
+      dengluPassword: '123456'
     }
   },
   created () {

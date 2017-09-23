@@ -26,6 +26,9 @@ export default {
   },
   computed: {
     cellName () {
+      if(this.cell.xy === undefined){
+        return ''
+      }
       return this.cell.land.name || ''
     },
     xinxi () {
