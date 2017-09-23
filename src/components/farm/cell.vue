@@ -52,5 +52,6 @@ export default {
 }
 .farm-cell-red {
   background-image: url('~@/assets/de02.png');
+  color: #fff;
 }
 </style>
