@@ -6,6 +6,7 @@ export default {
   },
   // 获取session值
   getSession (key) {
+    // sdfllj
     return session.getItem(key)
   }
 }
