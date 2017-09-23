@@ -37,10 +37,6 @@
       <div class="deng-footer">
       </div>
     </div>
-    <!-- <div class="modal-mask denglu" v-show="loginType == 'denglu'">
-      <div class="denglu-modal">
-      </div>
-    </div> -->
     <div class="modal-mask zhuce" v-show="loginType == 'zhuce'">
       <div class="zhuce-modal">
         <div class="modal-head">注册</div>
@@ -111,9 +107,11 @@
         </div>
       </div>
     </div>
+    <tip-modal></tip-modal>
   </div>
 </template>
 <script>
+import TipModal from '@/components/modal/tip-modal'
 import {getToken, login, registerSms, register } from '@/js/allAxiosRequire'
 import util from '@/js/util'
 export default {
@@ -130,8 +128,8 @@ export default {
       DLSencondPassword: '',
       DLWeixin: '',
       DLYanzheng: '',
-      dengluAccount: '17076610773',
-      dengluPassword: '123456'
+      dengluAccount: '',
+      dengluPassword: ''
     }
   },
   created () {
@@ -143,6 +141,7 @@ export default {
     this.setDengluHeight()
   },
   components: {
+    TipModal
   },
   methods: {
     moveDot () {
@@ -201,45 +200,48 @@ export default {
     },
     getYanzheng ($event) {
       // 号码正则判断
-      if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
-        console.log('输入正确的号码')
-        return
-      }
+      // if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
+      //   console.log('输入正确的号码')
+      //   Bus.$emit('openTipModal', '')
+      //   return
+      // }
       registerSms(this.DLPhone)
       .then(function (respones) {
-        console.log(respones.data.msg)
-      })
+        Bus.$emit('openTipModal', respones.data.msg)
+      }.bind(this))
       .catch(function (err) {
         if(err && err.response) {
           if(err.response.status === 422) {
-            console.log(err.response.data.msg)
+            Bus.$emit('openTipModal', err.response.data.msg)
           }
         }
-      })
+      }.bind(this))
     },
     postChuze () {
       let full = (this.DLPhone != '') && (this.DLName != '') && (this.DLJihuoma != '') && (this.DLFirstPassword != '') && (this.DLSencondPassword != '') && (this.DLWeixin != '') && (this.DLYanzheng != '')
       if(!full) {
-        console.log('请填写完整注册信息')
+        Bus.$emit('openTipModal', '请填写完整注册信息')
         return
       }
-      if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
-        console.log('输入正确的号码')
-        return
-      }
+      // if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
+      //   Bus.$emit('openTipModal', '输入正确的号码')
+      //   return
+      // }
       register(this.DLPhone, this.DLYanzheng, this.DLJihuoma, this.DLFirstPassword, this.DLSencondPassword, this.DLName, this.DLWeixin)
       .then(function (response) {
-        this.loginType = 'denglu'
         this.DLPhone, this.DLName, this.DLJihuoma, this.DLFirstPassword, this.DLSencondPassword, this.DLWeixin, this.DLYanzheng = ''
-        console.log(response.data.msg)
-      })
-      .cathch(function () {
+        Bus.$emit('openTipModal', response.data.msg)
+        if(!response.err) {
+          this.loginType = 'denglu'
+        }
+      }.bind(this))
+      .catch(function (err) {
         if(err && err.response) {
           if(err.response.status === 422) {
-            console.log(err.response.data.msg)
+            Bus.$emit('openTipModal', err.response.data.msg)
           }
         }
-      })
+      }.bind(this))
     }
   }
 }
@@ -408,7 +410,7 @@ export default {
     background-size: 45% auto;
     .zhuce-modal {
       width: 45%;
-      height: 100%;
+      height: 90%;
       border-radius: 1rem;
       background-color: rgba(0, 0, 0, 0.4);
       .modal-head {
@@ -423,7 +425,7 @@ export default {
           height: 14.2%;
           margin: 0 1rem;
           .item-label {
-            width: 30%;
+            width: 40%;
             height: 100%;
             .flex-both-center();
           }
