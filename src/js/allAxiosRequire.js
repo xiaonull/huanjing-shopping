@@ -11,6 +11,9 @@ var instance = axios.create({
     'X-Requested-With': 'XMLHttpRequest',
   }
 });
+
+
+
 function _getToken () {
   return util.getSession('Token')
 }

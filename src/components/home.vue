@@ -8,7 +8,8 @@
     :maxSpirit="max_spirit"></spirit>
     <!-- 麦田层 -->
     <farm
-    :lands="landsData"></farm>
+    :lands="landsData"
+    :fertilizer="fertilizer"></farm>
     <!-- 用户农场信息层 -->
     <user-farm-message
     :seed="seed"
@@ -26,9 +27,9 @@
     <!-- 下方农场操作层 -->
     <farm-operation></farm-operation>
     <!-- 土地信息模态窗 -->
-    <cell-message-modal
+    <!-- <cell-message-modal
     :cell.sync="currentCell"
-    :fertilizer="fertilizer"></cell-message-modal>
+    :fertilizer="fertilizer"></cell-message-modal> -->
     <!-- 开地模态窗 -->
     <kaidi-modal
     :cell.sync="currentCell"></kaidi-modal>
@@ -84,7 +85,7 @@ import RightSetting from '@/components/setting/right-setting'
 import Spirit from '@/components/spirit/spirit'
 import KaidiModal from '@/components/modal/kaidi-modal'
 import ZengzhongModal from '@/components/modal/zengzhong-modal'
-import CellMessageModal from '@/components/modal/cell-message-modal'
+// import CellMessageModal from '@/components/modal/cell-message-modal'
 import TipModal from '@/components/modal/tip-modal'
 import ShouhuoModal from '@/components/modal/shouhuo-modal'
 import XiaoxiModal from '@/components/modal/xiaoxi-modal'
@@ -142,7 +143,7 @@ export default {
     Spirit,
     KaidiModal,
     ZengzhongModal,
-    CellMessageModal,
+    // CellMessageModal,
     TipModal,
     ShouhuoModal,
     XiaoxiModal,

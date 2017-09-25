@@ -118,6 +118,7 @@ export default {
           border-radius: 4rem;
         }
         label {
+          .flex-both-center();
           height: 4rem;
           width: 4rem;
           border-radius: 4rem;

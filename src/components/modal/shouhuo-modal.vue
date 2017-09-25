@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     fruit () {
-      if(this.cell.xy && this.cell.tree){
+      if(this.cell.xy !== undefined && this.cell.tree){
         return this.cell.tree.fruit - this.cell.land.min_fruit
       }
       return 0

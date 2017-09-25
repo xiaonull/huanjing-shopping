@@ -24,10 +24,11 @@
 <script>
 export default {
   name: 'cell-message-modal',
-  props: ['cell', 'fertilizer'],
+  props: ['fertilizer'],
   data () {
     return {
       showModal: true,
+      cell: {}
     }
   },
   mounted () {
@@ -45,8 +46,9 @@ export default {
     },
     modalEvent () {
       this.showModal = false
-      Bus.$on('showCellMessage', function (el) {
+      Bus.$on('showCellMessage', function (el, cell) {
         this.ele = el
+        this.cell = cell
         this.showModal = true
         clearTimeout(this.timer)
         this.timer = setTimeout(function () {
@@ -55,10 +57,10 @@ export default {
       }.bind(this))
     },
     setPosition (el) {
-      let offset = $(el).offset()
+      let position = $(el).position()
       let modal = this.$el
-      $(modal).css('left', offset.left + ($(el).width()-$(modal).width())/2)
-      $(modal).css('top', offset.top - $(modal).height())
+      $(modal).css('left', position.left + ($(el).width()-$(modal).width())/2)
+      $(modal).css('top', position.top - $(modal).height())
     }
   },
   computed: {
@@ -122,26 +124,28 @@ export default {
   z-index: 10;
   font-size: 0.8rem;
   color: #fff;
+  padding: 0.5rem 0;
   width: 11rem;
   .message-item {
     display: flex;
-    height: 1.5rem;
+    height: 1rem;
+    font-size: 0.7rem;
     &.head {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 1.8rem;
+      height: 1.3rem;
     }
     .label {
-      width: 5.5rem;
+      flex: 1;
       padding-right: 0.5rem;
       display: flex;
       justify-content: flex-end;
       align-items: center;
     }
     .value {
-      width: 5rem;
+      flex: 1;
       display: flex;
       justify-content: flex-start;
       align-items: center;

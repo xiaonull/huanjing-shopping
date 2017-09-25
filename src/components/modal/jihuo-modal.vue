@@ -5,8 +5,8 @@
       <div class="modal-head">激活好友</div>
       <div class="modal-content">
         <div class="tab-head">
-          <div class="tab-head-item" @click="clickTabHead(1)">激活码列表</div>
-          <div class="tab-head-item" @click="clickTabHead(2)">生成激活码</div>
+          <div class="tab-head-item" @click="clickTabHead(1)" :class="{'selected': tabIndex == 1}">激活码列表</div>
+          <div class="tab-head-item" @click="clickTabHead(2)" :class="{'selected': tabIndex == 2}">生成激活码</div>
         </div>
         <div class="tab-content">
           <div class="tab-content-item"v-show="tabIndex == 1">
@@ -27,6 +27,7 @@
           </div>
           <div class="tab-content-item"v-show="tabIndex == 2">
             <div class="jihuoma-box">{{ newCode }}</div>
+            <div class="type-select"></div>
             <div class="jihuo-opra">
               <div class="create-jihuoma-btn" @click="creatNewJihuoma()">生成激活码</div>
             </div>
@@ -140,6 +141,9 @@ export default {
         background-color: rgba(0, 0, 0, 0.4);
         margin-bottom: 0.5rem;
         font-size: 0.85rem;
+      }
+      &.selected {
+        color: yellow;
       }
     }
     .tab-content {

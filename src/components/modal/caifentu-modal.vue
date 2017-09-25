@@ -5,11 +5,11 @@
       <div class="modal-head">精灵岛拆分走势图</div>
       <div class="modal-content">
         <div class="tab-head">
-          <div class="tab-head-item">基础拆分率</div>
-          <div class="tab-head-item">个人利率</div>
+          <div class="tab-head-item" style="color:#EE9E19;">基础拆分率</div>
+          <div class="tab-head-item" style="color:#C8D20A;">个人利率</div>
         </div>
         <div class="tab-content">
-          <div class="tab-content-item" ref="iecharts">
+          <div class="tab-content-item" id="chart">
             <IEcharts :option="line" :loading="loading"></IEcharts>
           </div>
         </div>
@@ -47,7 +47,8 @@ export default {
           },
           color: '#fff',
           // 横坐标数据 (需要更改为动态)
-          data: ['6-13', '6-14', '6-15', '6-16', '6-17', '6-18', '6-19'],
+          // data: ['6-13', '6-14', '6-15', '6-16', '6-17', '6-18', '6-19'],
+          data: [],
         },
         yAxis: {
           type: 'value',
@@ -71,7 +72,8 @@ export default {
         series: [{
           type: 'line',
           // 基础拆分率折线数据(需要更改为动态)
-          data: [1.82, 1.71, 1.79, 1.84, 1.78, 1.77, 1.76],
+          // data: [1.82, 1.71, 1.79, 1.84, 1.78, 1.77, 1.76],
+          data: [],
           label: {
             normal: {
               show: true,
@@ -88,7 +90,8 @@ export default {
         {
           type: 'line',
           // 个人利率折线数据(需要更改为动态)
-          data: [2.23, 1.92, 2.20, 2.25, 2.15, 2.13, 2.10],
+          // data: [{}, 1.92, 2.20, 2.25, 2.15, 2.13, 2.10],
+          // data: [],
           label: {
             normal: {
               show: true,
@@ -107,12 +110,52 @@ export default {
   },
   watch: {
     split (value) {
-      // if(value.system_split )
+      if(value.system_split.length === 0) {
+        return
+      }
+      if(value.user_split.length === 0) {
+        let date = []
+        let base = []
+        for (var i = value.system_split.length - 1; i < 0; i--) {
+          date.push(value.system_split[i].date)
+          base.push(value.system_split[i].value)
+        }
+        // 横坐标
+        this.line.xAxis.data = date
+        // 基础
+        this.line.series[0].data = base
+        // 用户
+        this.line.series[1].data = []
+        return
+      }
+      if(value.system_split.length !== 0 && value.user_split.length !== 0) {
+        let date = []
+        let base = []
+        let user = []
+        for (var i = 0; i < value.system_split.length; i++) {
+          date.push(value.system_split[i].date)
+          base.push(value.system_split[i].value)
+          if(value.user_split[i] === undefined){
+            user.push({})
+          }else{
+            user.push(value.user_split[i].value)
+          }
+        }
+        // 横坐标
+        this.line.xAxis.data = date.reverse()
+        // 基础
+        this.line.series[0].data = base.reverse()
+        // 用户
+        this.line.series[1].data = user.reverse()
+      }
+
     }
   },
+  updated () {
+  },
   mounted () {
-    this.setWrapWH()
-    this.bindModalEvent()
+    this.setWH()
+    this.bindModalEvent()   
   },
   components: {
    IEcharts
@@ -139,11 +182,11 @@ export default {
         })
       }.bind(this))
     },
-    setWrapWH () {
-      let chart = this.$refs.iecharts
-      chart.style.width = $(chart).width() + 'px'
-      chart.style.height = $(chart).height() + 'px'
-    },
+    setWH () {
+      let chart = $('#chart')
+      chart.children().width(chart.width())
+      chart.children().height(chart.height())
+    }
   }
 }
 </script>

@@ -1,4 +1,5 @@
 <template>
+<!-- 用户信息弹窗 -->
   <div class="modal-mask" v-show="showModal">
     <div class="account-modal modal">
       <div class="modal-close" @click="close($event)"></div>

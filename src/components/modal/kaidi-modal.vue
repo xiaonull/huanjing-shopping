@@ -28,10 +28,9 @@ export default {
   },
   computed: {
     minFruit () {
-      if(this.cell.xy){
+      if(this.cell.xy !== undefined){
         return this.cell.land.min_fruit
       }
-      return ''
     }
   },
   methods: {

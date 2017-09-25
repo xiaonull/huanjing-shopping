@@ -1,9 +1,11 @@
 <template>
 	<div class="farm" ref="farm">
     <cell v-for="(item, index) in lands" :cell="item"></cell>
+    <cell-message-modal></cell-message-modal>
 	</div>
 </template>
 <script>
+import CellMessageModal from '@/components/modal/cell-message-modal'
 import Cell from '@/components/farm/cell'
 export default {
   name: 'farm',
@@ -16,6 +18,10 @@ export default {
           emptyLandsArray.push(new Object())
         }
       }
+    },
+    'fertilizer': {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -50,7 +56,8 @@ export default {
     }
   },
   components: {
-    Cell
+    Cell,
+    CellMessageModal
   }
 }
 </script>

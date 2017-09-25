@@ -18,7 +18,7 @@ export default {
   methods: {
     selectLand () {
       Bus.$emit('setCurrentCell', this.cell)
-      Bus.$emit('showCellMessage', this.$el)
+      Bus.$emit('showCellMessage', this.$el, this.cell)
     }
   },
   computed: {

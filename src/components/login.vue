@@ -93,7 +93,7 @@
                 <input type="text" v-model="DLYanzheng">
               </div>
               <div class="btn-yanzheng">
-                <div class="yanzheng" @click="getYanzheng()">获取验证码</div>
+                <div class="yanzheng" @click="getYanzheng()">{{ ZCdaojishi ? ZCdaojishimiao : '获取验证码'}}</div>
               </div>
             </div>
             <div class="item-star"></div>
@@ -128,7 +128,7 @@
                 <input type="text" v-model="forgetYanzhengma">
               </div>
               <div class="btn-yanzheng">
-                <div class="yanzheng" @click="getForgetYanzhengma()">获取验证码</div>
+                <div class="yanzheng" @click="getForgetYanzhengma()">{{ WJdaojishi ? WJdaojishimiao : '获取验证码' }}</div>
               </div>
             </div>
           </div>
@@ -182,8 +182,19 @@ export default {
       forgetPnone: '',
       forgetYanzhengma: '',
       forgetPassword1: '',
-      forgetPassword2: ''
+      forgetPassword2: '',
+      // 倒计时
+      ZCdaojishi: 0,
+      WJdaojishi: 0
 }
+  },
+  computed: {
+    ZCdaojishimiao () {
+      return this.ZCdaojishi + 's'
+    },
+    WJdaojishimiao () {
+      return this.WJdaojishi + 's'
+    }
   },
   created () {
     this.getAndSetToken()
@@ -195,8 +206,8 @@ export default {
     TipModal
   },
   methods: {
+    // 加载动画
     moveDot () {
-      // 加载动画
       var timer = setInterval(function () {
         if(this.percent < 100) {
           this.percent++
@@ -207,12 +218,14 @@ export default {
         }
       }.bind(this), 30)
     },
+    // token
     getAndSetToken () {
       getToken()
       .then(function (response) {
         util.setSession('Token', response.data.token)
       })
     },
+    // 登录操作请求
     dengluOperation (e) {
       if(this.dengluAccount === '') {
         Bus.$emit('openTipModal', '登录账号不能为空')
@@ -222,13 +235,23 @@ export default {
         Bus.$emit('openTipModal', '登录密码不能为空')
         return
       }
-      login(this.dengluAccount, this.dengluPassword).then(function (response) {
+      login(this.dengluAccount, this.dengluPassword)
+      .then(function (response) {
         let data = response.data
         if(data.error === 0){
           this.$router.push({path: '/'})
         }
       }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+          if(err.response.status === 422) {
+            this.dengluPassword = ''
+            Bus.$emit('openTipModal', err.response.data.msg)
+          }
+        }
+      }.bind(this))
     },
+    // modal状态跳转
     toZhuce ($event) {
       this.loginType = 'zhuce'
     },
@@ -238,10 +261,18 @@ export default {
     toForget ($event) {
       this.loginType = 'forget'
     },
+    // 获取验证码
     getYanzheng ($event) {
       registerSms(this.DLPhone)
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
+        this.ZCdaojishi = 60
+        window.ZCyanzheng = setInterval(function(){
+          this.ZCdaojishi--
+          if(this.ZCdaojishi === 0) {
+            clearInterval(window.ZCdaojishi)
+          }
+        }.bind(this), 1000)
       }.bind(this))
       .catch(function (err) {
         if(err && err.response) {
@@ -251,19 +282,22 @@ export default {
         }
       }.bind(this))
     },
+    // 注册请求
     postChuze () {
       let full = (this.DLPhone != '') && (this.DLName != '') && (this.DLJihuoma != '') && (this.DLFirstPassword != '') && (this.DLSencondPassword != '') && (this.DLWeixin != '') && (this.DLYanzheng != '')
       if(!full) {
         Bus.$emit('openTipModal', '请填写完整注册信息')
         return
       }
-      // if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
-      //   Bus.$emit('openTipModal', '输入正确的号码')
-      //   return
-      // }
       register(this.DLPhone, this.DLYanzheng, this.DLJihuoma, this.DLFirstPassword, this.DLSencondPassword, this.DLName, this.DLWeixin)
       .then(function (response) {
-        this.DLPhone, this.DLName, this.DLJihuoma, this.DLFirstPassword, this.DLSencondPassword, this.DLWeixin, this.DLYanzheng = ''
+        this.DLPhone = ''
+        this.DLName = ''
+        this.DLJihuoma = ''
+        this.DLFirstPassword = ''
+        this.DLSencondPassword = ''
+        this.DLWeixin = ''
+        this.DLYanzheng = ''
         Bus.$emit('openTipModal', response.data.msg)
         if(!response.err) {
           this.loginType = 'denglu'
@@ -281,6 +315,13 @@ export default {
     getForgetYanzhengma (e) {
       forgetYanzhengma(this.forgetPnone)
       .then(function (respones) {
+        this.WJdaojishi = 60
+        window.WJyanzheng = setInterval(function(){
+          this.WJdaojishi--
+          if(this.WJdaojishi === 0) {
+            clearInterval(window.WJyanzheng)
+          }
+        }.bind(this), 1000)
         Bus.$emit('openTipModal', respones.data.msg)
       }.bind(this))
       .catch(function (err) {
@@ -306,6 +347,10 @@ export default {
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
         this.loginType = 'denglu'
+        this.forgetPnone = ''
+        this.forgetYanzhengma = ''
+        this.forgetPassword1 = ''
+        this.forgetPassword2 = ''
       }.bind(this))
       .catch(function (err) {
         if(err && err.response) {

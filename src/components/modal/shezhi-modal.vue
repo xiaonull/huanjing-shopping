@@ -1,4 +1,5 @@
 <template>
+<!-- 设置 -->
   <div class="modal-mask" v-show="showModal">
     <div class="shezhi-modal modal">
       <div class="modal-close" @click="close($event)"></div>
@@ -61,7 +62,8 @@ export default {
         this.showModal = true
       }.bind(this))
     },
-  }
+  }，
+  watch : {}
 }
 </script>
 <style scoped lang="less" type="text/less">
