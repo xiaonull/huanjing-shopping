@@ -1,70 +1,82 @@
 <template>
-  <div class="account-modal modal" ref="accountModal" :class="{'hide': !showModal}">
-    <div class="modal-header" ref="modalHeader"><div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
-    </div>
-    <div class="modal-content">
-      <div class="account-image">
-        <img :src="imageSrc" @click="chooseImage($event)">
-      </div>
-      <div class="account-message">
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">手机号码</div>
-            <div class="cell-value">{{ phone }}</div>
-          </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
-          </div>
+  <div class="modal-mask" v-show="showModal">
+    <div class="account-modal modal">
+      <div class="modal-close" @click="close($event)"></div>
+      <div class="modal-head"></div>
+      <div class="modal-content">
+        <div class="account-image">
+          <img :src="imageSrc" @click="chooseImage($event)">
         </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">ID账号</div>
-            <div class="cell-value">{{ userId }}</div>
+        <div class="account-message">
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">手机号码</div>
+              <div class="cell-value"><input type="text" v-model="phone" readonly></div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+            </div>
           </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">ID账号</div>
+              <div class="cell-value"><input type="text" v-model="userId" readonly></div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+            </div>
           </div>
-        </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">游戏昵称</div>
-            <div class="cell-value">{{ userName }}</div>
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">游戏昵称</div>
+              <div class="cell-value">
+                <div class="cell-value-label" v-show="!nickEdit">{{ hereNick }}</div>
+                <input type="text" v-model="hereNick" v-show="nickEdit" ref="nick">
+              </div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+              <div class="cell-btn" @click="operateNich()">{{ nickEdit ? '保存' : '修改' }}</div>
+            </div>
           </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
-            <div class="cell-btn">保存</div>
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">一级密码</div>
+              <div class="cell-value">
+                <input type="text" v-model="oneLevelPassword" readonly>
+              </div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+              <div class="cell-btn" @click="password('login')">修改</div>
+            </div>
           </div>
-        </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">一级密码</div>
-            <div class="cell-value">{{ oneLevelPassword }}</div>
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">二级密码</div>
+              <div class="cell-value">
+                <input type="text" v-model="twoLevelPassword" readonly>
+              </div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+              <div class="cell-btn" @click="password('safe')">修改</div>
+            </div>
           </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
-            <div class="cell-btn" @click="password('login')">修改</div>
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">微信号</div>
+              <div class="cell-value">
+                <div class="cell-value-label" v-show="!weixinEdit">{{ hereWeixin }}</div>
+                <input type="text" v-model="hereWeixin" ref="weixin" v-show="weixinEdit">
+              </div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+              <div class="cell-btn" @click="operateWeixin()">{{ weixinEdit ? '保存' : '修改' }}</div>
+            </div>
           </div>
-        </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">二级密码</div>
-            <div class="cell-value">{{ twoLevelPassword }}</div>
-          </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
-            <div class="cell-btn" @click="password('safe')">修改</div>
-          </div>
-        </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">微信号</div>
-            <div class="cell-value">{{ weixin }}</div>
-          </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
-            <div class="cell-btn">保存</div>
-          </div>
-        </div>
-        <div class="account-message-cell">
-          <div class="account-message-cell-content">
-            <div class="cell-key">推荐人ID</div>
-            <div class="cell-value">{{ parentId }}</div>
-          </div>
-          <div class="account-message-cell-edit" ref="cellEdit">
+          <div class="account-message-cell">
+            <div class="account-message-cell-content">
+              <div class="cell-key">推荐人ID</div>
+              <div class="cell-value"><input type="text" v-model="parentId"></div>
+            </div>
+            <div class="account-message-cell-edit" ref="cellEdit">
+            </div>
           </div>
         </div>
       </div>
@@ -72,10 +84,10 @@
   </div>
 </template>
 <script>
+import {setNick, setWeixin} from '@/js/allAxiosRequire'
 export default {
   name: 'account-modal',
   props: {
-    showModal: [Boolean],
     phone: {
       type: String,
       default: ''
@@ -110,14 +122,25 @@ export default {
         '4': require('../../assets/portrait-tu04.png'),
         '5': require('../../assets/portrait-tu05.png')
       },
-      oneLevelPassword: '**********',
-      twoLevelPassword: '**********'
+      oneLevelPassword: '????????????',
+      twoLevelPassword: '????????????',
+      showModal: true,
+      nickEdit: false,
+      weixinEdit: false,
+      hereNick: '',
+      hereWeixin: ''
     }
   },
   mounted () {
-    this.setCloseBtnHW()
-    this.setHeadLineheight()
-    this.setCellBtnHeight()
+    this.bindModalEvent()
+  },
+  updated () {
+    if(this.nickEdit === true) {
+      $(this.$refs.nick).focus()
+    }
+    if(this.weixinEdit === true) {
+      $(this.$refs.weixin).focus()
+    }
   },
   computed: {
     imageSrc () {
@@ -134,111 +157,157 @@ export default {
   components: {
   },
   methods: {
-    setCloseBtnHW () {
-      let bodyH = $(document.body).height()
-      let closeBtnWH = bodyH * .07
-      let closeBtn = this.$refs.btnClose
-      closeBtn.style.width = closeBtn.style.height = closeBtnWH + 'px'
-    },
-    setHeadLineheight () {
-      let modalHeader = this.$refs.modalHeader
-      let height = $(modalHeader).height()
-      modalHeader.style.lineHeight = height + 'px'
-    },
-    setCellBtnHeight () {
-      let edit = this.$refs.cellEdit
-      let width = $(edit).width()
-      let height = width * ( 58 / 223)
-      $.each($('.cell-btn', this.$refs.accountModal), function(index, val) {
-        val.style.height = val.style.lineHeight = height + 'px'
-      });
-    },
     password (type) {
       Bus.$emit('openPasswordModal', type);
-      Bus.$emit('closeAccountModal')
+      this.showModal = false
     },
     chooseImage (e) {
-      Bus.$emit('closeAccountModal')
+      this.showModal = false
       Bus.$emit('openChooseImageModal')
     },
     close () {
-      Bus.$emit('closeAccountModal')
+      this.showModal = false
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openAccountModal', function(){
+        this.showModal = true
+      }.bind(this))
+      Bus.$on('closeAccountModal', function(){
+        this.showModal = false
+      }.bind(this))
+    },
+    // 操作游戏昵称
+    operateNich () {
+      if(this.nickEdit === true) {
+        setNick(this.hereNick)
+        .then(function (response) {
+          this.nickEdit = false
+          Bus.$emit('openTipModal', response.data.msg)
+          Bus.$emit('refreshData')
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+        })
+      }else{
+        this.nickEdit = true
+      }
+    },
+    // 操作微信号
+    operateWeixin () {
+      if(this.weixinEdit === true) {
+        setWeixin(this.hereWeixin)
+        .then(function (response) {
+          this.weixinEdit = false
+          Bus.$emit('openTipModal', response.data.msg)
+          Bus.$emit('refreshData')
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+        })
+      }else{
+        this.weixinEdit = true
+      }
     }
-  }
+  },
+  watch : {
+    userName (value) {
+      this.hereNick = value
+    },
+    weixin (value) {
+      this.hereWeixin = value
+    }
+  } 
 }
 </script>
 <style scoped lang="less" type="text/less">
-.hide {
-  display: none !important;
+// flex布局水平垂直居中
+.flex-both-center () {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .account-modal {
-  display:  flex;
+  display: flex;
   flex-direction: column;
-  width: 40%;
-  height: 90%;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 7%;
-  z-index: 10;
-  font-size: 1rem;
-  color: #fff;
-  .modal-header {
-    position: relative;
-    height:0%;
-    font-size: 1.4rem;
-    text-align: center;
-    .modal-btn-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      background-image: url('~@/assets/close.png');
-      background-size: 100%;
-      background-repeat: no-repeat;
-    }
+  width: 45%;
+  font-size: 0.88rem;
+  .modal-head {
+    .flex-both-center()
   }
   .modal-content {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    margin: 4% 4%;
-    margin-right: 3%;
-    text-align: center;
+    padding: 1rem 2rem;
     .account-image {
-      height: 22%;
-      margin-bottom: 1rem;
+      .flex-both-center();
+      height: 4rem;
+      padding-bottom: 0.5rem;
       img {
-        height: 100%;
+        height: 4rem;
+        width: 4rem;
+        border-radius: 4rem;
       }
     }
     .account-message {
-      flex: 1;
-      overflow: auto;
       .account-message-cell {
         display: flex;
+        height: 2.3rem;
         .account-message-cell-content {
           display: flex;
-          width: 75%;
-          border-bottom:1px solid #fff;
-          text-align: left;
+          flex: 4;
+          border-bottom: 1px solid #fff;
+          margin-right: 0.5rem;
           .cell-key {
-            width: 40%;
-            line-height: 2;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 2;
           }
           .cell-value {
-            width: 60%;
-            line-height: 2;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 4;
+            margin-left: 0.5rem;
+            input {
+              padding: 0;
+              outline: none;
+              border: 0;
+              width: 100%;
+              height: 2.3rem;
+              line-height: 2.3rem;
+              background-color: transparent;
+              color: #fff;
+            }
+            .cell-value-label {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              width: 100%;
+              height: 2.3rem;
+              color: #fff;
+            }
           }
         }
         .account-message-cell-edit {
-          width: 25%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          flex: 1;
+          .flex-both-center();
           .cell-btn {
-            width: 80%;
-            font-size: 0.85rem;
-            text-align: center;
+            width: 100%;
+            height: 1.5rem;
             background-image: url('~@/assets/an-bg01.png');
             background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            .flex-both-center();
           }
         }
       }

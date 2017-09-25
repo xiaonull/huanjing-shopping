@@ -25,7 +25,7 @@
                 <div class="item-list-nicheng">{{ item.nick }}</div>
                 <div class="item-list-id">{{ item.id }}</div>
                 <div class="item-list-mishu">{{ item.day_fruit }}</div>
-                <div class="item-list-caozuo"><a href="javascript:void(0)" :data-id="item.id" v-show="item.gather ? true : false" @click="gather($event)">采蜜</a></div>
+                <div class="item-list-caozuo"><a href="javascript:void(0)" :data-id="item.id" v-show="item.gather ? false : true" @click="gather($event)">采蜜</a></div>
               </div>
             </div>
             <div class="item-list-footer">
@@ -83,7 +83,7 @@ export default {
         if (value.level == this.selectFriendType) {
           newSelect.push(value[i])
         }
-        if(value[i].gather) {
+        if(!value[i].gather) {
           caimi = true
         }
       }

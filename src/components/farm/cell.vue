@@ -1,6 +1,6 @@
 <template>
-  <div class="farm-cell farm-cell-green" @click="showCellMessage($event)" ref="cell">
-    <div class="farm-tree" v-if="hasTree" @click></div>
+  <div class="farm-cell farm-cell-green" @click="selectLand($event)" ref="cell">
+    <div class="farm-tree" v-if="hasTree"></div>
   </div>
 </template>
 <script>
@@ -16,8 +16,9 @@ export default {
   components: {
   },
   methods: {
-    showCellMessage () {
-      Bus.$emit('openCellMessageModal',this.cell, this.$refs.cell)
+    selectLand () {
+      Bus.$emit('setCurrentCell', this.cell)
+      Bus.$emit('showCellMessage', this.$el)
     }
   },
   computed: {

@@ -1,144 +1,203 @@
 <template>
-  <div class="jihuo-modal modal" ref="jihuoModal" :class="{'hide': !showModal}">
-    <div class="modal-header" ref="modalHeader">激活中心<div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
-    </div>
-    <div class="modal-content">
-      <div class="modal-content-cell">
-        <div class="cell-key">会员ID：</div>
-        <div class="cell-value">
-          <input v-model="huiyuanId">
+  <div class="modal-mask" v-show="showModal">
+    <div class="modal jihuo-modal">
+      <div class="modal-close" @click="close($event)"></div>
+      <div class="modal-head">激活好友</div>
+      <div class="modal-content">
+        <div class="tab-head">
+          <div class="tab-head-item" @click="clickTabHead(1)">激活码列表</div>
+          <div class="tab-head-item" @click="clickTabHead(2)">生成激活码</div>
+        </div>
+        <div class="tab-content">
+          <div class="tab-content-item"v-show="tabIndex == 1">
+            <div class="code-title">
+              <div class="title-code">key</div>
+              <div class="title-usertype">激活码类型</div>
+              <div class="title-recommend-id">推荐人ID</div>
+              <div class="title-user-id">使用者ID</div>
+            </div>
+            <div class="code-list">
+              <div class="code-list-item" v-for="item in codes">
+                <div class="code">{{ item.key }}</div>
+                <div class="code-usertype">{{ item.user_type == 1 ? '正常用户' : '测试用户' }}</div>
+                <div class="code-recommend-id">{{ item.recommend_id }}</div>
+                <div class="code-user-id">{{ item.user ? item.user.id : '未使用' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content-item"v-show="tabIndex == 2">
+            <div class="jihuoma-box">{{ newCode }}</div>
+            <div class="jihuo-opra">
+              <div class="create-jihuoma-btn" @click="creatNewJihuoma()">生成激活码</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="modal-content-cell">
-        <div class="cell-key">会员账号：</div>
-        <div class="cell-value">
-          <input v-model="huiyuanAccount">
-        </div>
-      </div>
-      <div class="modal-content-cell tip">
-        激活会员需要消耗xx个果子
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="modal-footer-btn-sure" ref="btnSure">激活</div>
     </div>
   </div>
 </template>
 <script>
+import {jihuoma, creatJihuoma} from '@/js/allAxiosRequire'
+
 export default {
   name: 'jihuo-modal',
-  props: ['showModal'],
+  props: ['userType'],
   data () {
     return {
-      huiyuanId: '134546',
-      huiyuanAccount: '123456'
+      showModal: true,
+      tabIndex: 1,
+      codes: [],
+      newCode: ''
     }
   },
   mounted () {
-    this.setCloseBtnHW()
-    this.setHeadLineheight()
-    this.setFooterBtnHeight()
+    this.bindModalEvent()
   },
   components: {
   },
+  computed: {
+    newCodekey () {
+      if(this.code.data){
+        return this.code.data.key
+      }
+      return ''
+    }
+  },
   methods: {
-    setCloseBtnHW () {
-      let bodyH = $(document.body).height()
-      let closeBtnWH = bodyH * .07
-      let closeBtn = this.$refs.btnClose
-      closeBtn.style.width = closeBtn.style.height = closeBtnWH + 'px'
-    },
-    setHeadLineheight () {
-      let modalHeader = this.$refs.modalHeader
-      let height = $(modalHeader).height()
-      modalHeader.style.lineHeight = height + 'px'
-    },
-    setFooterBtnHeight () {
-      let sure = this.$refs.btnSure
-      let width = $(sure).width()
-      let height = width * ( 58 / 223)
-      sure.style.height = sure.style.lineHeight = height + 'px'
-    },
     close () {
-      Bus.$emit('closeJihuoModal')
+      this.showModal = false
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openJihuoModal', function(){
+        this.showModal = true
+        this.getJihuoma()
+      }.bind(this))
+    },
+    clickTabHead (index) {
+      this.tabIndex = index
+    },
+    getJihuoma () {
+      jihuoma()
+      .then(function (response) {
+        let data = response.data
+        this.codes = data.actcode_list
+      }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+      }.bind(this))
+    },
+    creatNewJihuoma () {
+      creatJihuoma(this.userType)
+      .then(function (response) {
+        let data = response.data
+        Bus.$emit('openTipModal', data.msg)
+        Bus.$emit('refreshData')
+        this.newCode = data.data.key
+      }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+      }.bind(this))
     }
   }
 }
 </script>
 <style scoped lang="less" type="text/less">
-.hide {
-  display: none !important;
+// flex布局水平垂直居中
+.flex-both-center () {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .jihuo-modal {
-  display:  flex;
+  display: flex;
   flex-direction: column;
-  width: 34%;
-  height: 55%;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 7%;
-  z-index: 10;
-  font-size: 0.95rem;
-  color: #fff;
-  .modal-header {
-    position: relative;
-    height: 26%;
-    font-size: 1.4rem;
-    text-align: center;
-    .modal-btn-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      background-image: url('~@/assets/close.png');
-      background-size: 100%;
-      background-repeat: no-repeat;
-    }
+  width: 80%;
+  height: 70%;
+  .modal-head {
+    height: 3rem;
+    .flex-both-center()
   }
   .modal-content {
-    display: flex;
     flex: 1;
-    flex-direction: column;
-    justify-content: space-around;
-    margin: 4.5% 6%;
-    margin-top: 2%;
-    overflow: auto;
-    .modal-content-cell {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 31%;
-      &.tip {
-        color: red;
-        font-size: 0.8rem;
-      }
-      .cell-key {
-        width: 35%;
-        text-align: left;
-      }
-      .cell-value {
-        flex: 1;
-        input {
-          border: 0;
-          padding:0 5%;
-          box-sizing: border-box;
-          width: 100%;
-          line-height: 1.5;
-          background-color: rgba(0, 0, 0, 0.4);
-          color:#fff;
-        }
+    padding: 1rem 2rem;
+    display: flex;
+    .tab-head {
+      width: 25%;
+      margin-right: 1rem;
+      .tab-head-item {
+        height: 1.5rem;
+        .flex-both-center();
+        border-radius: 1.5rem;
+        background-color: rgba(0, 0, 0, 0.4);
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
       }
     }
-  }
-  .modal-footer {
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .modal-footer-btn-sure {
-      width: 30%;
-      font-size: 1rem;
-      text-align: center;
-      background-image: url('~@/assets/an-bg01.png');
-      background-size: 100% 100%;
+    .tab-content {
+      flex: 1;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 1rem;
+      padding: 0.5rem;
+      .tab-content-item {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        .code-title {
+          display: flex;
+          height: 1.5rem;
+          font-size: 0.9rem;
+          * {
+            flex: 1;
+            .flex-both-center()
+          }
+          .title-code {
+            flex: 1.5;
+          }
+        }
+        .code-list {
+          flex: 1;
+          overflow: auto;
+          .code-list-item {
+            display: flex;
+            height: 1.5rem;
+            font-size: 0.85rem;
+            * {
+              flex: 1;
+              .flex-both-center()
+            }
+            .code {
+              flex: 1.5;
+            }
+          }
+        }
+        .jihuoma-box {
+          flex: 1;
+          .flex-both-center();
+          font-size: 1.8rem;
+        }
+        .jihuo-opra {
+          .flex-both-center();
+          height: 3rem;
+          .create-jihuoma-btn {
+            .flex-both-center();
+            width: 50%;
+            height: 1.6rem;
+            font-size: 1rem;
+            border-radius: 1.6rem;
+            background-color: #20acd6;
+          }
+        }
+      }
     }
   }
 }

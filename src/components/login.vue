@@ -1,42 +1,45 @@
 <template>
   <div class="login">
     <!-- 登录加载 -->
-    <!-- <div class="login-loading" :class="{'hide': !showLoading}"> -->
-    <div class="login-loading" v-show="loginType == 'loading'">
-      <div class="login-loading-bar">
-        <div class="login-loading-dot" ref="dot"></div>
-        <div class="login-loading-percent">{{ percent }}%</div>
+    <div class="modal-mask loading" v-show="loginType == 'loading'">
+      <div class="login-loading">
+        <div class="login-loading-bar">
+          <div class="login-loading-dot" ref="dot"></div>
+          <div class="login-loading-percent">{{ percent }}%</div>
+        </div>
       </div>
     </div>
     <!-- 登录界面 -->
-    <!-- <div class="login-denglu" :class="{'hide': showLoading}"> -->
-    <div class="login-denglu" v-show="loginType == 'denglu'">
-      <div class="denglu-logo"></div>
-      <div class="denglu-content">
-        <div class="denglu-main">
-          <div class="main-input-wrap" ref="mainInputWrap">
-            <div class="input-cell">
-              <div class="input-label">游戏账号 : </div>
-              <div class="input"><input type="text" ref="youxizhanghu" v-model.number.trim="dengluAccount"></div>
+    <div class="modal-mask denglu" v-show="loginType == 'denglu'">
+      <div class="login-denglu">
+        <div class="denglu-logo"></div>
+        <div class="denglu-content">
+          <div class="denglu-main">
+            <div class="main-input-wrap" ref="mainInputWrap">
+              <div class="input-cell">
+                <div class="input-label">游戏账号 : </div>
+                <div class="input"><input type="text" ref="youxizhanghu" v-model.number.trim="dengluAccount"></div>
+              </div>
+              <div class="input-cell">
+                <div class="input-label">登录密码 : </div>
+                <div class="input"><input type="password" ref="denglumima" v-model.trim="dengluPassword"></div>
+              </div>
             </div>
-            <div class="input-cell">
-              <div class="input-label">登录密码 : </div>
-              <div class="input"><input type="password" ref="denglumima" v-model.trim="dengluPassword"></div>
+            <div class="main-btn-wrap">
+              <div class="main-btn-denglu" ref="dengluBtn"@click="dengluOperation($event)">登录</div>
+              <div class="main-btn-other-wrap">
+                <div class="main-btn-wangjimima" @click="toForget($event)">忘记密码</div>
+                <div class="main-btn-zhuce" @click="toZhuce($event)">注册</div>
+              </div>
             </div>
           </div>
-          <div class="main-btn-wrap">
-            <div class="main-btn-denglu" ref="dengluBtn"@click="dengluOperation($event)">登录</div>
-            <div class="main-btn-other-wrap">
-              <div class="main-btn-wangjimima" @click="toForget($event)">忘记密码</div>
-              <div class="main-btn-zhuce" @click="toZhuce($event)">注册</div>
-            </div>
-          </div>
+          <div class="denglu-mianze hide"></div>
         </div>
-        <div class="denglu-mianze hide"></div>
-      </div>
-      <div class="deng-footer">
+        <div class="deng-footer">
+        </div>
       </div>
     </div>
+    <!-- 注册界面 -->
     <div class="modal-mask zhuce" v-show="loginType == 'zhuce'">
       <div class="zhuce-modal">
         <div class="modal-head">注册</div>
@@ -107,12 +110,56 @@
         </div>
       </div>
     </div>
+    <!-- 忘记密码 -->
+    <div class="modal-mask forget" v-show="loginType == 'forget'">
+      <div class="forget-modal">
+        <div class="modal-head">忘记密码</div>
+        <div class="modal-content">
+          <div class="content-item">
+            <div class="item-label">手机号:</div>
+            <div class="item-input">
+              <input type="text" v-model="forgetPnone">
+            </div>
+          </div>
+          <div class="content-item">
+            <div class="item-label">验证码:</div>
+            <div class="item-input">
+              <div class="input-yanzheng">
+                <input type="text" v-model="forgetYanzhengma">
+              </div>
+              <div class="btn-yanzheng">
+                <div class="yanzheng" @click="getForgetYanzhengma()">获取验证码</div>
+              </div>
+            </div>
+          </div>
+          <div class="content-item">
+            <div class="item-label">新密码:</div>
+            <div class="item-input">
+              <input type="text" v-model="forgetPassword1">
+            </div>
+          </div>
+          <div class="content-item">
+            <div class="item-label">再次确认:</div>
+            <div class="item-input">
+              <input type="text" v-model="forgetPassword2">
+            </div>
+          </div>
+          <div class="main-btn-wrap">
+            <div class="main-btn-forget" @click="forgetOperation($event)">确认</div>
+            <div class="main-btn-other-wrap">
+              <div class="main-btn-wangjimima" @click="toDenglu($event)">返回登录</div>
+              <div class="main-btn-zhuce" @click="toZhuce($event)">注册</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <tip-modal></tip-modal>
   </div>
 </template>
 <script>
 import TipModal from '@/components/modal/tip-modal'
-import {getToken, login, registerSms, register } from '@/js/allAxiosRequire'
+import {getToken, login, registerSms, register, forgetYanzhengma, forgetPost} from '@/js/allAxiosRequire'
 import util from '@/js/util'
 export default {
   name: 'login',
@@ -120,7 +167,7 @@ export default {
     return {
       percent: 0,
       loginType: 'loading',
-      // 登录的数据
+      // 注册的数据
       DLPhone: '',
       DLName: '',
       DLJihuoma: '',
@@ -128,17 +175,21 @@ export default {
       DLSencondPassword: '',
       DLWeixin: '',
       DLYanzheng: '',
+      // 登录的数据
       dengluAccount: '',
-      dengluPassword: ''
-    }
+      dengluPassword: '',
+      // 忘记密码的数据
+      forgetPnone: '',
+      forgetYanzhengma: '',
+      forgetPassword1: '',
+      forgetPassword2: ''
+}
   },
   created () {
     this.getAndSetToken()
   },
   mounted () {
     this.moveDot()
-    this.setInputHeight()
-    this.setDengluHeight()
   },
   components: {
     TipModal
@@ -156,17 +207,6 @@ export default {
         }
       }.bind(this), 30)
     },
-    setInputHeight () {
-      let inputs = [this.$refs.youxizhanghu, this.$refs.denglumima]
-      let height = $(inputs[0]).height()
-      inputs.forEach(function (val, index, arr) {
-        val.style.borderRadius = height + 'px'
-      })
-    },
-    setDengluHeight () {
-      let btn = this.$refs.dengluBtn
-      btn.style.borderRadius = $(btn).height() + 'px'
-    },
     getAndSetToken () {
       getToken()
       .then(function (response) {
@@ -175,11 +215,11 @@ export default {
     },
     dengluOperation (e) {
       if(this.dengluAccount === '') {
-        console.log('登录账号不能为空')
+        Bus.$emit('openTipModal', '登录账号不能为空')
         return
       }
       if(this.dengluPassword === '') {
-        console.log('登录密码不能为空')
+        Bus.$emit('openTipModal', '登录密码不能为空')
         return
       }
       login(this.dengluAccount, this.dengluPassword).then(function (response) {
@@ -196,15 +236,9 @@ export default {
       this.loginType = 'denglu'
     },
     toForget ($event) {
-      this.loginType = 'denglu'
+      this.loginType = 'forget'
     },
     getYanzheng ($event) {
-      // 号码正则判断
-      // if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(this.DLPhone))){
-      //   console.log('输入正确的号码')
-      //   Bus.$emit('openTipModal', '')
-      //   return
-      // }
       registerSms(this.DLPhone)
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
@@ -242,6 +276,44 @@ export default {
           }
         }
       }.bind(this))
+    },
+    // 获取忘记密码验证码
+    getForgetYanzhengma (e) {
+      forgetYanzhengma(this.forgetPnone)
+      .then(function (respones) {
+        Bus.$emit('openTipModal', respones.data.msg)
+      }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+          if(err.response.status === 422) {
+            Bus.$emit('openTipModal', err.response.data.msg)
+          }
+        }
+      }.bind(this))
+    },
+    // 忘记密码请求
+    forgetOperation ($event) {
+      if(this.forgetPassword1 !== this.forgetPassword2) {
+        Bus.$emit('openTipModal', '两次输入新密码不一致')
+        return
+      }
+      let params = {
+        phone: this.forgetPnone,
+        code: this.forgetYanzhengma,
+        password: this.forgetPassword1
+      }
+      forgetPost(params)
+      .then(function (respones) {
+        Bus.$emit('openTipModal', respones.data.msg)
+        this.loginType = 'denglu'
+      }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+          if(err.response.status === 422) {
+            Bus.$emit('openTipModal', err.response.data.msg)
+          }
+        }
+      }.bind(this))
     }
   }
 }
@@ -271,134 +343,139 @@ export default {
   background-size: 100% 100%;
   background-repeat: no-repeat;
   color: #fff;
-  .login-denglu {
-    position: absolute;
-    z-index: 1;
-    width: 45%;
-    height: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    .denglu-logo {
-      position: absolute;
-      z-index: 2;
-      width: 100%;
-      height: 30%;
-      top: 0;
-      left: 50%;
-      transform: translate(-50%, 0);
-      background-image: url('~@/assets/logo.png');
-      background-size: 90% auto;
-      background-position: center 400%;
-      background-repeat: no-repeat;
-    }
-    .denglu-content {
-      display: flex;
-      position: absolute;
-      z-index: 1;
-      width: 80%;
-      height: 55%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 1rem;
-      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4) inset;
-      .denglu-main {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        margin: 10% 8%;
-        // background-color: rgba(0, 0, 0, 0.4);
-        .main-input-wrap {
-          height: 50%;
-          margin-bottom: 5%;
-          .input-cell {
-            display: flex;
-            height: 50%;
-            .input-label {
-              font-size: 1rem;
+  .denglu {
+    .flex-both-center();
+    background-image: url('~@/assets/box-bg.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40% 16rem;
+    .login-denglu {
+      position: relative;
+      overflow: hidden;
+      width: 40%;
+      height: 100%;
+      .denglu-logo {
+        height: 100%;
+        width: 100%;
+        background-image: url('~@/assets/logo.png');
+        background-size: 100% auto;
+        background-position: center center;
+        background-repeat: no-repeat;
+        transform: translateY(-8rem);
+        z-index: 1;
+      }
+      .denglu-content {
+        box-sizing: border-box;
+        padding: 2rem 10%;
+        position: absolute;
+        width: 100%;
+        height: 16rem;
+        top: 50%;
+        transform: translateY(-8rem);
+        z-index: 2;
+        .denglu-main {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          .main-input-wrap {
+            .input-cell {
               display: flex;
-              align-items: center;
-              width: 40%;
+              height: 3rem;
+              .input-label {
+                flex: 1;
+                font-size: 0.88rem;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+              }
+              .input {
+                flex: 2;
+                .flex-both-center();
+                input {
+                  padding: 0;
+                  padding: 0 1rem;
+                  width: 100%;
+                  box-sizing: border-box;
+                  height: 1.6rem;
+                  line-height: 1.6rem;
+                  border-radius: 1.6rem;
+                }
+              }
             }
-            .input {
+          }
+          .main-btn-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+            .main-btn-denglu {
+              height: 2rem;
+              border-radius: 2rem;
+              width: 100%;
+              background-color: #3db3e0;
+              .flex-both-center();
+            }
+            .main-btn-other-wrap {
+              flex: 1;
               display: flex;
-              width: 60%;
-              font-size: 0.7rem;
-              color: #333;
-              justify-content: center;
+              width: 100%;
+              justify-content: space-between;
               align-items: center;
-              input {
-                box-sizing: border-box;
-                width: 100%;
-                padding: 2% 10%;
+              * {
+                font-size: 0.75rem;
+                height: 1rem;
+                .flex-both-center();
               }
             }
           }
         }
-        .main-btn-wrap {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          .main-btn-denglu {
-            line-height: 1.5;
-            background-color: #66bfe3;
-            text-align: center;
-          }
-          .main-btn-other-wrap {
-            flex: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            * {
-              font-size: 0.8rem;
-              line-height: 1.5;
-            }
-          }
-        }
       }
-    }
+    }    
   }
-  .login-loading {
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    width: 45%;
-    height: 100%;
-    transform: translateX(-50%);
-    background-image: url('~@/assets/logo.png');
-    background-size: 100% auto;
-    background-position: center 25%;
-    background-repeat: no-repeat;
-    .login-loading-bar {
+  .loading {
+    .login-loading {
       position: absolute;
-      top: 50%;
+      z-index: 1;
       left: 50%;
-      transform: translate(-50%, -50%);
-      height: 40%;
-      width: 80%;
-      background-image: url('~@/assets/load-bg.png');
+      width: 45%;
+      height: 100%;
+      transform: translateX(-50%);
+      background-image: url('~@/assets/logo.png');
       background-size: 100% auto;
-      background-position: center center;
+      background-position: center 25%;
       background-repeat: no-repeat;
-      .login-loading-dot {
+      .login-loading-bar {
         position: absolute;
         top: 50%;
-        transform: translateY(-50%);        
-        width: 20%;
-        height: 20%;
-        background-image: url('~@/assets/load-dian.png');
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 40%;
+        width: 80%;
+        background-image: url('~@/assets/load-bg.png');
         background-size: 100% auto;
         background-position: center center;
         background-repeat: no-repeat;
-      }
-      .login-loading-percent {
-        position: absolute;
-        top: 60%;
-        width: 100%;
-        text-align: center;
-        color: red;
-        font-size: 0.9rem;
+        .login-loading-dot {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);        
+          width: 20%;
+          height: 20%;
+          background-image: url('~@/assets/load-dian.png');
+          background-size: 100% auto;
+          background-position: center center;
+          background-repeat: no-repeat;
+        }
+        .login-loading-percent {
+          position: absolute;
+          top: 60%;
+          width: 100%;
+          text-align: center;
+          color: red;
+          font-size: 0.9rem;
+        }
       }
     }
   }
@@ -410,93 +487,194 @@ export default {
     background-size: 45% auto;
     .zhuce-modal {
       width: 45%;
-      height: 90%;
       border-radius: 1rem;
       background-color: rgba(0, 0, 0, 0.4);
       .modal-head {
         .flex-both-center();
-        font-size: 1.2rem;
-        height: 10%;
+        font-size: 1.1rem;
+        height: 3rem;
       }
       .modal-content {
-        height: 80%;
+        padding: 0 1rem;
         .content-item {
           display: flex;
-          height: 14.2%;
-          margin: 0 1rem;
+          height: 2.4rem;
           .item-label {
-            width: 40%;
-            height: 100%;
+            flex: 3;
             .flex-both-center();
+            font-size: 0.85rem;
           }
           .item-input {
-            width: 60%;
-            height: 100%;
+            flex: 6;
             .flex-both-center();
-            input {
+            > input {
+              padding: 0 1em;
               box-sizing: border-box;
-              padding-left: 1rem;
-              padding-right: 1rem;
               width: 100%;
               height: 1.5rem;
-              border-radius: 1.2rem;
+              line-height: 1.5rem;
+              border-radius: 1.5rem;
             }
             .input-yanzheng {
+              flex: 1;
               .flex-both-center();
-              width: 50%;
-              height: 100%;
+              input {
+                box-sizing: border-box;
+                padding: 0 1rem;
+                width: 100%;
+                height: 1.5rem;
+                border-radius: 1.5rem;
+                line-height: 1.5rem;
+              }
             }
             .btn-yanzheng {
-              width: 50%;
-              height: 100%;
+              flex: 1;
+              margin-left: 0.5rem;
+              height: 1.5rem;
               .flex-both-center();
               .yanzheng {
-                width: 80%;
-                height: 50%;
+                width: 100%;
+                height: 1.5rem;
                 .flex-both-center();
                 color: #fff;
-                font-size: 0.6rem;
+                font-size: 0.65rem;
                 background-color: #00b8ff;
-                border-radius: 1rem;
+                border-radius: 1.5rem;
+                line-height: 1.5rem;
               }
             }
           }
           .item-star {
-            width: 10%;
-            height: 100%;
+            flex: 1;
             .flex-both-center();
             &:after {
               content: '*';
-              font-size: 1rem;
+              font-size: 0.8rem;
               color: red;
             }
           }
         }
       }
       .modal-foot {
-        margin: 0 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 10%;
+        height: 3.5rem;
+        padding: 0 1rem;
         .btn-zhuce {
           .flex-both-center();
-          width: 20%;
-          height: 1.5rem;
-          font-size: 1.1rem;
-          border-radius: 1.5rem;
+          width: 5rem;
+          height: 1.8rem;
+          font-size: 1rem;
+          border-radius: 1.8rem;
           background-color: #00b8ff;
         }
         .btn-to-denglu {
           a {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #fff;
           }
         }
         .btn-to-forget {
           a {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #fff;
+          }
+        }
+      }
+    }
+  }
+  .forget {
+    .flex-both-center();
+    background-image: url('~@/assets/logo.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 45% auto;
+    .forget-modal {
+      width: 45%;
+      border-radius: 1rem;
+      background-color: rgba(0, 0, 0, 0.4);
+      .modal-head {
+        .flex-both-center();
+        font-size: 1.1rem;
+        height: 3rem;
+      }
+      .modal-content {
+        padding: 0 1rem;
+        .content-item {
+          display: flex;
+          height: 2.4rem;
+          .item-label {
+            flex: 3;
+            .flex-both-center();
+            font-size: 0.85rem;
+          }
+          .item-input {
+            flex: 6;
+            .flex-both-center();
+            > input {
+              padding: 0 1em;
+              box-sizing: border-box;
+              width: 100%;
+              height: 1.5rem;
+              line-height: 1.5rem;
+              border-radius: 1.5rem;
+            }
+            .input-yanzheng {
+              flex: 1;
+              .flex-both-center();
+              input {
+                box-sizing: border-box;
+                padding: 0 1rem;
+                width: 100%;
+                height: 1.5rem;
+                border-radius: 1.5rem;
+                line-height: 1.5rem;
+              }
+            }
+            .btn-yanzheng {
+              flex: 1;
+              margin-left: 0.5rem;
+              height: 1.5rem;
+              .flex-both-center();
+              .yanzheng {
+                width: 100%;
+                height: 1.5rem;
+                .flex-both-center();
+                color: #fff;
+                font-size: 0.65rem;
+                background-color: #00b8ff;
+                border-radius: 1.5rem;
+                line-height: 1.5rem;
+              }
+            }
+          }
+        }
+        .main-btn-wrap {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding-top: 1rem;
+          .main-btn-forget {
+            height: 2rem;
+            border-radius: 2rem;
+            width: 100%;
+            background-color: #3db3e0;
+            .flex-both-center();
+          }
+          .main-btn-other-wrap {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            height: 4rem;
+            justify-content: space-between;
+            align-items: center;
+            * {
+              font-size: 0.75rem;
+              height: 1rem;
+              .flex-both-center();
+            }
           }
         }
       }

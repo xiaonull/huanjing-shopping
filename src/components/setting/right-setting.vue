@@ -2,7 +2,7 @@
 	<div class="right-setting" ref="rightSetting">
     <div class="haoyouliebiao" @click="friends($event)">好友列表</div>
     <div class="jiaoyisuo" @click="jiaoyi($event)">交易所</div>
-    <div class="chaifentu">拆分图</div>
+    <div class="chaifentu" @click="caifen($event)">拆分图</div>
     <div class="shangcheng" @click="shangcheng">商城</div>
 	</div>
 </template>
@@ -36,6 +36,9 @@ export default {
     },
     jiaoyi (e) {
       Bus.$emit('openJiaoyiModal')
+    },
+    caifen () {
+      Bus.$emit('openCaifenModal')
     }
   }
 }

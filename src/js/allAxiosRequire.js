@@ -122,7 +122,7 @@ export function pick (treeId) {
 }
 
 // 获取消息
-export function news () {
+export function getNews () {
   let url = 'news'
   return instance.get(url, {
     headers: {
@@ -155,8 +155,37 @@ export function setHead (imageSrc) {
     'method': 'POST',
     'url': url,
     'data': {
-      value: imageSrc,
-      head: ''
+      value: imageSrc
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 昵称修改
+export function setNick (value) {
+  let url = 'user/update/nick'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      value
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 微信修改
+export function setWeixin (value) {
+  let url = 'user/update/wx_name'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      value
     },
     'headers': {
       'X-CSRF-TOKEN': _getToken()
@@ -281,6 +310,87 @@ export function recordCancel () {
   })
 }
 
+// 获取交易验证码
+export function jiaoyiYanzhengma (phone) {
+  let url = 'user/trade-sell-sms'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      phone
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 我要卖
+export function woyaomai (params) {
+  let url = 'user/trade-sell'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': params,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 买方确认
+export function sureBuyfang (id) {
+  let url = 'user/trade-buy/' + id
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 买方取消
+export function cancelBuyfang (id) {
+  let url = '/user/trade-buy-cancel/' + id
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 卖方确认
+export function sureSellfang (id) {
+  let url = 'user/trade-sell-sub/' + id
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 卖方取消
+export function cancelSellfang (id) {
+  let url = '/user/trade-sell-cancel/' + id
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+
 // 并发请求交易大厅的数据
 //返回的数序： 待收米 我要买 抢购 抢购单 购买记录 出售记录 委托记录 取消记录
 export function jiaoyiAllData () {
@@ -319,6 +429,106 @@ export function registerSms (phone) {
       phone,
     },
     'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+
+// 激活码列表
+export function jihuoma () {
+  let url = 'user/actcode-list'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 生成激活码
+export function creatJihuoma (user_type) {
+  let url = 'user/actcode'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      user_type,
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+
+// 上传图片
+export function uploadImage (param) {
+  let url = 'upload-data'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': param,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken(),
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+// 获取忘记密码验证码
+export function forgetYanzhengma (phone) {
+  let url = 'login-forget-sms'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      phone,
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 忘记密码
+export function forgetPost (params) {
+  let url = 'login-forget'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': params,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 获取全局配置信息
+export function getGlobalMessage () {
+  let url = 'config'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+
+// 获取吐司信息
+export function getToast () {
+  let url = 'toast'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 获取拆分提信息
+export function getCaifen () {
+  let url = 'split'
+  return instance.get(url, {
+    headers: {
       'X-CSRF-TOKEN': _getToken()
     }
   })

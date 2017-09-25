@@ -1,98 +1,100 @@
 <template>
-  <div class="xiaoxi-modal modal" ref="xiaoxiModal" :class="{'hide': !showModal}">
-    <div class="modal-header" ref="modalHeader">消息<div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
-    </div>
-    <div class="modal-content">
-      <div class="xiaoxi-wrap" v-for="item in news" :key="item.id">
-        <div class="xiaoxi-content">{{ item.msg }}</div>
-        <div class="xiaoxi-footer">
-          <div class="xiaoxi-time">{{ item.start_time }}</div>
+  <div class="modal-mask" v-show="showModal">
+    <div class="xiaoxi-modal modal">
+      <div class="modal-close" @click="close($event)"></div>
+      <div class="modal-head">消息</div>
+      <div class="modal-content">
+        <div class="xiaoxi-list">
+          <div class="xiaoxi-wrap" v-for="item in news" :key="item.id">
+            <div class="xiaoxi-content">{{ item.msg }}</div>
+            <div class="xiaoxi-footer">
+              <div class="xiaoxi-time">{{ item.start_time }}</div>
+            </div>
+          </div>          
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import {getNews} from '@/js/allAxiosRequire'
 export default {
   name: 'xiaoxi-modal',
-  props: ['showModal', 'news'],
   data () {
     return {
+      showModal: true,
+      news: []
     }
   },
   mounted () {
-    this.setCloseBtnHW()
-    this.setHeadLineheight()
+    this.bindModalEvent()
   },
   components: {
   },
   methods: {
-    setCloseBtnHW () {
-      let bodyH = $(document.body).height()
-      let closeBtnWH = bodyH * .07
-      let closeBtn = this.$refs.btnClose
-      closeBtn.style.width = closeBtn.style.height = closeBtnWH + 'px'
-    },
-    setHeadLineheight () {
-      let modalHeader = this.$refs.modalHeader
-      let height = $(modalHeader).height()
-      modalHeader.style.lineHeight = height + 'px'
-    },
     close () {
-      Bus.$emit('closeXiaoxiModal')
+      this.showModal = false
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openXiaoxiModal', function(){
+        getNews()
+        .then(function (response) {
+          this.showModal = true
+          this.news = response.data.news
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+        })
+      }.bind(this))
     }
   }
 }
 </script>
 <style scoped lang="less" type="text/less">
-.hide {
-  display: none !important;
+// flex布局水平垂直居中
+.flex-both-center () {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .xiaoxi-modal {
-  display:  flex;
+  display: flex;
   flex-direction: column;
   width: 60%;
   height: 70%;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 7%;
-  z-index: 10;
-  font-size: 0.95rem;
-  color: #fff;
-  .modal-header {
-    position: relative;
-    height: 15%;
-    font-size: 1.4rem;
-    text-align: center;
-    .modal-btn-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      background-image: url('~@/assets/close.png');
-      background-size: 100%;
-      background-repeat: no-repeat;
-    }
+  .modal-head {
+    height: 3rem;
+    .flex-both-center()
   }
   .modal-content {
     flex: 1;
-    margin: 4.5% 6%;
-    margin-top: 2%;
-    overflow: auto;
-    .xiaoxi-wrap {
-      margin-top: 1rem;
-      border-radius: 0.7rem;
-      border:1px solid rgba(208, 112, 41, 0.5);
-      background-color: rgba(0, 0, 0, 0.4);
-      font-size: 0.75rem;
-      .xiaoxi-content {
-        margin: 0.8rem;
-        margin-bottom: 0;
-      }
-      .xiaoxi-footer {
-        margin: 0.5rem 0.8rem;
-        overflow: hidden;
-        .xiaoxi-time {
-          float:  right;
-          font-size: 0.85rem;
+    padding: 1rem 2rem;
+    overflow: hidden;
+    .xiaoxi-list {
+      height: 100%;
+      overflow: auto;
+      .xiaoxi-wrap {
+        background-color: rgba(0, 0, 0, 0.4);
+        font-size: 0.75em;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        margin-top: 0.8rem;
+        &:first-child {
+          margin-top: 0;
+        }
+        .xiaoxi-content {
+        }
+        .xiaoxi-footer {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          height: 1.5rem;
+          .xiaoxi-time {}
         }
       }
     }

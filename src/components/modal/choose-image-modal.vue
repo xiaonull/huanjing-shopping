@@ -1,149 +1,128 @@
 <template>
-  <div class="choose-image-modal modal" ref="chooseImageModal" :class="{'hide': !showModal}">
-    <div class="modal-header" ref="modalHeader">修改头像<div class="modal-btn-close" ref="btnClose" @click="close($event)"></div>
-    </div>
-    <div class="modal-content">
-      <div class="modal-content-line">
-        <div class="line-column"><img :src="image1" @click="choose('1')"></div>
-        <div class="line-column"><img :src="image2" @click="choose('2')"></div>
-        <div class="line-column"><img :src="image3" @click="choose('3')"></div>
+  <div class="modal-mask" v-show="showModal">
+    <div class="choose-image-modal modal">
+      <div class="modal-close" ref="btnClose" @click="close($event)"></div>
+      <div class="modal-head">修改头像</div>
+      <div class="modal-content">
+        <div class="modal-content-line">
+          <div class="line-column"><img :src="image1" @click="choose('1')"></div>
+          <div class="line-column"><img :src="image2" @click="choose('2')"></div>
+          <div class="line-column"><img :src="image3" @click="choose('3')"></div>
+        </div>
+        <div class="modal-content-line">
+          <div class="line-column"><img :src="image4" @click="choose('4')"></div>
+          <div class="line-column"><img :src="image5" @click="choose('5')"></div>
+          <div class="line-column add-image">
+            <label>+<input style="display:none;" type="file" accept="image/png,image/gif,image/jpeg" @change="upload($event)"/></label>
+          </div>
+        </div>
       </div>
-      <div class="modal-content-line">
-        <div class="line-column"><img :src="image4" @click="choose('4')"></div>
-        <div class="line-column"><img :src="image5" @click="choose('5')"></div>
-        <div class="line-column add-image">+</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="modal-footer-btn-sure" ref="btnSure">确认</div>
-    </div>
+    </div>    
   </div>
 </template>
 <script>
-import {setHead} from '@/js/allAxiosRequire'
+import {setHead, uploadImage} from '@/js/allAxiosRequire'
 export default {
   name: 'choose-image-modal',
-  props: ['showModal'],
   data () {
     return {
       image1 : require('../../assets/portrait-tu01.png'),
       image2 : require('../../assets/portrait-tu02.png'),
       image3 : require('../../assets/portrait-tu03.png'),
       image4 : require('../../assets/portrait-tu04.png'),
-      image5 : require('../../assets/portrait-tu05.png')
+      image5 : require('../../assets/portrait-tu05.png'),
+      showModal: true
     }
   },
   mounted () {
-    this.setCloseBtnHW()
-    this.setHeadLineheight()
-    this.setFooterBtnHeight()
+    this.bindModalEvent()
   },
   components: {
   },
   methods: {
-    setCloseBtnHW () {
-      let bodyH = $(document.body).height()
-      let closeBtnWH = bodyH * .07
-      let closeBtn = this.$refs.btnClose
-      closeBtn.style.width = closeBtn.style.height = closeBtnWH + 'px'
-    },
-    setHeadLineheight () {
-      let modalHeader = this.$refs.modalHeader
-      let height = $(modalHeader).height()
-      modalHeader.style.lineHeight = height + 'px'
-    },
-    setFooterBtnHeight () {
-      let sure = this.$refs.btnSure
-      let width = $(sure).width()
-      let height = width * ( 58 / 223)
-      sure.style.height = sure.style.lineHeight = height + 'px'
-    },
     choose (imageSrc) {
       setHead(imageSrc)
       .then(function (respones) {
+        this.showModal = false
         Bus.$emit('openTipModal', respones.data.msg)
         Bus.$emit('refreshData')
-      })
+      }.bind(this))
       .catch(function (err) {
         if(err && err.response) {
           if(err.response.status === 422) {
             Bus.$emit('openTipModal', err.response.data.msg)
           }
         }
-      })
+      }.bind(this))
     },
     close () {
-      Bus.$emit('closeChooseImageModal')
+      this.showModal = false
+    },
+    bindModalEvent () {
+      this.showModal = false
+      Bus.$on('openChooseImageModal', function(){
+        this.showModal = true
+      }.bind(this))
+    },
+    upload (e) {
+      let file = e.target.files[0];
+      let param = new FormData();
+      param.append('uploadfile',file,file.name);
+      uploadImage(param)
+      .then(function (response) {
+         let data = response.data
+         this.choose(data)
+      }.bind(this))
+      .catch(function (err) {
+        if(err && err.response) {
+          if(err.response.status === 422) {
+            Bus.$emit('openTipModal', err.response.data.msg)
+          }
+        }
+      }.bind(this))
     }
   }
 }
 </script>
 <style scoped lang="less" type="text/less">
-.hide {
-  display: none !important;
+// flex布局水平垂直居中
+.flex-both-center () {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .choose-image-modal {
-  display:  flex;
-  flex-direction: column;
-  width: 34%;
-  height: 60%;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 7%;
-  z-index: 10;
-  font-size: 0.95rem;
   color: #fff;
-  .modal-header {
-    position: relative;
-    height: 15%;
-    font-size: 1.4rem;
-    text-align: center;
-    .modal-btn-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      background-image: url('~@/assets/close.png');
-      background-size: 100%;
-      background-repeat: no-repeat;
-    }
+  .modal-head {
+    height: 3rem;
+    .flex-both-center();
   }
   .modal-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: space-between;
-    margin: 4.5% 6%;
-    margin-top: 2%;
-    overflow: auto;
+    padding: 1rem;
+    padding-top: 0;
+    font-size: 0.9rem;
     .modal-content-line {
       display: flex;
       justify-content: space-between;
-      height: 49%;
+      align-items: center;
+      height: 5rem;
       .line-column {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30%;
+        .flex-both-center();
+        font-size: 3.5rem;
+        height: 4rem;
+        width: 4rem;
+        margin: 0 0.5rem;
         img {
-          width: 100%;
+          height: 4rem;
+          width: 4rem;
+          border-radius: 4rem;
         }
-        &.add-image {
-          font-size: 2rem;
-
+        label {
+          height: 4rem;
+          width: 4rem;
+          border-radius: 4rem;
         }
       }
-    }
-  }
-  .modal-footer {
-    height: 14%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .modal-footer-btn-sure {
-      width: 30%;
-      font-size: 1rem;
-      text-align: center;
-      background-image: url('~@/assets/an-bg01.png');
-      background-size: 100% 100%;
     }
   }
 }
