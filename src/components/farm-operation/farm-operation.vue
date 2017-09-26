@@ -59,7 +59,7 @@ export default {
     display: inline-block;
     height: 100%;
     background-size: 100% 100%;
-    margin: 0 8px;
+    margin: 0 0.2rem;
   }
   .kaidi {
     .nav-ico ('01');

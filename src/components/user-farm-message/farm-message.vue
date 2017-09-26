@@ -70,7 +70,7 @@ export default {
 	color: #fff;
 	* {
 		flex: 1;
-		margin: 0 2%;
+		margin: 0 0.3rem;
 		background-image: url('~@/assets/status-bg.png');
 		background-size: 100% 100%;
 		background-repeat: no-repeat;

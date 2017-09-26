@@ -1,5 +1,8 @@
 <template>
 <!-- 设置 -->
+  <!-- <audio id="mainBgMusic" loop autoplay>
+    <source src=".../assets/bgMusic.mp3" type="audio/mpeg">
+  </audio> -->
   <div class="modal-mask" v-show="showModal">
     <div class="shezhi-modal modal">
       <div class="modal-close" @click="close($event)"></div>
@@ -62,8 +65,8 @@ export default {
         this.showModal = true
       }.bind(this))
     },
-  }，
-  watch : {}
+  }
+  // watch : {}
 }
 </script>
 <style scoped lang="less" type="text/less">

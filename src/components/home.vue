@@ -208,6 +208,7 @@ export default {
       Bus.$on('shifei', function(){
         fertilizer()
         .then(function (respones) {
+          Bus.$emit('refreshData');
           Bus.$emit('openTipModal', respones.data.msg)
         })
         .catch(function (err) {
@@ -224,7 +225,8 @@ export default {
       Bus.$on('jiaoshui', function(){
         irrigation()
         .then(function (respones) {
-          Bus.$emit('openTipModal', '您已经成功浇水~')
+          Bus.$emit('refreshData');
+          Bus.$emit('openTipModal', respones.data.msg)
         })
         .catch(function (err) {
           if(err && err.response) {
@@ -269,11 +271,11 @@ export default {
     },
     // 肥料
     fertilizer () {
-      if(this.is_irrigation){
-        if(this.is_fertilizer){
+      if(this.userData.is_irrigation){
+        if(this.userData.is_fertilizer){
           return 0
         }else{
-          return this.day_fruit
+          return this.userData.day_fruit
         }
       }else{
         return 0

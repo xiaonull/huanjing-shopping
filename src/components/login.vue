@@ -47,7 +47,7 @@
           <div class="content-item">
             <div class="item-label">游戏账号</div>
             <div class="item-input">
-              <input type="text" v-model="DLPhone">
+              <input type="text" v-model="DLPhone" placeholder="请输入手机号">
             </div>
             <div class="item-star"></div>
           </div>
