@@ -18,16 +18,16 @@
   </div>
 </template>
 <script>
-import {getCaifen} from '@/js/allAxiosRequire'
-import IEcharts from 'vue-echarts-v3/src/full.vue';
-export default {
-  name: 'caifentu-modal',
-  data () {
-    return {
-      split: {},
-      showModal: true,
-      loading: false,
-      line: {
+  import {getCaifen} from '@/js/allAxiosRequire'
+  import IEcharts from 'vue-echarts-v3/src/full.vue';
+  export default {
+    name: 'caifentu-modal',
+    data () {
+      return {
+        split: {},
+        showModal: true,
+        loading: false,
+        line: {
         // 背景色可以去掉
         // backgroundColor: 'rgba(0, 0, 0, 0.4)',
         xAxis: {
@@ -154,87 +154,112 @@ export default {
   updated () {
   },
   mounted () {
+    // setTimeout(() => {
+    //   this.setWH();
+    // }, 3000);
     this.setWH()
     this.bindModalEvent()   
   },
   components: {
    IEcharts
+ },
+ methods: {
+  close () {
+    this.showModal = false
   },
-  methods: {
-    close () {
-      this.showModal = false
-    },
-    bindModalEvent () {
-      this.showModal = false
-      Bus.$on('openCaifenModal', function(){
-        getCaifen()
-        .then(function (response) {
-          let data = response.data
-          this.split = data
-          this.showModal = true
-        }.bind(this))
-        .catch(function (err) {
-          if(err && err.response) {
-            if(err.response.status === 422) {
-              Bus.$emit('openTipModal', err.response.data.msg)
-            }
-          }
-        })
+  bindModalEvent () {
+    this.showModal = false
+    Bus.$on('openCaifenModal', function(){
+      getCaifen()
+      .then(function (response) {
+        let data = response.data
+        this.split = data
+        this.showModal = true
       }.bind(this))
-    },
-    setWH () {
-      let chart = $('#chart')
-      chart.children().width(chart.width())
-      chart.children().height(chart.height())
+      .catch(function (err) {
+        if(err && err.response) {
+          if(err.response.status === 422) {
+            Bus.$emit('openTipModal', err.response.data.msg)
+          }
+        }
+      })
+    }.bind(this))
+  },
+  setWH () {
+    let chart = $('#chart')
+    let bodyW = $('body').width
+    if(bodyW < 560) {
+      chart.width('340px')
     }
+    if(bodyW < 540) {
+      chart.width('330px')
+    }
+    if(bodyW >= 560) {
+      chart.width('360px')
+    }
+    if(bodyW >= 580) {
+      chart.width('370px')
+    }
+    if(bodyW >= 600) {
+      chart.width('390px')
+    }
+    
+    chart.height('10rem')
+    chart.children().width(chart.width())
+    chart.children().height(chart.height())
   }
+}
 }
 </script>
 <style scoped lang="less" type="text/less">
-// flex布局水平垂直居中
-.flex-both-center () {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.caifentu-modal {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
-  height: 70%;
-  .modal-head {
-    height: 3rem;
-    .flex-both-center()
+  // flex布局水平垂直居中
+  .flex-both-center () {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .modal-content {
+  .caifentu-modal {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    padding: 0 2rem;
-    padding-bottom: 1.5rem;
-    overflow: hidden;
-    .tab-head {
-      font-size: 0.8rem;
-      height: 2.4rem;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      .tab-head-item {
-        height: 1.6rem;
-        .flex-both-center();
-        background-color: rgba(0, 0, 0, 0.4);
-        border-radius: 1.5rem;
-        width: 6rem;
-      }
+    width: 60%;
+    height: 70%;
+    .modal-head {
+      height: 3rem;
+      .flex-both-center()
     }
-    .tab-content {
+    .modal-content {
+      display: flex;
+      flex-direction: column;
       flex: 1;
+      padding: 0 2rem;
+      padding-bottom: 1.5rem;
       overflow: hidden;
-      .tab-content-item {
-        width: 100%;
-        height: 100%;
+      .tab-head {
+        font-size: 0.8rem;
+        height: 2.4rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .tab-head-item {
+          height: 1.6rem;
+          .flex-both-center();
+          background-color: rgba(0, 0, 0, 0.4);
+          border-radius: 1.5rem;
+          width: 6rem;
+        }
+      }
+      .tab-content {
+        flex: 1;
+        overflow: hidden;
+        .tab-content-item {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
-}
+  #echarts {
+    width: 800px;
+    height: 200px;
+  }
 </style>
