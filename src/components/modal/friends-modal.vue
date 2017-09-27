@@ -13,7 +13,10 @@
         <div class="tabs-content">
           <!-- .friends-list-content -->
           <div class="friends-list-content" v-show="showFriends">
-            <div class="tabs-content-title">一代好友</div>
+            <div class="tabs-content-title" v-show="selectFriendType === 0">总数</div>
+            <div class="tabs-content-title" v-show="selectFriendType === 1">一代好友</div>
+            <div class="tabs-content-title" v-show="selectFriendType === 2">二代好友</div>
+            <div class="tabs-content-title" v-show="selectFriendType === 3">三代好友</div>
             <div class="tabs-content-list-comment">
               <div class="item-list-nicheng">昵称</div>
               <div class="item-list-id">ID</div>
