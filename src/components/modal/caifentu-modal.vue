@@ -2,7 +2,7 @@
   <div class="modal-mask" v-show="showModal">
     <div class="caifentu-modal modal">
       <div class="modal-close" @click="close($event)"></div>
-      <div class="modal-head">精灵岛拆分走势图</div>
+      <div class="modal-head">精灵幻境拆分走势图</div>
       <div class="modal-content">
         <div class="tab-head">
           <div class="tab-head-item" style="color:#EE9E19;">基础拆分率</div>

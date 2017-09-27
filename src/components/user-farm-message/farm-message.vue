@@ -10,9 +10,12 @@
 		<div class="earnings">总收益: {{ earnings }}</div>
 		<!-- 直推奖 -->
 		<div class="directPush">直推奖: {{ directPush }}</div>
+    <!-- 滚动公告 -->
+    <notice-modal></notice-modal>
 	</div>
 </template>
 <script>
+import NoticeModal from '@/components/modal/notice-modal'
 export default {
   name: 'farm-message',
   props: {
@@ -45,6 +48,7 @@ export default {
   	this.setHeight()
   },
   components: {
+    NoticeModal
   },
   methods: {
   	setHeight () {
@@ -68,6 +72,7 @@ export default {
 	margin-top: 2%;
 	font-size: 0.8rem;
 	color: #fff;
+  position: relative;
 	* {
 		flex: 1;
 		margin: 0 0.3rem;
@@ -76,5 +81,8 @@ export default {
 		background-repeat: no-repeat;
 		text-align: center;
 	}
+  .noticeModal {
+    background-image:none;
+  }
 }
 </style>
