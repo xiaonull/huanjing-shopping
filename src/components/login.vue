@@ -24,6 +24,13 @@
                 <div class="input-label">登录密码 : </div>
                 <div class="input"><input type="password" ref="denglumima" v-model.trim="dengluPassword"></div>
               </div>
+              <div class="input-cell">
+                <div class="input-label">记住密码 : </div>
+                <div class="input">
+                  <checkbox name="rememberPsw" class="rememberPsw" v-model="rememberPsw" value="1">
+                  </checkbox>
+                </div>
+              </div>
             </div>
             <div class="main-btn-wrap">
               <div class="main-btn-denglu" ref="dengluBtn"@click="dengluOperation($event)">登录</div>
@@ -158,15 +165,19 @@
   </div>
 </template>
 <script>
-import TipModal from '@/components/modal/tip-modal'
-import {getToken, login, registerSms, register, forgetYanzhengma, forgetPost} from '@/js/allAxiosRequire'
-import util from '@/js/util'
-export default {
-  name: 'login',
-  data () {
-    return {
-      percent: 0,
-      loginType: 'loading',
+  import TipModal from '@/components/modal/tip-modal'
+  import {getToken, login, registerSms, register, forgetYanzhengma, forgetPost} from '@/js/allAxiosRequire'
+  import util from '@/js/util'
+  import Vue from 'vue'
+  import {Checkbox} from 'vue-checkbox-radio'
+  Vue.component('checkbox', Checkbox);
+  export default {
+    name: 'login',
+    data () {
+      return {
+        percent: 0,
+        loginType: 'loading',
+        rememberPsw: true,
       // 注册的数据
       DLPhone: '',
       DLName: '',
@@ -176,8 +187,8 @@ export default {
       DLWeixin: '',
       DLYanzheng: '',
       // 登录的数据
-      dengluAccount: '',
-      dengluPassword: '',
+      dengluAccount: localStorage.userName ? localStorage.userName : '',
+      dengluPassword: localStorage.password ? localStorage.password : '',
       // 忘记密码的数据
       forgetPnone: '',
       forgetYanzhengma: '',
@@ -186,7 +197,7 @@ export default {
       // 倒计时
       ZCdaojishi: 0,
       WJdaojishi: 0
-}
+    }
   },
   computed: {
     ZCdaojishimiao () {
@@ -227,6 +238,7 @@ export default {
     },
     // 登录操作请求
     dengluOperation (e) {
+      // console.log(this.rememberPsw);
       if(this.dengluAccount === '') {
         Bus.$emit('openTipModal', '登录账号不能为空')
         return
@@ -239,7 +251,15 @@ export default {
       .then(function (response) {
         let data = response.data
         if(data.error === 0){
-          this.$router.push({path: '/'})
+          // 登录成功
+          if(this.rememberPsw) {
+            localStorage.userName = this.dengluAccount;
+            localStorage.password = this.dengluPassword;
+          }else {
+            localStorage.removeItem("userName");
+            localStorage.removeItem("password");
+          }
+          this.$router.push({path: '/'});
         }
       }.bind(this))
       .catch(function (err) {
@@ -364,87 +384,338 @@ export default {
 }
 </script>
 <style scoped lang="less" type="text/less">
-.flex-both-center () {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.hide {
-  display: none !important;
-}
-.modal-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-}
-.login {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-image: url('~@/assets/login-body-bg.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  color: #fff;
-  .denglu {
-    .flex-both-center();
-    background-image: url('~@/assets/box-bg.png');
+  .flex-both-center () {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .hide {
+    display: none !important;
+  }
+  .modal-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+  }
+  .login {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url('~@/assets/login-body-bg.jpg');
+    background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 40% 16rem;
-    .login-denglu {
-      position: relative;
-      overflow: hidden;
-      width: 40%;
-      height: 100%;
-      .denglu-logo {
+    color: #fff;
+    .denglu {
+      .flex-both-center();
+      background-image: url('~@/assets/box-bg.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 40% 16rem;
+      .login-denglu {
+        position: relative;
+        overflow: hidden;
+        width: 40%;
         height: 100%;
-        width: 100%;
+        .denglu-logo {
+          height: 100%;
+          width: 100%;
+          background-image: url('~@/assets/logo.png');
+          background-size: 100% auto;
+          background-position: center center;
+          background-repeat: no-repeat;
+          transform: translateY(-8rem);
+          z-index: 1;
+        }
+        .denglu-content {
+          box-sizing: border-box;
+          padding: 1.5rem 10%;
+          position: absolute;
+          width: 100%;
+          height: 18rem;
+          top: 50%;
+          transform: translateY(-8rem);
+          z-index: 2;
+          .denglu-main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .main-input-wrap {
+              .input-cell {
+                display: flex;
+                height: 3rem;
+                .input-label {
+                  flex: 1;
+                  font-size: 0.88rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                }
+                .input {
+                  flex: 2;
+                  .flex-both-center();
+                  input {
+                    padding: 0;
+                    padding: 0 1rem;
+                    width: 100%;
+                    box-sizing: border-box;
+                    height: 1.6rem;
+                    line-height: 1.6rem;
+                    border-radius: 1.6rem;
+                  }
+                  .rememberPsw {
+                    position: relative;
+                    left: -4rem;
+                    top: 0.1rem;
+                  }
+                }
+              }
+            }
+            .main-btn-wrap {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              padding-top: 0.5rem;
+              .main-btn-denglu {
+                height: 2rem;
+                border-radius: 2rem;
+                width: 100%;
+                background-color: #3db3e0;
+                .flex-both-center();
+              }
+              .main-btn-other-wrap {
+                flex: 1;
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                * {
+                  font-size: 0.75rem;
+                  height: 1rem;
+                  .flex-both-center();
+                }
+              }
+            }
+          }
+        }
+      }    
+    }
+    .loading {
+      .login-loading {
+        position: absolute;
+        z-index: 1;
+        left: 50%;
+        width: 45%;
+        height: 100%;
+        transform: translateX(-50%);
         background-image: url('~@/assets/logo.png');
         background-size: 100% auto;
-        background-position: center center;
+        background-position: center 25%;
         background-repeat: no-repeat;
-        transform: translateY(-8rem);
-        z-index: 1;
+        .login-loading-bar {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          height: 40%;
+          width: 80%;
+          background-image: url('~@/assets/load-bg.png');
+          background-size: 100% auto;
+          background-position: center center;
+          background-repeat: no-repeat;
+          .login-loading-dot {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);        
+            width: 20%;
+            height: 20%;
+            background-image: url('~@/assets/load-dian.png');
+            background-size: 100% auto;
+            background-position: center center;
+            background-repeat: no-repeat;
+          }
+          .login-loading-percent {
+            position: absolute;
+            top: 60%;
+            width: 100%;
+            text-align: center;
+            color: red;
+            font-size: 0.9rem;
+          }
+        }
       }
-      .denglu-content {
-        box-sizing: border-box;
-        padding: 2rem 10%;
-        position: absolute;
-        width: 100%;
-        height: 16rem;
-        top: 50%;
-        transform: translateY(-8rem);
-        z-index: 2;
-        .denglu-main {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          .main-input-wrap {
-            .input-cell {
-              display: flex;
-              height: 3rem;
-              .input-label {
-                flex: 1;
-                font-size: 0.88rem;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
+    }
+    .zhuce {
+      .flex-both-center();
+      background-image: url('~@/assets/logo.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 45% auto;
+      .zhuce-modal {
+        width: 45%;
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.4);
+        .modal-head {
+          .flex-both-center();
+          font-size: 1.1rem;
+          height: 3rem;
+        }
+        .modal-content {
+          padding: 0 1rem;
+          .content-item {
+            display: flex;
+            height: 2.4rem;
+            .item-label {
+              flex: 3;
+              .flex-both-center();
+              font-size: 0.85rem;
+            }
+            .item-input {
+              flex: 6;
+              .flex-both-center();
+              > input {
+                padding: 0 1em;
+                box-sizing: border-box;
+                width: 100%;
+                height: 1.5rem;
+                line-height: 1.5rem;
+                border-radius: 1.5rem;
               }
-              .input {
-                flex: 2;
+              .input-yanzheng {
+                flex: 1;
                 .flex-both-center();
                 input {
-                  padding: 0;
+                  box-sizing: border-box;
                   padding: 0 1rem;
                   width: 100%;
+                  height: 1.5rem;
+                  border-radius: 1.5rem;
+                  line-height: 1.5rem;
+                }
+              }
+              .btn-yanzheng {
+                flex: 1;
+                margin-left: 0.5rem;
+                height: 1.5rem;
+                .flex-both-center();
+                .yanzheng {
+                  width: 100%;
+                  height: 1.5rem;
+                  .flex-both-center();
+                  color: #fff;
+                  font-size: 0.65rem;
+                  background-color: #00b8ff;
+                  border-radius: 1.5rem;
+                  line-height: 1.5rem;
+                }
+              }
+            }
+            .item-star {
+              flex: 1;
+              .flex-both-center();
+              &:after {
+                content: '*';
+                font-size: 0.8rem;
+                color: red;
+              }
+            }
+          }
+        }
+        .modal-foot {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 3.5rem;
+          padding: 0 1rem;
+          .btn-zhuce {
+            .flex-both-center();
+            width: 5rem;
+            height: 1.8rem;
+            font-size: 1rem;
+            border-radius: 1.8rem;
+            background-color: #00b8ff;
+          }
+          .btn-to-denglu {
+            a {
+              font-size: 0.75rem;
+              color: #fff;
+            }
+          }
+          .btn-to-forget {
+            a {
+              font-size: 0.75rem;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+    .forget {
+      .flex-both-center();
+      background-image: url('~@/assets/logo.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 45% auto;
+      .forget-modal {
+        width: 45%;
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.4);
+        .modal-head {
+          .flex-both-center();
+          font-size: 1.1rem;
+          height: 3rem;
+        }
+        .modal-content {
+          padding: 0 1rem;
+          .content-item {
+            display: flex;
+            height: 2.4rem;
+            .item-label {
+              flex: 3;
+              .flex-both-center();
+              font-size: 0.85rem;
+            }
+            .item-input {
+              flex: 6;
+              .flex-both-center();
+              > input {
+                padding: 0 1em;
+                box-sizing: border-box;
+                width: 100%;
+                height: 1.5rem;
+                line-height: 1.5rem;
+                border-radius: 1.5rem;
+              }
+              .input-yanzheng {
+                flex: 1;
+                .flex-both-center();
+                input {
                   box-sizing: border-box;
-                  height: 1.6rem;
-                  line-height: 1.6rem;
-                  border-radius: 1.6rem;
+                  padding: 0 1rem;
+                  width: 100%;
+                  height: 1.5rem;
+                  border-radius: 1.5rem;
+                  line-height: 1.5rem;
+                }
+              }
+              .btn-yanzheng {
+                flex: 1;
+                margin-left: 0.5rem;
+                height: 1.5rem;
+                .flex-both-center();
+                .yanzheng {
+                  width: 100%;
+                  height: 1.5rem;
+                  .flex-both-center();
+                  color: #fff;
+                  font-size: 0.65rem;
+                  background-color: #00b8ff;
+                  border-radius: 1.5rem;
+                  line-height: 1.5rem;
                 }
               }
             }
@@ -455,7 +726,7 @@ export default {
             flex-direction: column;
             align-items: center;
             padding-top: 1rem;
-            .main-btn-denglu {
+            .main-btn-forget {
               height: 2rem;
               border-radius: 2rem;
               width: 100%;
@@ -466,6 +737,7 @@ export default {
               flex: 1;
               display: flex;
               width: 100%;
+              height: 4rem;
               justify-content: space-between;
               align-items: center;
               * {
@@ -477,254 +749,7 @@ export default {
           }
         }
       }
-    }    
-  }
-  .loading {
-    .login-loading {
-      position: absolute;
-      z-index: 1;
-      left: 50%;
-      width: 45%;
-      height: 100%;
-      transform: translateX(-50%);
-      background-image: url('~@/assets/logo.png');
-      background-size: 100% auto;
-      background-position: center 25%;
-      background-repeat: no-repeat;
-      .login-loading-bar {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 40%;
-        width: 80%;
-        background-image: url('~@/assets/load-bg.png');
-        background-size: 100% auto;
-        background-position: center center;
-        background-repeat: no-repeat;
-        .login-loading-dot {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);        
-          width: 20%;
-          height: 20%;
-          background-image: url('~@/assets/load-dian.png');
-          background-size: 100% auto;
-          background-position: center center;
-          background-repeat: no-repeat;
-        }
-        .login-loading-percent {
-          position: absolute;
-          top: 60%;
-          width: 100%;
-          text-align: center;
-          color: red;
-          font-size: 0.9rem;
-        }
-      }
     }
   }
-  .zhuce {
-    .flex-both-center();
-    background-image: url('~@/assets/logo.png');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 45% auto;
-    .zhuce-modal {
-      width: 45%;
-      border-radius: 1rem;
-      background-color: rgba(0, 0, 0, 0.4);
-      .modal-head {
-        .flex-both-center();
-        font-size: 1.1rem;
-        height: 3rem;
-      }
-      .modal-content {
-        padding: 0 1rem;
-        .content-item {
-          display: flex;
-          height: 2.4rem;
-          .item-label {
-            flex: 3;
-            .flex-both-center();
-            font-size: 0.85rem;
-          }
-          .item-input {
-            flex: 6;
-            .flex-both-center();
-            > input {
-              padding: 0 1em;
-              box-sizing: border-box;
-              width: 100%;
-              height: 1.5rem;
-              line-height: 1.5rem;
-              border-radius: 1.5rem;
-            }
-            .input-yanzheng {
-              flex: 1;
-              .flex-both-center();
-              input {
-                box-sizing: border-box;
-                padding: 0 1rem;
-                width: 100%;
-                height: 1.5rem;
-                border-radius: 1.5rem;
-                line-height: 1.5rem;
-              }
-            }
-            .btn-yanzheng {
-              flex: 1;
-              margin-left: 0.5rem;
-              height: 1.5rem;
-              .flex-both-center();
-              .yanzheng {
-                width: 100%;
-                height: 1.5rem;
-                .flex-both-center();
-                color: #fff;
-                font-size: 0.65rem;
-                background-color: #00b8ff;
-                border-radius: 1.5rem;
-                line-height: 1.5rem;
-              }
-            }
-          }
-          .item-star {
-            flex: 1;
-            .flex-both-center();
-            &:after {
-              content: '*';
-              font-size: 0.8rem;
-              color: red;
-            }
-          }
-        }
-      }
-      .modal-foot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 3.5rem;
-        padding: 0 1rem;
-        .btn-zhuce {
-          .flex-both-center();
-          width: 5rem;
-          height: 1.8rem;
-          font-size: 1rem;
-          border-radius: 1.8rem;
-          background-color: #00b8ff;
-        }
-        .btn-to-denglu {
-          a {
-            font-size: 0.75rem;
-            color: #fff;
-          }
-        }
-        .btn-to-forget {
-          a {
-            font-size: 0.75rem;
-            color: #fff;
-          }
-        }
-      }
-    }
-  }
-  .forget {
-    .flex-both-center();
-    background-image: url('~@/assets/logo.png');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 45% auto;
-    .forget-modal {
-      width: 45%;
-      border-radius: 1rem;
-      background-color: rgba(0, 0, 0, 0.4);
-      .modal-head {
-        .flex-both-center();
-        font-size: 1.1rem;
-        height: 3rem;
-      }
-      .modal-content {
-        padding: 0 1rem;
-        .content-item {
-          display: flex;
-          height: 2.4rem;
-          .item-label {
-            flex: 3;
-            .flex-both-center();
-            font-size: 0.85rem;
-          }
-          .item-input {
-            flex: 6;
-            .flex-both-center();
-            > input {
-              padding: 0 1em;
-              box-sizing: border-box;
-              width: 100%;
-              height: 1.5rem;
-              line-height: 1.5rem;
-              border-radius: 1.5rem;
-            }
-            .input-yanzheng {
-              flex: 1;
-              .flex-both-center();
-              input {
-                box-sizing: border-box;
-                padding: 0 1rem;
-                width: 100%;
-                height: 1.5rem;
-                border-radius: 1.5rem;
-                line-height: 1.5rem;
-              }
-            }
-            .btn-yanzheng {
-              flex: 1;
-              margin-left: 0.5rem;
-              height: 1.5rem;
-              .flex-both-center();
-              .yanzheng {
-                width: 100%;
-                height: 1.5rem;
-                .flex-both-center();
-                color: #fff;
-                font-size: 0.65rem;
-                background-color: #00b8ff;
-                border-radius: 1.5rem;
-                line-height: 1.5rem;
-              }
-            }
-          }
-        }
-        .main-btn-wrap {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding-top: 1rem;
-          .main-btn-forget {
-            height: 2rem;
-            border-radius: 2rem;
-            width: 100%;
-            background-color: #3db3e0;
-            .flex-both-center();
-          }
-          .main-btn-other-wrap {
-            flex: 1;
-            display: flex;
-            width: 100%;
-            height: 4rem;
-            justify-content: space-between;
-            align-items: center;
-            * {
-              font-size: 0.75rem;
-              height: 1rem;
-              .flex-both-center();
-            }
-          }
-        }
-      }
-    }
-  }
-}
 </style>
 
