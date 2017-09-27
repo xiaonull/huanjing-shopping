@@ -31,7 +31,7 @@
 		left: 0;
 		width: 300px;
 		height: 1.8rem !important;
-		line-height: 0rem !important;
+		line-height: 0.1rem !important;
 		color: #fff;
 		background-color: rgba(0, 0, 0, 0.4);
 		border-radius: 1rem;

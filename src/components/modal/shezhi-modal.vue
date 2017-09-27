@@ -1,8 +1,8 @@
 <template>
   <!-- 设置 -->
-  <audio id="mainBgMusic" ref="mainBgMusic" loop autoplay>
-    <source src="/music/back.mp3" type="audio/mpeg">
-  </audio>
+  <!-- <audio id="mainBgMusic" ref="mainBgMusic" loop autoplay>
+    <source src="/static/music/back.mp3" type="audio/mpeg">
+  </audio> -->
   <div class="modal-mask" v-show="showModal">
     <div class="shezhi-modal modal">
       <div class="modal-close" @click="close($event)"></div>
@@ -41,7 +41,7 @@
       return {
         sound: true,
         soundEffect: true,
-        showModal: true
+        showModal: false
       }
     },
     mounted () {
@@ -49,7 +49,8 @@
         if(!localStorage.musicFlag) {
           localStorage.musicFlag = 'open';
         }
-        var mainBgMusic = this.$refs.mainBgMusic;
+        // var mainBgMusic = this.$refs.mainBgMusic;
+        var mainBgMusic = document.getElementById('mainBgMusic');;
         console.log('mounted: ' + mainBgMusic);
         if(localStorage.musicFlag === 'close') {
           // 关闭音乐
@@ -69,7 +70,8 @@
       },
       clickSound () {
         console.log(localStorage.musicFlag);
-        var mainBgMusic = this.$refs.mainBgMusic;
+        // var mainBgMusic = this.$refs.mainBgMusic;
+        var mainBgMusic = document.getElementById('mainBgMusic');
         console.log(this.sound);
 
         if(localStorage.musicFlag === 'open') {
