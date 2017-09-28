@@ -30,11 +30,17 @@
             </div>
           </div>
         </div>
+        <div class="modal-content-cell">
+          <button class="logout" @click="logout">退出游戏</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import {logout} from '@/js/allAxiosRequire'
+  import util from '@/js/util'
+
   export default {
     name: 'shezhi-modal',
     data () {
@@ -65,6 +71,17 @@
     components: {
     },
     methods: {
+      logout() {
+        logout()
+        .then(function (response) {
+          this.$router.push({path: '/login'});
+          util.setSession('Token', '');
+        })
+        .catch(function (err) {
+          this.$router.push({path: '/login'});
+          util.setSession('Token', '');
+        }.bind(this))
+      },
       close () {
         this.showModal = false
       },
@@ -173,6 +190,16 @@
               }
             }
           }
+        }
+        .logout {
+          border: none;
+          border-radius: 3rem;
+          background-color: #e37f2c;
+          padding: 0.1rem 1rem;
+          height: 2rem;
+          font-size: 0.8rem;
+          color: #fff;
+          margin: 0.7rem auto;
         }
       }
     }

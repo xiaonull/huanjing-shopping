@@ -162,6 +162,7 @@
       </div>
     </div>
     <tip-modal></tip-modal>
+    <a class="recordNumber" href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17043533号</a>
   </div>
 </template>
 <script>
@@ -384,6 +385,15 @@
 }
 </script>
 <style scoped lang="less" type="text/less">
+  .recordNumber {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+    font-size: 0.6rem;
+    color: #fff;
+    text-decoration: none;
+  }
   .flex-both-center () {
     display: flex;
     justify-content: center;

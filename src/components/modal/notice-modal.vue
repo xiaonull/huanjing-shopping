@@ -31,6 +31,7 @@
 		left: 0;
 		width: 300px;		
 		color: #fff;
+		overflow-y: hidden;
 		background-color: rgba(0, 0, 0, 0.4);
 		border-radius: 1rem;
 		overflow-x: hidden;

@@ -554,3 +554,15 @@ export function getCaifen () {
     }
   })
 }
+
+export function logout () {
+  let url = 'logout'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}

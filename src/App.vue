@@ -2,7 +2,7 @@
   <div id="app" class="cross">
     <!-- <img src="./assets/logo.png"> -->
     <router-view></router-view>
-    <a class="recordNumber" href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17043533号</a>
+    <!-- <a class="recordNumber" href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17043533号</a> -->
   </div>
 </template>
 
@@ -44,7 +44,7 @@
   .vertical {
     position: absolute;
   }
-  #app .recordNumber {
+  /*#app .recordNumber {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
@@ -52,5 +52,5 @@
     font-size: 0.6rem;
     color: #fff;
     text-decoration: none;
-  }
+  }*/
 </style>
