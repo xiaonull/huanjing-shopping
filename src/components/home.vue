@@ -133,6 +133,8 @@ export default {
     this.jiaoshuiEvent()
     this.refreshDataEvent()
     this.setCurrentCellEvent()
+    // 隐藏备案号
+    $('.recordNumber').css('display', 'none');
   },
   components: {
     Farm,

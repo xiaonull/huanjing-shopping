@@ -14,7 +14,9 @@ export default {
     return {}
   },
   mounted () {
-    this.setButtonHeight()
+    crossScreen().then(()=>{
+      this.setButtonHeight()
+    });
   },
   methods: {
     setButtonHeight () {

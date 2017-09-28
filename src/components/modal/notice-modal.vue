@@ -29,13 +29,17 @@
 		position: absolute;
 		top: 3rem;
 		left: 0;
-		width: 300px;
-		height: 1.8rem !important;
-		line-height: 0.1rem !important;
+		width: 300px;		
 		color: #fff;
 		background-color: rgba(0, 0, 0, 0.4);
 		border-radius: 1rem;
 		overflow-x: hidden;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-justify-content: center;
+		justify-content: center;
 		p {
 			font-size: 0.6rem;
 			position: relative;
