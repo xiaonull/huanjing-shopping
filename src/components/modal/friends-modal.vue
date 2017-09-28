@@ -4,10 +4,11 @@
       <div class="modal-close" @click="close($event)"></div>
       <div class="modal-content">
         <div class="tabs-head">
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 0}" @click="clickFriend('0', $event)">总数</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 1}" @click="clickFriend('1', $event)">一代好友</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 2}" @click="clickFriend('2', $event)">二代好友</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 3}" @click="clickFriend('3', $event)">三代好友</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 0}" @click="clickFriend('0', $event)">总数（{{allFriendsNum}}）</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 1}" @click="clickFriend('1', $event)">一代好友（{{level1Num}}）</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 2}" @click="clickFriend('2', $event)">二代好友（{{level2Num}}）</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 3}" @click="clickFriend('3', $event)">三代好友（{{level3Num}}）</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 5}" @click="clickLeaderReward($event)">领导奖提现</div>
           <!-- <div class="tabs-head-item" :class="{'head-select': selectFriendType == 4}" @click="clickReward($event)">奖励明细</div> -->
         </div>
         <div class="tabs-content">
@@ -39,8 +40,40 @@
               <div class="list-footer-btn" @click="allGather($event)" :class="{'btn-disable': !hasCaimi}">一键采蜜</div>
             </div>
           </div>
+          <!-- 领导奖面板 -->
+          <div class="leaderReward-list-content" v-show="!showFriends">
+            <h2>个人信息</h2>
+            <div class="formGroup">
+              <div class="from">
+                <label>账 户：</label>
+                <input type="text" v-model="account">
+              </div>
+              <div class="from">
+                <label>账户名：</label>
+                <input type="text" v-model="accountName">
+              </div>
+              <div class="from">
+                <label>类 型：</label>
+                <div class="radios">
+                  <radio name="payType" v-model="payType" value="微信">
+                    微 信
+                  </radio>
+                  <radio name="payType" v-model="payType" value="支付宝">
+                    支付宝
+                  </radio>
+                </div>
+              </div>
+              <div class="from">
+                <label>备 注：</label>
+                <input type="text" v-model="remark">
+              </div>
+              <div class="from">
+                <button class="sure" @click="withdrawals">确认提现</button>
+              </div>
+            </div>
+          </div>
           <!-- .reward-list-content -->
-          <div class="reward-list-content" v-show="!showFriends">
+          <!-- <div class="reward-list-content" v-show="!showFriends">
             <div class="tabs-content-list-comment">
               <div class="item-list-time">时间</div>
               <div class="item-list-id">ID</div>
@@ -53,7 +86,7 @@
                 <div class="item-list-reward">20</div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -61,7 +94,11 @@
 </div>
 </template>
 <script>
-  import {getFriends, oneGather, simplyGather} from '@/js/allAxiosRequire'
+  import Vue from 'vue'
+  import {getFriends, oneGather, simplyGather, leaderRewardWithdrawals} from '@/js/allAxiosRequire'
+  import {Radio} from 'vue-checkbox-radio';
+  Vue.component('radio', Radio);
+
   export default {
     name: 'frends-modal',
     props: ['isOneGather'],
@@ -73,7 +110,14 @@
         selectFriendType: 0,
         selectFriends: [],
         showFriends: true,
-        hasCaimi: false
+        hasCaimi: false,
+        level1Num: 0,
+        level2Num: 0,
+        level3Num: 0,
+        account: '',
+        accountName: '',
+        payType: '微信',
+        remark: ''
       }
     },
     mounted () {
@@ -82,6 +126,9 @@
     components: {
     },
     computed: {
+      allFriendsNum() {
+        return this.level1Num + this.level2Num + this.level3Num;
+      }
     },
     watch: {
       allFriends (value) {
@@ -105,6 +152,21 @@
           .then(function (respones) {
             this.selectFriends = this.allFriends = respones.data.friends
             this.showModal = true
+            let level1 = 0;
+            let level2 = 0;
+            let level3 = 0;
+            for (let i = 0; i < this.allFriends.length; i++) {
+              if(this.allFriends[i].level == 1) {
+                level1++;
+              }else if(this.allFriends[i].level == 2) {
+                level2++;
+              }else if(this.allFriends[i].level == 3) {
+                level3++;
+              }
+            }  
+            this.level1Num = level1;
+            this.level2Num = level2;
+            this.level3Num = level3;
           }.bind(this))
           .catch(function (err) {
             if(err && err.response) {
@@ -136,6 +198,10 @@
         }
         this.showFriends = true
       },
+      clickLeaderReward() {
+        this.selectFriendType = 5;
+        this.showFriends = false;
+      },
       clickReward (event) {
         this.selectFriendType = 4
         this.showFriends = false
@@ -164,6 +230,22 @@
           let msg = respones.data.msg
           Bus.$emit('openTipModal', msg)
           Bus.$emit('openFriendsModal')
+          Bus.$emit('refreshData')
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+        })
+      },
+      withdrawals() {
+        leaderRewardWithdrawals(this.account, this.accountName, this.payType, this.remark)
+        .then(function (respones) {
+          let msg = respones.data.msg
+          Bus.$emit('openTipModal', msg)
+          // Bus.$emit('openFriendsModal')
           Bus.$emit('refreshData')
         }.bind(this))
         .catch(function (err) {
@@ -217,7 +299,6 @@
         height: 100%;
         background: white;
         background-color: rgba(0, 0, 0, 0.4);
-        // 好友列表的样式
         .friends-list-content {
           width: 100%;
           height: 100%;
@@ -300,7 +381,52 @@
             }
           }
         }
-        // 奖励明细的样式
+        .leaderReward-list-content {
+          text-align: center;
+          h2 {
+            font-size: 1rem;
+          }
+          .formGroup {
+            .from {
+              overflow: hidden;
+              margin-top: 1.2rem;
+              label {
+                display: inline-block;
+                width: 25%;
+                text-align: right;
+                float: left;
+                margin-left: 1rem;
+                font-size: 0.8rem;
+              }
+              input {
+                width: 55%;
+                float: right;
+                margin-right: 1rem;
+                border-radius: 0.5rem;
+                padding-left: 0.8rem;
+                height: 1rem;
+                font-size: 0.8rem;
+              }
+              .radios {
+                .radio-component {
+                  display: inline-block;
+                  font-size: 0.8rem;
+                  position: relative;
+                  top: -0.1rem;
+                }
+              }
+              .sure {
+                border: none;
+                background-color: #bb6523;
+                color: #fff;
+                border-radius: 1rem;
+                padding: 0.2rem 0.8rem;
+                margin-top: 0.3rem;
+                font-size: 0.8rem;
+              }
+            }
+          }
+        }
         .reward-list-content {
           width: 100%;
           height: 100%;

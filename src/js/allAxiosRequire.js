@@ -233,6 +233,24 @@ export function simplyGather (friendId) {
   })
 }
 
+// 领导奖提现
+export function leaderRewardWithdrawals (account, accountName, payType, remark) {
+  let url = '/user/draw'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      account: account,
+      name: accountName,
+      type: payType,
+      desc: remark
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
 // 定向交易=》待收米
 export function dxSell () {
   let url = 'user/trade/dxsell'

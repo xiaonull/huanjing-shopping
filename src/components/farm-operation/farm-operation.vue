@@ -51,6 +51,7 @@ export default {
   left: 50%;
   bottom: 3%;
   z-index: 7;
+  width: 70%;
 	height: 12%;
   text-align: center;
   transform: translateX(-50%);
