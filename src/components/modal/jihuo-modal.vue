@@ -193,7 +193,7 @@
           }
           .code-list {
             flex: 1;
-            overflow: auto;
+            overflow: scroll;
             .code-list-item {
               display: flex;
               height: 1.5rem;
