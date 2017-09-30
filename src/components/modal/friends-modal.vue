@@ -49,11 +49,11 @@
             <div class="formGroup">
               <div class="from">
                 <label>账 户：</label>
-                <input type="text" v-model="account">
+                <input type="text" v-model="account" placeholder="请输入微信或支付宝账户">
               </div>
               <div class="from">
                 <label>账户名：</label>
-                <input type="text" v-model="accountName">
+                <input type="text" v-model="accountName" placeholder="请输入姓名或昵称">
               </div>
               <div class="from">
                 <label>类 型：</label>
@@ -68,7 +68,7 @@
               </div>
               <div class="from">
                 <label>备 注：</label>
-                <input type="text" v-model="remark">
+                <input type="text" v-model="remark" placeholder="请填写联系方式或其他">
               </div>
               <div class="from">
                 <button class="sure" @click="withdrawals">确认提现</button>
