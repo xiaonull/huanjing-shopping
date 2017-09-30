@@ -17,7 +17,7 @@
               <div class="title-user-id">使用者ID</div>
             </div>
             <!-- 滚动条 -->
-            <div id="wrapper">
+            <div id="jihumaWrapper">
               <div class="code-list">
                 <div class="code-list-item" v-for="item in codes">
                   <div class="code">{{ item.key }}</div>
@@ -103,7 +103,7 @@
           this.$nextTick(() => {
             // 初始化scroll
             if(!this.scroll) {
-              this.scroll = new iScroll('wrapper', {
+              this.scroll = new iScroll('jihumaWrapper', {
                 scrollbarClass: 'myScrollbar',
                 hScroll: true,
                 hScrollbar: true,
@@ -250,5 +250,8 @@
         }
       }
     }
+  }
+  #jihumaWrapper {
+    position: relative;
   }
 </style>

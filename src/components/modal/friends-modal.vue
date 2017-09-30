@@ -24,12 +24,15 @@
               <div class="item-list-mishu">蜜数</div>
               <div class="item-list-caozuo">操作</div>
             </div>
-            <div class="item-list-content">
-              <div class="item-list-item" v-for="item in selectFriends" :key="item.id">
-                <div class="item-list-nicheng">{{ item.nick }}</div>
-                <div class="item-list-id">{{ item.id }}</div>
-                <div class="item-list-mishu">{{ item.day_fruit }}</div>
-                <div class="item-list-caozuo"><a href="javascript:void(0)" :data-id="item.id" v-show="item.gather ? false : true" @click="gather($event)">采蜜</a></div>
+            <!-- 滚动条 -->
+            <div id="friendsWrapper">
+              <div class="item-list-content">
+                <div class="item-list-item" v-for="item in selectFriends" :key="item.id">
+                  <div class="item-list-nicheng">{{ item.nick }}</div>
+                  <div class="item-list-id">{{ item.id }}</div>
+                  <div class="item-list-mishu">{{ item.day_fruit }}</div>
+                  <div class="item-list-caozuo"><a href="javascript:void(0)" :data-id="item.id" v-show="item.gather ? false : true" @click="gather($event)">采蜜</a></div>
+                </div>
               </div>
             </div>
             <!-- <span>{{isOneGather}}</span> -->
@@ -167,6 +170,23 @@
             this.level1Num = level1;
             this.level2Num = level2;
             this.level3Num = level3;
+            
+            this.$nextTick(() => {
+              // 初始化scroll
+              if(!this.scroll) {
+                this.scroll = new iScroll('friendsWrapper', {
+                  scrollbarClass: 'myScrollbar',
+                  hScroll: true,
+                  hScrollbar: true,
+                  vScroll: true,
+                  vScrollbar: true,
+                  hideScrollbar: false,  
+                }); 
+              }else {
+                this.scroll.refresh();
+              }
+            })
+
           }.bind(this))
           .catch(function (err) {
             if(err && err.response) {
@@ -197,6 +217,23 @@
           this.selectFriends = newSelect
         }
         this.showFriends = true
+        
+        this.$nextTick(() => {
+          // 初始化scroll
+          if(!this.scroll) {
+            this.scroll = new iScroll('friendsWrapper', {
+              scrollbarClass: 'myScrollbar',
+              hScroll: true,
+              hScrollbar: true,
+              vScroll: true,
+              vScrollbar: true,
+              hideScrollbar: false,  
+            }); 
+          }else {
+            this.scroll.refresh();
+          }
+        })
+
       },
       clickLeaderReward() {
         this.selectFriendType = 5;
@@ -331,7 +368,6 @@
             }
           }
           .item-list-content {
-            height: 50%;
             overflow: auto;
             .item-list-item {
               width: 100%;
@@ -474,5 +510,9 @@
         }
       }
     }
+  }
+  #friendsWrapper {
+    position: relative;
+    height: 50%;
   }
 </style>
