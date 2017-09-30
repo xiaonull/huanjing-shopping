@@ -16,12 +16,15 @@
               <div class="title-recommend-id">推荐人ID</div>
               <div class="title-user-id">使用者ID</div>
             </div>
-            <div class="code-list">
-              <div class="code-list-item" v-for="item in codes">
-                <div class="code">{{ item.key }}</div>
-                <div class="code-usertype">{{ item.user_type == 1 ? '正常用户' : '测试用户' }}</div>
-                <div class="code-recommend-id">{{ item.recommend_id }}</div>
-                <div class="code-user-id">{{ item.user ? item.user.id : '未使用' }}</div>
+            <!-- 滚动条 -->
+            <div id="wrapper">
+              <div class="code-list">
+                <div class="code-list-item" v-for="item in codes">
+                  <div class="code">{{ item.key }}</div>
+                  <div class="code-usertype">{{ item.user_type == 1 ? '正常用户' : '测试用户' }}</div>
+                  <div class="code-recommend-id">{{ item.recommend_id }}</div>
+                  <div class="code-user-id">{{ item.user ? item.user.id : '未使用' }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -65,7 +68,7 @@
       }
     },
     mounted () {
-      this.bindModalEvent()
+      this.bindModalEvent();
     },
     components: {
     },
@@ -96,6 +99,26 @@
         .then(function (response) {
           let data = response.data
           this.codes = data.actcode_list
+
+          this.$nextTick(() => {
+            // 初始化scroll
+            if(!this.scroll) {
+              this.scroll = new iScroll('wrapper', {
+                scrollbarClass: 'myScrollbar',
+                hScroll: true,
+                hScrollbar: true,
+                vScroll: true,
+                vScrollbar: true,
+                hideScrollbar: false,  
+              }); 
+            }else {
+              this.scroll.refresh();
+            }
+          })
+          document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+          }, false);
+
         }.bind(this))
         .catch(function (err) {
           if(err && err.response) {
