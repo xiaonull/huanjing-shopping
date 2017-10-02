@@ -32,6 +32,7 @@
         // backgroundColor: 'rgba(0, 0, 0, 0.4)',
         xAxis: {
           type: 'category',
+          boundaryGap: false,
           axisLine: {
             lineStyle: {
               color: '#FFF'
@@ -43,7 +44,7 @@
             showMinLabel: true
           },
           axisTick: {
-            length: -200,
+            length: -130,
             color: '#fff'
           },
           color: '#fff',
@@ -53,7 +54,13 @@
         },
         yAxis: {
           type: 'value',
-          splitNumber: 2,
+          boundaryGap: ['0.1', '0.1'],
+          axisLabel: {
+            formatter: '{value}'
+          },
+          min: 0,
+          max: 4,
+          splitNumber: 1,
           splitLine: {
             lineStyle: {
               type: 'solid',
@@ -66,7 +73,7 @@
           },
           axisLine: {
             lineStyle: {
-              color: 'rgba(0,0,0,0)'
+              color: 'rgba(0, 0, 0, 0)'
             }
           },
         },
@@ -111,16 +118,16 @@
   },
   watch: {
     split (value) {
-      if(value.system_split.length === 0) {
-        return
+     if(value.system_split.length === 0) {
+      return
+    }
+    if(value.user_split.length === 0) {
+      let date = []
+      let base = []
+      for (var i = value.system_split.length - 1; i < 0; i--) {
+        date.push(value.system_split[i].date)
+        base.push(value.system_split[i].value)
       }
-      if(value.user_split.length === 0) {
-        let date = []
-        let base = []
-        for (var i = value.system_split.length - 1; i < 0; i--) {
-          date.push(value.system_split[i].date)
-          base.push(value.system_split[i].value)
-        }
         // 横坐标
         this.line.xAxis.data = date
         // 基础
@@ -135,11 +142,11 @@
         let user = []
         for (var i = 0; i < value.system_split.length; i++) {
           date.push(value.system_split[i].date)
-          base.push(value.system_split[i].value)
+          base.push(value.system_split[i].value.toFixed(1))
           if(value.user_split[i] === undefined){
             user.push({})
           }else{
-            user.push(value.user_split[i].value)
+            user.push(value.user_split[i].value.toFixed(1))
           }
         }
         // 横坐标
@@ -188,24 +195,29 @@
   },
   setWH () {
     let chart = $('#chart')
-    let bodyW = $('body').width
+    let bodyW = $('body').width()
     if(bodyW < 560) {
-      chart.width('340px')
+      chart.width('335px')
+      chart.height('11rem')
     }
     if(bodyW < 540) {
-      chart.width('330px')
+      chart.width('340px')
+      chart.height('12rem')
     }
     if(bodyW >= 560) {
-      chart.width('360px')
+      chart.width('355px')
+      chart.height('13rem')
     }
     if(bodyW >= 580) {
-      chart.width('370px')
+      chart.width('360px')
+      chart.height('14rem')
     }
     if(bodyW >= 600) {
-      chart.width('390px')
+      chart.width('370px')
+      chart.height('15rem')
     }
     
-    chart.height('10rem')
+    // chart.height('15rem')
     chart.children().width(chart.width())
     chart.children().height(chart.height())
   }
@@ -232,7 +244,9 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-      padding: 0 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0;
       padding-bottom: 1.5rem;
       overflow: hidden;
       .tab-head {
@@ -259,8 +273,8 @@
       }
     }
   }
-  #echarts {
-    width: 800px;
-    height: 200px;
+  #chart {
+    position: relative;
+    top: -4rem;
   }
 </style>
