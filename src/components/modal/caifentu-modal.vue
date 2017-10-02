@@ -58,7 +58,7 @@
           axisLabel: {
             formatter: '{value}'
           },
-          min: 0,
+          min: 1,
           max: 4,
           splitNumber: 1,
           splitLine: {
