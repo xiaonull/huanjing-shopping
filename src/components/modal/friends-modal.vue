@@ -4,10 +4,10 @@
       <div class="modal-close" @click="close($event)"></div>
       <div class="modal-content">
         <div class="tabs-head">
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 0}" @click="clickFriend('0', $event)">总数（{{allFriendsNum}}）</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 1}" @click="clickFriend('1', $event)">一代好友（{{level1Num}}）</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 2}" @click="clickFriend('2', $event)">二代好友（{{level2Num}}）</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 3}" @click="clickFriend('3', $event)">三代好友（{{level3Num}}）</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 0}" @click="clickFriend('0', $event)">总数({{allFriendsNum}})</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 1}" @click="clickFriend('1', $event)">一代好友({{level1Num}})</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 2}" @click="clickFriend('2', $event)">二代好友({{level2Num}})</div>
+          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 3}" @click="clickFriend('3', $event)">三代好友({{level3Num}})</div>
           <div class="tabs-head-item" :class="{'head-select': selectFriendType == 5}" @click="clickLeaderReward($event)">领导奖提现</div>
           <!-- <div class="tabs-head-item" :class="{'head-select': selectFriendType == 4}" @click="clickReward($event)">奖励明细</div> -->
         </div>
@@ -134,6 +134,21 @@
       }
     },
     watch: {
+      showModal(value) {
+        if(value === true) {
+          this.$nextTick(() => {
+            // 初始化scroll
+            this.scroll = new iScroll('friendsWrapper', {
+              scrollbarClass: 'myScrollbar',
+              hScroll: true,
+              hScrollbar: true,
+              vScroll: true,
+              vScrollbar: true,
+              hideScrollbar: false,  
+            }); 
+          })
+        }
+      },      
       allFriends (value) {
         let newSelect = []
         let caimi = false
@@ -146,6 +161,7 @@
           }
         }
         this.hasCaimi = caimi
+        
       }
     },
     methods: {
@@ -154,6 +170,8 @@
           getFriends()
           .then(function (respones) {
             this.selectFriends = this.allFriends = respones.data.friends
+            this.selectFriendType = 0
+            this.showFriends = true
             this.showModal = true
             let level1 = 0;
             let level2 = 0;
@@ -171,21 +189,21 @@
             this.level2Num = level2;
             this.level3Num = level3;
             
-            this.$nextTick(() => {
-              // 初始化scroll
-              if(!this.scroll) {
-                this.scroll = new iScroll('friendsWrapper', {
-                  scrollbarClass: 'myScrollbar',
-                  hScroll: true,
-                  hScrollbar: true,
-                  vScroll: true,
-                  vScrollbar: true,
-                  hideScrollbar: false,  
-                }); 
-              }else {
-                this.scroll.refresh();
-              }
-            })
+            // this.$nextTick(() => {
+            //    // 初始化scroll
+            //    if(!this.scroll) {
+            //     this.scroll = new iScroll('friendsWrapper', {
+            //       scrollbarClass: 'myScrollbar',
+            //       hScroll: true,
+            //       hScrollbar: true,
+            //       vScroll: true,
+            //       vScrollbar: true,
+            //       hideScrollbar: false,  
+            //     }); 
+            //   }else {
+            //     this.scroll.refresh();
+            //   }
+            // })
 
           }.bind(this))
           .catch(function (err) {
@@ -324,6 +342,7 @@
           .flex-both-center();
           width: 100%;
           height: 1.5rem;
+          white-space:nowrap;
           border-radius: 1.5rem;
           background-color: rgba(0, 0, 0, 0.4);
           &.head-select {
@@ -368,7 +387,7 @@
             }
           }
           .item-list-content {
-            overflow: auto;
+            overflow: scroll;
             .item-list-item {
               width: 100%;
               height: 15%;

@@ -129,7 +129,7 @@
 				// Events
 				onRefresh: null,
 				onBeforeScrollStart: function(e) {
-					e.preventDefault();
+					// e.preventDefault();
 				},
 				onScrollStart: null,
 				onBeforeScrollMove: null,

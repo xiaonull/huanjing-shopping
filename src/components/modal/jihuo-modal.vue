@@ -80,6 +80,26 @@
         return ''
       }
     },
+    watch: {
+      tabIndex(value) {
+        this.$nextTick(() => {
+          // 初始化scroll
+          if(!this.scroll) {
+            this.scroll = new iScroll('jihumaWrapper', {
+              scrollbarClass: 'myScrollbar',
+              hScroll: true,
+              hScrollbar: true,
+              vScroll: true,
+              vScrollbar: true,
+              hideScrollbar: false,  
+              preventDefault: false
+            }); 
+          }else {
+            this.scroll.refresh();
+          }
+        })
+      }
+    },
     methods: {
       close () {
         this.showModal = false
@@ -110,14 +130,15 @@
                 vScroll: true,
                 vScrollbar: true,
                 hideScrollbar: false,  
+                preventDefault: false
               }); 
             }else {
               this.scroll.refresh();
             }
           })
-          document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-          }, false);
+          // document.addEventListener('touchmove', function(e) {
+          //   e.preventDefault();
+          // }, false);
 
         }.bind(this))
         .catch(function (err) {
@@ -253,5 +274,7 @@
   }
   #jihumaWrapper {
     position: relative;
+    height: 8rem;
+    padding-bottom: 2rem;
   }
 </style>
