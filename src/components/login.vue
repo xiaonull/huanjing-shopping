@@ -52,7 +52,7 @@
         <div class="modal-head">注册</div>
         <div class="modal-content">
           <div class="content-item">
-            <div class="item-label">游戏账号</div>
+            <div class="item-label">手机号</div>
             <div class="item-input">
               <input type="text" v-model="DLPhone" placeholder="请输入手机号">
             </div>
@@ -61,35 +61,35 @@
           <div class="content-item">
             <div class="item-label">游戏昵称</div>
             <div class="item-input">
-              <input type="text" v-model="DLName">
+              <input type="text" v-model="DLName" placeholder="请输入昵称">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
             <div class="item-label">激活码</div>
             <div class="item-input">
-              <input type="text" v-model="DLJihuoma">
+              <input type="text" v-model="DLJihuoma" placeholder="请输入激活码">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
             <div class="item-label">一级密码</div>
             <div class="item-input">
-              <input type="text" v-model="DLFirstPassword">
+              <input type="text" v-model="DLFirstPassword" placeholder="请输入登录密码">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
             <div class="item-label">二级密码</div>
             <div class="item-input">
-              <input type="text" v-model="DLSencondPassword">
+              <input type="text" v-model="DLSencondPassword" placeholder="请输入交易密码">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
             <div class="item-label">微信账号</div>
             <div class="item-input">
-              <input type="text" v-model="DLWeixin">
+              <input type="text" v-model="DLWeixin" placeholder="请输入微信号">
             </div>
             <div class="item-star"></div>
           </div>
@@ -97,7 +97,7 @@
             <div class="item-label">验证码</div>
             <div class="item-input">
               <div class="input-yanzheng">
-                <input type="text" v-model="DLYanzheng">
+                <input type="text" v-model="DLYanzheng" placeholder="4位数字">
               </div>
               <div class="btn-yanzheng">
                 <div class="yanzheng" @click="getYanzheng()">{{ ZCdaojishi ? ZCdaojishimiao : '获取验证码'}}</div>
