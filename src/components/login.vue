@@ -264,10 +264,14 @@
         }
       }.bind(this))
       .catch(function (err) {
+        // console.log('err:' + err);
+        // console.log('err:' + err.response);
+        // console.log('err:' + err.response.status);
+        // console.log('err:' + err.response.data.phone);
         if(err && err.response) {
           if(err.response.status === 422) {
             this.dengluPassword = ''
-            Bus.$emit('openTipModal', err.response.data.msg)
+            Bus.$emit('openTipModal', err.response.data.phone)
           }
         }
       }.bind(this))
