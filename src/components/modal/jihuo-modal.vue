@@ -32,14 +32,14 @@
             <div class="jihuoma-box">{{ newCode }}</div>
             <div class="type-select"></div>
             <!-- 单选按钮 -->
-            <div class="radios">
+         <!--    <div class="radios">
               <radio name="robot" v-model="accountType" value="2">
                 体验账号
               </radio>
               <radio name="robot" v-model="accountType" value="1">
                 正常账号
               </radio>
-            </div>
+            </div> -->
             <div class="jihuo-opra">
               <div class="create-jihuoma-btn" @click="creatNewJihuoma()">生成激活码</div>
             </div>
