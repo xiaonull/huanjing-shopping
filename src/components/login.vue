@@ -68,7 +68,7 @@
           <div class="content-item">
             <div class="item-label">激活码</div>
             <div class="item-input">
-              <input type="text" v-model="DLJihuoma" placeholder="请输入激活码">
+              <input type="text" v-model="DLJihuoma" placeholder="请输入激活码" @blur="yanzhengJiHuoMa">
             </div>
             <div class="item-star"></div>
           </div>
@@ -93,7 +93,7 @@
             </div>
             <div class="item-star"></div>
           </div>
-          <div class="content-item">
+          <div class="content-item" v-if="is_DLJihuoma">
             <div class="item-label">验证码</div>
             <div class="item-input">
               <div class="input-yanzheng">
@@ -167,7 +167,7 @@
 </template>
 <script>
   import TipModal from '@/components/modal/tip-modal'
-  import {getToken, login, registerSms, register, forgetYanzhengma, forgetPost} from '@/js/allAxiosRequire'
+  import {getToken, login, getIs_JiHuoMa, registerSms, register, forgetYanzhengma, forgetPost} from '@/js/allAxiosRequire'
   import util from '@/js/util'
   import Vue from 'vue'
   import {Checkbox} from 'vue-checkbox-radio'
@@ -183,6 +183,7 @@
       DLPhone: '',
       DLName: '',
       DLJihuoma: '',
+      is_DLJihuoma: false,
       DLFirstPassword: '',
       DLSencondPassword: '',
       DLWeixin: '',
@@ -285,6 +286,25 @@
     },
     toForget ($event) {
       this.loginType = 'forget'
+    },
+    // 验证激活码
+    yanzhengJiHuoMa() {
+      if(this.DLJihuoma === '' || this.DLJihuoma === null) {
+        Bus.$emit('openTipModal', '请先填写激活码')
+      }else {
+        getIs_JiHuoMa(this.DLJihuoma)
+        .then(function (respones) {
+          this.is_DLJihuoma = true;
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+              this.DLJihuoma = '';
+            }
+          }
+        }.bind(this))
+      }
     },
     // 获取验证码
     getYanzheng ($event) {

@@ -440,6 +440,18 @@ export function register (phone, code, actcode, password, safe_password, nick, w
   })
 }
 
+// 验证激活码
+export function getIs_JiHuoMa (actcode) {
+  let url = 'ver-act/'+actcode;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
 // 获取注册验证码
 export function registerSms (phone) {
   let url = 'register-sms'
