@@ -184,6 +184,7 @@
       DLName: '',
       DLJihuoma: '',
       is_DLJihuoma: false,
+      jihuo_code: '',
       DLFirstPassword: '',
       DLSencondPassword: '',
       DLWeixin: '',
@@ -295,6 +296,7 @@
         getIs_JiHuoMa(this.DLJihuoma)
         .then(function (respones) {
           this.is_DLJihuoma = true;
+          this.jihuo_code = respones.data.data.code;
         }.bind(this))
         .catch(function (err) {
           if(err && err.response) {
@@ -308,7 +310,7 @@
     },
     // 获取验证码
     getYanzheng ($event) {
-      registerSms(this.DLPhone)
+      registerSms(this.DLPhone, this.jihuo_code)
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
         this.ZCdaojishi = 60

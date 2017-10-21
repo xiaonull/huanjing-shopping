@@ -453,13 +453,14 @@ export function getIs_JiHuoMa (actcode) {
 }
 
 // 获取注册验证码
-export function registerSms (phone) {
+export function registerSms (phone, code) {
   let url = 'register-sms'
   return instance({
     'method': 'POST',
     'url': url,
     'data': {
       phone,
+      code
     },
     'headers': {
       'X-CSRF-TOKEN': _getToken()
