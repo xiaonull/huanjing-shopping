@@ -214,7 +214,9 @@
     // this.getAndSetToken()
   },
   mounted () {
-    this.moveDot()
+
+    sessionStorage.clear();
+    this.moveDot();
   },
   components: {
     TipModal
