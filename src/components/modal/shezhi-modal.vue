@@ -74,8 +74,10 @@
       logout() {
         logout()
         .then(function (response) {
-          this.$router.push({path: '/login'});
           util.setSession('Token', '');
+          sessionStorage._token = '';
+          // console.log('logout: ' + sessionStorage._token);
+          this.$router.push({path: '/login'});
         })
         .catch(function (err) {
           this.$router.push({path: '/login'});

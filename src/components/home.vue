@@ -119,7 +119,7 @@ export default {
   },
   created () {
     // 刚刚登录进来时根据token的有无判断是否首次登录
-    if (util.getSession('Token') === null) {
+    if (!sessionStorage._token) {
       // 路由跳转都登录页
       this.$router.push('login')
     }else{

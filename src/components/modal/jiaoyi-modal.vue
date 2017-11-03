@@ -67,12 +67,18 @@
                       </div>
                     </div>
                     <div class="yaoSell-item">
+                      <div class="item-label">交易密码</div>
+                      <div class="item-input">
+                        <input type="password" v-model="yaoPas">
+                      </div>
+                    </div>
+                    <div class="yaoSell-item">
                       <div class="item-label">预留手机号</div>
                       <div class="item-input">
                         <input type="text" v-model="yaoPhone">
                       </div>
                     </div>
-                    <div class="yaoSell-item">
+                    <!-- <div class="yaoSell-item">
                       <div class="item-label">验证码</div>
                       <div class="item-yanzheng">
                         <input type="text" v-model="yaoYanzheng">
@@ -80,7 +86,7 @@
                       <div class="item-yanzheng-btn">
                         <div class="button"  @click="getYaoYanzheng()">发送验证码</div class="button">
                       </div>
-                    </div>
+                    </div> -->
                     <div class="yaoSell-item">
                       <div class="item-sure">
                         <div class="sure" @click="yaoSellPost">确认</div>
@@ -163,12 +169,18 @@
                       </div>
                     </div>
                     <div class="guamai-item">
+                      <div class="item-label">交易密码</div>
+                      <div class="item-input">
+                        <input type="password" v-model="guaPas">
+                      </div>
+                    </div>
+                    <div class="guamai-item">
                       <div class="item-label">预留手机</div>
                       <div class="item-input">
                         <input type="text" v-model="guaPhone">
                       </div>
                     </div>
-                    <div class="guamai-item">
+                   <!--  <div class="guamai-item">
                       <div class="item-label">验证码</div>
                       <div class="item-yanzheng">
                         <input type="text" v-model="guaYanzhengma">
@@ -176,7 +188,7 @@
                       <div class="item-yanzheng-btn">
                         <div class="button" @click="getGuaYanzheng()">发送验证码</div class="button">
                       </div>
-                    </div>
+                    </div> -->
                     <div class="guamai-item">
                       <div class="item-sure">
                         <div class="sure" @click="guamaiPost()">确认</div>
@@ -322,10 +334,12 @@ export default {
       // 我要卖
       yaoAccount: '',
       yaoNum: '',
+      yaoPas: '',
       yaoPhone: '',
       yaoYanzheng: '',
       // 挂卖
       guaNum: '',
+      guaPas: '',
       guaPhone: '',
       guaYanzhengma: '',
       // 大厅信息
@@ -462,6 +476,7 @@ export default {
       let params = {
         code: this.yaoYanzheng,
         phone: this.yaoPhone,
+        password: this.yaoPas,
         fruit: this.yaoNum,
         buy_user_id: this.yaoAccount
       }
@@ -485,6 +500,7 @@ export default {
       let params = {
         code: this.guaYanzhengma,
         phone: this.guaPhone,
+        password: this.guaPas,
         fruit: this.guaNum
       }
       woyaomai(params)
@@ -595,8 +611,8 @@ export default {
   .modal-content {
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    height: 75%;
+    width: 92%;
+    height: 85%;
     .tabs-head {
       display: flex;
       flex-direction: column;
@@ -745,7 +761,7 @@ export default {
                   margin: 0 1rem;
                   .yaoSell-item {
                     display: flex;
-                    height: 16.6%;
+                    height: 16%;
                     * {
                       height: 100%;
                     }
@@ -977,7 +993,7 @@ export default {
                   margin: 0 1rem;
                   .guamai-item {
                     display: flex;
-                    height: 25%;
+                    height: 23%;
                     * {
                       height: 100%;
                     }

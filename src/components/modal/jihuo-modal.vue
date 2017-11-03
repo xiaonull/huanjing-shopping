@@ -7,9 +7,10 @@
         <div class="tab-head">
           <div class="tab-head-item" @click="clickTabHead(1)" :class="{'selected': tabIndex == 1}">激活码列表</div>
           <div class="tab-head-item" @click="clickTabHead(2)" :class="{'selected': tabIndex == 2}">生成激活码</div>
+          <div class="tab-head-item" @click="clickTabHead(3)" :class="{'selected': tabIndex == 3}">为好友激活</div>
         </div>
         <div class="tab-content">
-          <div class="tab-content-item"v-show="tabIndex == 1">
+          <div class="tab-content-item" v-show="tabIndex == 1">
             <div class="code-title">
               <div class="title-code">key</div>
               <div class="title-usertype">激活码类型</div>
@@ -28,7 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="tab-content-item"v-show="tabIndex == 2">
+          <div class="tab-content-item" v-show="tabIndex == 2">
             <div class="jihuoma-box">{{ newCode }}</div>
             <div class="type-select"></div>
             <!-- 单选按钮 -->
@@ -44,6 +45,17 @@
               <div class="create-jihuoma-btn" @click="creatNewJihuoma()">生成激活码</div>
             </div>
           </div>
+          <div class="tab-content-item" v-show="tabIndex == 3">
+            <div class="form">
+              <div class="item-label">好友ID</div>
+              <div class="item-input">
+                <input type="text" v-model="friendID">
+              </div>
+            </div>
+            <div class="sureJiHuoBtn" @click="sureJiHuo">
+              确认激活
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -51,7 +63,7 @@
 </template>
 <script>
   import Vue from 'vue'
-  import {jihuoma, creatJihuoma} from '@/js/allAxiosRequire'
+  import {jihuoma, creatJihuoma, jihuoForFriend} from '@/js/allAxiosRequire'
   import {Radio} from 'vue-checkbox-radio';
   Vue.component('radio', Radio);
 
@@ -64,7 +76,8 @@
         tabIndex: 1,
         codes: [],
         newCode: '',
-        accountType: '1'
+        accountType: '1',
+        friendID: ''
       }
     },
     mounted () {
@@ -151,7 +164,7 @@
       },
       creatNewJihuoma () {
         // creatJihuoma(this.userType)
-        console.log(this.accountType);
+        // console.log(this.accountType);
         creatJihuoma(this.accountType)
         .then(function (response) {
           let data = response.data
@@ -160,12 +173,32 @@
           this.newCode = data.data.key
         }.bind(this))
         .catch(function (err) {
+          console.log(err);
           if(err && err.response) {
             if(err.response.status === 422) {
               Bus.$emit('openTipModal', err.response.data.msg)
             }
           }
         }.bind(this))
+      },
+      sureJiHuo() {
+        if(this.friendID === '') {
+          Bus.$emit('openTipModal', '请输入好友ID');
+          return;
+        }
+
+        jihuoForFriend(this.friendID)
+        .then(function (response) {
+          console.log(response);
+          Bus.$emit('openTipModal', response.data.msg)
+        }.bind(this))
+        .catch(function (err) {
+          if(err && err.response) {
+            if(err.response.status === 422) {
+              Bus.$emit('openTipModal', err.response.data.msg)
+            }
+          }
+        }.bind(this))        
       }
     }
   }
@@ -268,13 +301,47 @@
               background-color: #20acd6;
             }
           }
+
+          .form {
+           display: flex;
+           height: 16.6%;
+           margin-top: 15%;
+
+           .item-label {
+            width: 30%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+          }
+          .item-input {
+            .flex-both-center();
+            width: 65%;
+            input {
+              width: 85%;
+              box-sizing: border-box;
+              height: 1.2rem;
+              border-radius: 1.2rem;
+              padding-left: 1rem; 
+              padding-right: 1rem;
+            }
+          }
+        }
+        .sureJiHuoBtn {
+          .flex-both-center();
+          width: 30%;
+          height: 1.6rem;
+          font-size: 1rem;
+          border-radius: 1.6rem;
+          background-color: #20acd6;
+          margin: 2rem auto 0 auto;
         }
       }
     }
   }
-  #jihumaWrapper {
-    position: relative;
-    height: 8rem;
-    padding-bottom: 2rem;
-  }
+}
+#jihumaWrapper {
+  position: relative;
+  height: 8rem;
+  padding-bottom: 2rem;
+}
 </style>

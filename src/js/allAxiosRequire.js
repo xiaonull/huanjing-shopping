@@ -1,16 +1,64 @@
 import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
-window.baseURL = 'http://fairyapi.niowoo.cn'
+window.baseURL = 'http://admin.jinglinghuanjing.cn'
 // 所有请求的全局配置
 var instance = axios.create({
-  baseURL: 'http://fairyapi.niowoo.cn',
+  baseURL: 'http://admin.jinglinghuanjing.cn',
   timeout: 3000,
-  withCredentials: true,
+  // withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
   }
 });
+
+
+
+// 添加一个请求拦截器
+instance.interceptors.request.use(function(config){
+  //在请求发送之前添加token
+  if(sessionStorage._token) {
+    if(config.method === 'post') {
+      if(config.data.append) {
+        config.data.append('token', sessionStorage._token);
+      }else {
+        config.data.token = sessionStorage._token;
+      }
+            
+      // console.log(config.data);
+    }else if(config.method === 'get') {
+      config.url += '?token=' + sessionStorage._token;
+    }
+  }
+  // console.log(config);
+
+  return config;
+},function(error){
+  //当出现请求错误是做一些事
+  return Promise.reject(error);
+});
+
+//添加一个返回拦截器
+instance.interceptors.response.use(function(response){
+  //保存token到本地
+  if(response.data.token) {
+    sessionStorage._token = response.data.token;
+  }
+  // console.log(response);
+
+  return response;
+},function(error){
+  //对返回的错误进行一些处理
+  //保存token到本地
+  // if(error.data.token) {
+  //   sessionStorage._token = error.data.token;
+  // }
+  
+  console.log(error);
+
+  return Promise.reject(error);
+});
+
 
 
 
@@ -570,6 +618,19 @@ export function getCaifen () {
 
 export function logout () {
   let url = 'logout'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function jihuoForFriend (id) {
+  console.log(id)
+  let url = 'user/actcode/user/' + id;
   return instance({
     'method': 'POST',
     'url': url,

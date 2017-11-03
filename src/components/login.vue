@@ -211,7 +211,7 @@
     }
   },
   created () {
-    this.getAndSetToken()
+    // this.getAndSetToken()
   },
   mounted () {
     this.moveDot()
@@ -233,12 +233,12 @@
       }.bind(this), 30)
     },
     // token
-    getAndSetToken () {
-      getToken()
-      .then(function (response) {
-        util.setSession('Token', response.data.token)
-      })
-    },
+    // getAndSetToken () {
+    //   getToken()
+    //   .then(function (response) {
+    //     util.setSession('Token', response.data.token)
+    //   })
+    // },
     // 登录操作请求
     dengluOperation (e) {
       // console.log(this.rememberPsw);
@@ -266,7 +266,7 @@
         }
       }.bind(this))
       .catch(function (err) {
-        // console.log('err:' + err);
+        console.log('err:' + err);
         // console.log('err:' + err.response);
         // console.log('err:' + err.response.status);
         // console.log('err:' + err.response.data.phone);
