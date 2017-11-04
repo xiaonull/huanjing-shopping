@@ -2,9 +2,11 @@ import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
 window.baseURL = 'http://admin.jinglinghuanjing.cn'
+// window.baseURL = 'http://fairyapi1.niowoo.cn'
 // 所有请求的全局配置
 var instance = axios.create({
   baseURL: 'http://admin.jinglinghuanjing.cn',
+  // baseURL: 'http://fairyapi1.niowoo.cn',
   timeout: 3000,
   // withCredentials: true,
   headers: {
@@ -24,7 +26,7 @@ instance.interceptors.request.use(function(config){
       }else {
         config.data.token = sessionStorage._token;
       }
-            
+
       // console.log(config.data);
     }else if(config.method === 'get') {
       config.url += '?token=' + sessionStorage._token;
@@ -177,6 +179,19 @@ export function getNews () {
   let url = 'news'
   return instance.get(url, {
     headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 修改交易密码的获取验证码
+export function getCode() {
+  let url = 'user/update-password-sms'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
       'X-CSRF-TOKEN': _getToken()
     }
   })
