@@ -80,3 +80,9 @@ var Root = new Vue({
   components: { App }
 })
 
+// 下拉滚动条时禁止浏览器下拉刷新
+setTimeout(() => {
+  $('.modal').on('touchmove', function (event) { 
+    event.preventDefault();
+  });
+}, 2000);

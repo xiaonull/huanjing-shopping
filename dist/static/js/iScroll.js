@@ -431,12 +431,18 @@
 		_move: function(e) {
 			var that = this,
 				point = hasTouch ? e.touches[0] : e,
-				deltaX = point.pageX - that.pointX,
-				deltaY = point.pageY - that.pointY,
+				deltaY = point.pageX - that.pointX,
+				deltaX = point.pageY - that.pointY,
+
 				newX = that.x + deltaX,
 				newY = that.y + deltaY,
 				c1, c2, scale,
 				timestamp = e.timeStamp || Date.now();
+
+				if(window.orientation === 90 || window.orientation === -90) {
+					deltaX = point.pageX - that.pointX;
+					deltaY = point.pageY - that.pointY;
+				}
 
 			if(that.options.onBeforeScrollMove) that.options.onBeforeScrollMove.call(that, e);
 

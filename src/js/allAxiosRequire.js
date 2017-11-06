@@ -7,7 +7,7 @@ window.baseURL = 'http://admin.jinglinghuanjing.cn'
 var instance = axios.create({
   baseURL: 'http://admin.jinglinghuanjing.cn',
   // baseURL: 'http://fairyapi1.niowoo.cn',
-  timeout: 3000,
+  timeout: 6000,
   // withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
