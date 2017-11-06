@@ -697,7 +697,7 @@
             flex: 1;
             .content-content-item {
               width: 100%;
-              /* height: 100%; */
+              height: 100%;
               overflow: auto;
               // 我要买
               .content-yaoBuy-list {
@@ -1264,5 +1264,9 @@
     position: relative;
     height: 8rem;
     padding-bottom: 2rem;
+
+    .content-content-item {
+      height: auto;
+    }
   }
 </style>
