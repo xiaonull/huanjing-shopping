@@ -44,7 +44,8 @@
     <!-- 游戏大厅模态窗 -->
     <youxidating-modal></youxidating-modal>
     <!-- 商城模态窗 -->
-    <shangcheng-modal></shangcheng-modal>
+    <!-- <shangcheng-modal></shangcheng-modal> -->
+    <shopping-modal></shopping-modal>
     <!-- 操作提示模态窗 -->
     <tip-modal></tip-modal>
     <!-- 账户信息模态窗 -->
@@ -90,7 +91,8 @@ import TipModal from '@/components/modal/tip-modal'
 import ShouhuoModal from '@/components/modal/shouhuo-modal'
 import XiaoxiModal from '@/components/modal/xiaoxi-modal'
 import YouxidatingModal from '@/components/modal/youxidating-modal'
-import ShangchengModal from '@/components/modal/shangcheng-modal'
+// import ShangchengModal from '@/components/modal/shangcheng-modal'
+import ShoppingModal from '@/components/modal/shopping-modal'
 import AccountModal from '@/components/modal/account-modal'
 import ChooseImageModal from '@/components/modal/choose-image-modal'
 import PasswordModal from '@/components/modal/password-modal'
@@ -150,7 +152,8 @@ export default {
     ShouhuoModal,
     XiaoxiModal,
     YouxidatingModal,
-    ShangchengModal,
+    // ShangchengModal,
+    ShoppingModal,
     AccountModal,
     ChooseImageModal,
     PasswordModal,

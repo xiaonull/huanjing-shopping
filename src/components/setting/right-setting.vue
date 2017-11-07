@@ -29,7 +29,8 @@ export default {
       });
     },
     shangcheng () {
-      Bus.$emit('openShangchengModal')
+      Bus.$emit('openShoppingModal');
+      // Bus.$emit('openShangchengModal')
     },
     friends (e) {
       Bus.$emit('openFriendsModal')

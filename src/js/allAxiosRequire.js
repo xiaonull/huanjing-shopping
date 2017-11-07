@@ -1,12 +1,12 @@
 import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
-window.baseURL = 'http://admin.jinglinghuanjing.cn'
-// window.baseURL = 'http://fairyapi1.niowoo.cn'
+// window.baseURL = 'http://admin.jinglinghuanjing.cn'
+window.baseURL = 'http://fairyapi1.niowoo.cn'
 // 所有请求的全局配置
 var instance = axios.create({
-  baseURL: 'http://admin.jinglinghuanjing.cn',
-  // baseURL: 'http://fairyapi1.niowoo.cn',
+  // baseURL: 'http://admin.jinglinghuanjing.cn',
+  baseURL: 'http://fairyapi1.niowoo.cn',
   timeout: 6000,
   // withCredentials: true,
   headers: {
