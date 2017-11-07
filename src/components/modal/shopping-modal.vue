@@ -49,44 +49,16 @@
 							</div>
 						</div>
 					</div>
-					<div class="tabs-content-item orderPage" v-if="outerTabSelect === 2"></div>
+					<div class="tabs-content-item orderPage" v-if="outerTabSelect === 2">
+						<div class="item">
+							
+						</div>
+					</div>
 					<div class="tabs-content-item detailPage" v-if="outerTabSelect === 3"></div>
 					<div class="tabs-content-item addressPage" v-if="outerTabSelect === 4">
 						<div class="list">
 							<div class="item">
 								<img src="~@/assets/gou-ico2.png" class="gouIco">
-								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
-								<p class="info">
-									<span class="name">某某某</span>
-									<span class="phone">18888888888</span>
-								</p>
-								<img src="~@/assets/setting.png" class="settingIco">
-							</div>
-							<div class="item">
-								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
-								<p class="info">
-									<span class="name">某某某</span>
-									<span class="phone">18888888888</span>
-								</p>
-								<img src="~@/assets/setting.png" class="settingIco">
-							</div>
-							<div class="item">
-								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
-								<p class="info">
-									<span class="name">某某某</span>
-									<span class="phone">18888888888</span>
-								</p>
-								<img src="~@/assets/setting.png" class="settingIco">
-							</div>
-							<div class="item">
-								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
-								<p class="info">
-									<span class="name">某某某</span>
-									<span class="phone">18888888888</span>
-								</p>
-								<img src="~@/assets/setting.png" class="settingIco">
-							</div>
-							<div class="item">
 								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
 								<p class="info">
 									<span class="name">某某某</span>
@@ -273,6 +245,17 @@
 								background-size: 100% 100%;
 							}
 						}
+					}
+				}
+
+				.orderPage {
+					width: 85%;
+					height: 98%;
+
+					.item {
+						width: 100%;
+						height: 7rem;
+						background-color: #E53636;
 					}
 				}
 
