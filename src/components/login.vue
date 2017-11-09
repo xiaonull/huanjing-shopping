@@ -162,7 +162,7 @@
       </div>
     </div>
     <tip-modal></tip-modal>
-    <a class="recordNumber" href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17043533号</a>
+    <!-- <a class="recordNumber" href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备17043533号</a> -->
   </div>
 </template>
 <script>
