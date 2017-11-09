@@ -17,7 +17,7 @@
 								<div class="itemContainer" v-for="item in goodsData" :key="item.id">
 									<div class="item">
 										<div class="imgContainer">
-											<img :src="item.img" class="img">
+											<img :src="'http://admin.juzhuange.cn/' + item.img" class="img">
 											<span class="stock">剩余{{item.sum}}件</span>
 										</div>
 										<div class="btn num">{{item.name + '：'}}{{parseInt(item.fruit)}}果子</div>
