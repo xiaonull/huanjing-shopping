@@ -1,12 +1,12 @@
 import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
-// window.baseURL = 'http://admin.jinglinghuanjing.cn'
-window.baseURL = 'http://fairyapi1.niowoo.cn'
+window.baseURL = 'http://admin.juzhuange.cn'
+// window.baseURL = 'http://fairyapi1.niowoo.cn'
 // 所有请求的全局配置
 var instance = axios.create({
-  // baseURL: 'http://admin.jinglinghuanjing.cn',
-  baseURL: 'http://fairyapi1.niowoo.cn',
+  baseURL: 'http://admin.juzhuange.cn',
+  // baseURL: 'http://fairyapi1.niowoo.cn',
   timeout: 6000,
   // withCredentials: true,
   headers: {
@@ -655,3 +655,100 @@ export function jihuoForFriend (id) {
     }
   })
 }
+
+export function loadGoodsData() {
+  let url = 'goods'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function loadAddressList() {
+  let url = 'user/address'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function addAddress(data) {
+  let url = 'user/address-add'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': data,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function modifyAddress(id, data) {
+  let url = 'user/address-update/' + id;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': data,
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function deleteAddress(id) {
+  let url = 'user/address-remove/' + id;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function loadOrderList() {
+  let url = 'user/order/1'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function loadOrderDetail() {
+  let url = 'user/order/2'
+  return instance.get(url, {
+    headers: {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function sureExchange(goodsId, addressId) {
+  let url = 'user/buy-goods/' + goodsId + '/' + addressId;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function sureReceipt(orderId) {
+  let url = 'user/order-confirm/' + orderId;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+

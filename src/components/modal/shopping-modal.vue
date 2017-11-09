@@ -5,107 +5,338 @@
 			<div class="modal-close" @click="close()"></div>
 			<div class="modal-content">
 				<div class="tabs-head">
-					<div class="tabs-head-item" :class="{'head-select': outerTabSelect === 1}" @click="clickOuterTab(1)">兑换商城</div>
+					<div class="tabs-head-item" :class="{'head-select': outerTabSelect === 1 || outerTabSelect === 5}" @click="clickOuterTab(1)">兑换商城</div>
 					<div class="tabs-head-item" :class="{'head-select': outerTabSelect === 2}" @click="clickOuterTab(2)">我的订单</div>
 					<div class="tabs-head-item" :class="{'head-select': outerTabSelect === 3}" @click="clickOuterTab(3)">兑换明细</div>
 					<div class="tabs-head-item" :class="{'head-select': outerTabSelect === 4}" @click="clickOuterTab(4)">地址列表</div>
 				</div>
 				<div class="tabs-content">
-					<div class="tabs-content-item goodsPage" v-if="outerTabSelect === 1">
-						<div class="itemContainer">
-							<div class="item">
-								<div class="imgContainer">
-									<img src="~@/assets/juzi.png" class="img">
-									<span class="stock">剩余15件</span>
-								</div>
-								<div class="btn num">12果子每件</div>
-								<div class="exchange">
-									兑换
-								</div>
-							</div>
-						</div>
-						<div class="itemContainer">
-							<div class="item">
-								<div class="imgContainer">
-									<img src="~@/assets/juzi.png" class="img">
-									<span class="stock">剩余15件</span>
-								</div>
-								<div class="btn num">12果子每件</div>
-								<div class="exchange">
-									兑换
-								</div>
-							</div>
-						</div>
-						<div class="itemContainer">
-							<div class="item">
-								<div class="imgContainer">
-									<img src="~@/assets/juzi.png" class="img">
-									<span class="stock">剩余15件</span>
-								</div>
-								<div class="btn num">12果子每件</div>
-								<div class="exchange">
-									兑换
+					<div class="tabs-content-item goodsPage" v-show="outerTabSelect === 1">
+						<div id="goodsPageWrapper">
+							<div class="list">
+								<div class="itemContainer" v-for="item in goodsData" :key="item.id">
+									<div class="item">
+										<div class="imgContainer">
+											<img :src="item.img" class="img">
+											<span class="stock">剩余{{item.sum}}件</span>
+										</div>
+										<div class="btn num">{{item.name + '：'}}{{parseInt(item.fruit)}}果子</div>
+										<div class="exchange" @click="exchange(item.sum, item.id, parseInt(item.fruit))">
+											兑换
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="tabs-content-item orderPage" v-if="outerTabSelect === 2">
-						<div class="item">
-							
+					<exchangeInfo-modal v-show="outerTabSelect === 5" :addressInfo="receivingAddress" :exchangeInfo="exchangeInfo" @modifyInfo="modifyInfo" @closeExchangeInfo="clickOuterTab(1)"></exchangeInfo-modal>
+					<div class="tabs-content-item orderPage" v-show="outerTabSelect === 2">
+						<div id="orderPageWrapper">
+							<div class="list">
+								<div class="item" v-for="item in orderList" :key="item.id">
+									<div class="left">
+										<img :src="userHeadImg" class="img">
+									</div>
+									<div class="right">
+										<p class="info"><span class="time">{{item.created_at}}</span><span class="num">{{parseInt(item.goods.fruit)}}果</span></p>
+										<p class="info2"><span class="name">收货人：{{item.name}}</span><span class="phone">{{item.phone}}</span></p>
+										<p class="address">收货地址：{{item.address}}</p>
+										<div class="sureReceipt" @click="sureReceipt(item.id)">确认收货</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="tabs-content-item detailPage" v-if="outerTabSelect === 3"></div>
-					<div class="tabs-content-item addressPage" v-if="outerTabSelect === 4">
-						<div class="list">
-							<div class="item">
-								<img src="~@/assets/gou-ico2.png" class="gouIco">
-								<p class="address">广东省广州市天河区五山街道华南农业大学创客空间</p>
-								<p class="info">
-									<span class="name">某某某</span>
-									<span class="phone">18888888888</span>
-								</p>
-								<img src="~@/assets/setting.png" class="settingIco">
+					<div class="tabs-content-item detailPage" v-show="outerTabSelect === 3">
+						<div id="detailPageWrapper">
+							<div class="list">
+								<div class="item" v-for="item in orderDetailList" :key="item.id">
+									<div class="left">
+										<img class="headImg" :src="userHeadImg"></img>
+									</div>
+									<div class="right">
+										<p class="time">{{item.created_at.split(' ')[0]}}</p>
+										<p class="info"><span class="num">{{item.goods.name}}</span><span class="name">{{parseInt(item.goods.fruit)}}果</span></p>
+										<!-- <p class="info2"><span class="text">花费：</span><span class="price">{{parseInt(item.goods.fruit)}}果</span></p> -->
+										<div class="state">兑换成功</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tabs-content-item addressPage" v-show="outerTabSelect === 4">
+						<div id="addressPageWrapper">
+							<div class="list">
+								<div class="item" v-for="item in addressList" :key="item.id">
+									<img src="~@/assets/gou-ico2.png" class="gouIco" v-if="item.default === 1">
+									<p class="address">{{item.province + item.city + item.area + item.desc}}</p>
+									<p class="info">
+										<span class="name">{{item.name}}</span>
+										<span class="phone">{{item.phone}}</span>
+									</p>
+									<img src="~@/assets/setting.png" class="settingIco" @click="setAddress(item)">
+								</div>
 							</div>
 						</div>
 						<div class="add" @click="addAddress">添加</div>
 					</div>
-					<receiptInfoModal></receiptInfoModal>
 				</div>
+				<receiptInfoModal @loadAddressList="loadAddressList"></receiptInfoModal>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script type="text/javascript">
+	import ExchangeInfoModal from '@/components/modal/exchangeInfo-modal';
 	import ReceiptInfoModal from '@/components/modal/receiptInfo-modal';
+	import { getUserDate, loadGoodsData, loadAddressList, loadOrderList, sureReceipt, loadOrderDetail } from '@/js/allAxiosRequire';
 
 	export default {
 		data() {
 			return {
 				showModal: false,
-				outerTabSelect: 1
+				outerTabSelect: 1,
+				userHeadImg: '',
+				goodsData: [],
+				addressList: [],
+				receivingAddress: {},
+				exchangeInfo: {
+					id: 0,
+					price: -1
+				},
+				orderList: [],
+				orderDetailList: []
 			}
 		},
 		components: {
+			ExchangeInfoModal,
 			ReceiptInfoModal
 		},
 		mounted() {
 			this.modalEvent();
+			this.loadGoodsData();
+			this.loadAddressList();
 		},
 		methods: {
 			modalEvent() {
 				Bus.$on('openShoppingModal', function() {
-					this.showModal = true
+					this.loadHeadImg();
+					this.showModal = true;
+					this.createGoodsPageScroll();
 				}.bind(this))
+			},
+			createGoodsPageScroll() {
+				this.$nextTick(() => {
+					if(!this.goodsPageScroll) {
+						this.goodsPageScroll = new iScroll('goodsPageWrapper', {
+							scrollbarClass: 'myScrollbar',
+							hScroll: true,
+							hScrollbar: true,
+							vScroll: true,
+							vScrollbar: true,
+							hideScrollbar: false,  
+							preventDefault: false
+						}); 
+					}else {
+						this.goodsPageScroll.refresh();
+					}
+				})
+			},
+			createOrderPageScroll() {
+				this.$nextTick(() => {
+					if(!this.orderPageScroll) {
+						this.orderPageScroll = new iScroll('orderPageWrapper', {
+							scrollbarClass: 'myScrollbar',
+							hScroll: true,
+							hScrollbar: true,
+							vScroll: true,
+							vScrollbar: true,
+							hideScrollbar: false,  
+							preventDefault: false
+						}); 
+					}else {
+						this.orderPageScroll.refresh();
+					}
+				})
+			},
+			createDetailPageScroll() {
+				this.$nextTick(() => {
+					if(!this.detailPageScroll) {
+						this.detailPageScroll = new iScroll('detailPageWrapper', {
+							scrollbarClass: 'myScrollbar',
+							hScroll: true,
+							hScrollbar: true,
+							vScroll: true,
+							vScrollbar: true,
+							hideScrollbar: false,  
+							preventDefault: false
+						}); 
+					}else {
+						this.detailPageScroll.refresh();
+					}
+				})
+			},
+			createAddressPageScroll() {
+				this.$nextTick(() => {
+					if(!this.addressPageScroll) {
+						this.addressPageScroll = new iScroll('addressPageWrapper', {
+							scrollbarClass: 'myScrollbar',
+							hScroll: true,
+							hScrollbar: true,
+							vScroll: true,
+							vScrollbar: true,
+							hideScrollbar: false,  
+							preventDefault: false
+						}); 
+					}else {
+						this.addressPageScroll.refresh();
+					}
+				})
+			},
+			loadHeadImg() {
+				if(sessionStorage.userHeadImg) {
+					console.log(sessionStorage.userHeadImg)
+					this.userHeadImg = sessionStorage.userHeadImg;
+				}
 			},
 			close () {
 				this.showModal = false
 			},
 			clickOuterTab(index) {
+				if(index === 1) {
+					this.loadGoodsData();
+				}else if(index === 2) {
+					this.loadOrderList();
+				}else if(index === 3) {
+					this.loadOrderDetail();
+				}
+
 				this.outerTabSelect = index;
 			},
+			exchange(stock, id, price) {
+				if(stock <= 0) {
+					Bus.$emit('openTipModal', '该商品库存不足');
+					return;
+				}
+				if(this.addressList.length <= 0) {
+					Bus.$emit('openTipModal', '请先添加一个收货地址');
+					this.outerTabSelect = 4;
+				}else {
+					this.exchangeInfo.id = id;
+					this.exchangeInfo.price = price;
+					this.outerTabSelect = 5;
+				}
+			},
+			modifyInfo() {
+				this.outerTabSelect = 4;
+			},
 			addAddress() {
-				Bus.$emit('openReceiptInfoModal');
+				Bus.$emit('openReceiptInfoModal', {
+					type: 'add'
+				});
+			},
+			setAddress(address) {
+				Bus.$emit('openReceiptInfoModal', {
+					type: 'setting',
+					address: address
+				});
+			},
+			loadGoodsData() {
+				loadGoodsData()
+				.then(function (response) {
+					let data = response.data;
+					this.goodsData = data.goods;
+					this.createGoodsPageScroll();
+					// console.log(data);
+				}.bind(this))
+				.catch(function (err) {
+					if(err && err.response) {
+						if(err.response.status === 422) {
+							Bus.$emit('openTipModal', err.response.data.msg)
+						}
+					}
+				}.bind(this))
+			},
+			loadAddressList() {
+				loadAddressList()
+				.then(function (response) {
+					let data = response.data;
+					this.addressList = data.address;
+					this.createAddressPageScroll();
+					// console.log(data)
+					if(this.addressList.length > 0) {
+						let flag = false;
+						//判断有没有默认地址
+						for(let i = 0, j = data.address.length; i < j; i++) {
+							if(data.address[i].default === 1) {
+								this.receivingAddress = data.address[i];
+								flag = true;
+								return;
+							}
+						}
+						// 设置第一个地址为默认地址
+						if(!flag) {
+							this.addressList[0].default = 1;
+							this.receivingAddress = this.addressList[0];
+						}
+					}else {
+						this.receivingAddress = {};
+					}
+				}.bind(this))
+				.catch(function (err) {
+					if(err && err.response) {
+						if(err.response.status === 422) {
+							Bus.$emit('openTipModal', err.response.data.msg)
+						}
+					}
+				}.bind(this))
+			},
+			loadOrderList() {
+				loadOrderList()
+				.then(function (response) {
+					let data = response.data.order;
+					this.orderList = data;
+					this.createOrderPageScroll();
+					// console.log(data)
+				}.bind(this))
+				.catch(function (err) {
+					if(err && err.response) {
+						if(err.response.status === 422) {
+							Bus.$emit('openTipModal', err.response.data.msg)
+						}
+					}
+				}.bind(this))
+			},
+			sureReceipt(id) {
+				sureReceipt(id)
+				.then(function (response) {
+					this.loadOrderList();
+					Bus.$emit('openTipModal', response.data.msg);
+				}.bind(this))
+				.catch(function (err) {
+					if(err && err.response) {
+						if(err.response.status === 422) {
+							Bus.$emit('openTipModal', err.response.data.msg);
+						}
+					}
+				}.bind(this))
+			},
+			loadOrderDetail() {
+				loadOrderDetail()
+				.then(function (response) {
+					let data = response.data.order;
+					this.orderDetailList = data;
+					this.createDetailPageScroll();
+					// console.log(response.data)
+				}.bind(this))
+				.catch(function (err) {
+					if(err && err.response) {
+						if(err.response.status === 422) {
+							Bus.$emit('openTipModal', err.response.data.msg)
+						}
+					}
+				}.bind(this))
 			}
 		}
 	}
@@ -182,12 +413,14 @@
 
 				.goodsPage {
 					width: 85%;
-					height: 98%;
+					/* height: 98%; */
+					padding-right: 0.3rem;
+					position: relative;
 
 					.itemContainer {
 						display: inline-block;
 						width: 50%;
-						height: 50%;
+						height: 8.5rem;
 						float: left;
 
 						.item {
@@ -250,23 +483,161 @@
 
 				.orderPage {
 					width: 85%;
-					height: 98%;
+					/* height: 14.5rem; */
+					padding-right: 0.3rem;
+					padding-bottom: 0.5rem;
+					overflow-y: scroll;
 
 					.item {
-						width: 100%;
-						height: 7rem;
-						background-color: #E53636;
+						width: 95%;
+						min-height: 6rem;
+						font-size: 0.65rem;
+						overflow: hidden;
+						margin-top: 1rem;
+						margin-right: 5%;
+
+						.left {
+							display: inline-block;
+							width: 30%;
+							height: 6rem;
+							float: left;
+							text-align: center;
+
+							.img {
+								display: inline-block;
+								width: 70%;
+								height: auto;
+
+							}
+						}
+
+						.right {
+							display: inline-block;
+							width: 70%;
+							min-height: 6rem;
+							line-height: 1.2rem;
+							float: right;
+
+							.info {
+								margin: 0;
+
+								.time {
+
+								}
+
+								.num {
+									float: right;
+								}
+							}
+
+							.info2 {
+								margin: 0;
+
+								.phone {
+									float: right;
+								}
+							}
+
+							.address {
+								margin: 0;
+							}
+
+							.sureReceipt {
+								display: inline-block;
+								float: right;
+								background-color: #3692b6;
+								font-size: 0.7rem;
+								padding: 0 0.5rem;
+								border-radius: 1rem;
+							}
+						}
+					}
+				}
+
+				.detailPage {
+					width: 70%;
+					/* height: 90%; */
+					padding-right: 0.3rem;
+					padding-bottom: 0.5rem;
+					overflow-y: scroll;
+
+					.item {
+						min-height: 5rem;
+						margin-top: 0.5rem;
+						padding-left: 0.5rem;
+						overflow: hidden;
+						
+						.left {
+							width: 50%;
+							min-height: 5rem;
+							float: left;
+							.flex-both-center ();
+
+							.headImg {
+								width: 60%;
+							}
+						}
+
+						.right {
+							line-height: 1.4rem;
+							float: left;
+							font-size: 0.8rem;
+							text-align: center;
+							padding-top: 0.5rem;
+							margin-left: 0.5rem;
+							overflow-x: visible;
+
+							p {
+								margin: 0;
+								overflow: hidden;
+							}
+
+							.time {
+								font-size: 0.9rem;
+							}
+
+							.info {
+								.num {
+									float: left;
+								}
+
+								.name {
+									float: right;
+								}
+							}
+
+							.info2 {
+								.text {
+									float: left;
+								}
+
+								.price {
+									float: right;
+								}
+							}
+
+							.state {
+								display: inline-block;
+								margin-top: 0.3rem;
+								background-color: #3692b6;
+								line-height: 0.9rem;
+								font-size: 0.7rem;
+								padding: 0 0.3rem;
+								border-radius: 1rem;
+							}
+						}
 					}
 				}
 
 				.addressPage {
 					position: relative;
 					width: 90%;
-					height: 90%;
+					height: 16rem;
+					padding-right: 0.3rem;
 
 					.list {
 						width: 100%;
-						height: 85%;
+						/* height: 85%; */
 						overflow-y: scroll;
 
 						.item {
@@ -332,6 +703,47 @@
 					}
 				}
 			}
+		}
+	}
+
+	#goodsPageWrapper {
+		position: relative;
+		height: 15rem;
+		padding-bottom: 2rem;
+		overflow: hidden;
+
+		.list {
+			overflow: scroll;
+		}
+	}
+
+	#orderPageWrapper {
+		position: relative;
+		height: 15rem;
+		overflow: hidden;
+
+		.list {
+			overflow: scroll;
+		}
+	}
+
+	#detailPageWrapper {
+		position: relative;
+		height: 15rem;
+		overflow: hidden;
+
+		.list {
+			overflow: scroll;
+		}
+	}
+
+	#addressPageWrapper {
+		position: relative;
+		height: 13rem;
+		overflow: hidden;
+
+		.list {
+			overflow: scroll;
 		}
 	}
 </style>

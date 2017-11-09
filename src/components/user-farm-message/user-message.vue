@@ -56,11 +56,14 @@ export default {
     },
     imageSrc () {
       if(this.userImage === '' || this.userImage === null || this.userImage === undefined){
+        sessionStorage.userHeadImg = this.defaultImages['1'];
         return this.defaultImages['1']
       }
       if(this.defaultImages[this.userImage]){
+        sessionStorage.userHeadImg = this.defaultImages[this.userImage];
         return this.defaultImages[this.userImage]
       }else{
+        sessionStorage.userHeadImg = window.baseURL + this.userImage;
         return window.baseURL + this.userImage
       }
     }
