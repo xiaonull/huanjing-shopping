@@ -1,12 +1,12 @@
 import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
+// window.baseURL = 'http://admin.juzhuange.cn'
 window.baseURL = 'http://admin.juzhuange.cn'
-// window.baseURL = 'http://fairyapi1.niowoo.cn'
 // 所有请求的全局配置
 var instance = axios.create({
+  // baseURL: 'http://admin.juzhuange.cn',
   baseURL: 'http://admin.juzhuange.cn',
-  // baseURL: 'http://fairyapi1.niowoo.cn',
   timeout: 6000,
   // withCredentials: true,
   headers: {
@@ -244,9 +244,9 @@ export function setNick (value) {
   })
 }
 
-// 微信修改
+// 微信修改-修改姓名
 export function setWeixin (value) {
-  let url = 'user/update/wx_name'
+  let url = 'user/update/name'
   return instance({
     'method': 'POST',
     'url': url,
@@ -483,7 +483,7 @@ export function jiaoyiAllData () {
 
 
 // 注册
-export function register (phone, code, actcode, password, safe_password, nick, wx_name) {
+export function register (phone, nick, name, sex, password, parent_id, code) {
   let url = 'register'
   return instance({
     'method': 'POST',
@@ -491,12 +491,11 @@ export function register (phone, code, actcode, password, safe_password, nick, w
     'data': {
       phone,
       code,
-      actcode,
+      name,
       password,
-      safe_password,
       nick,
-      wx_name
-    },
+      parent_id,
+      sex    },
     'headers': {
       'X-CSRF-TOKEN': _getToken()
     }
@@ -516,14 +515,13 @@ export function getIs_JiHuoMa (actcode) {
 }
 
 // 获取注册验证码
-export function registerSms (phone, code) {
+export function registerSms (phone) {
   let url = 'register-sms'
   return instance({
     'method': 'POST',
     'url': url,
     'data': {
       phone,
-      code
     },
     'headers': {
       'X-CSRF-TOKEN': _getToken()

@@ -42,6 +42,7 @@ export default {
       // offsetY：同一层不同颜色的土地的绝对定位的Y数值的偏移量（%）
       // offsetx：每一块相同颜色的土地相对上一块相对颜色的土地的都绝对定位的X数值的偏移量（%）
       // offsety：每一块相同颜色的土地相对上一块相对颜色的土地的都绝对定位的X数值的偏移量（%）
+      // console.log(this.lands)
       let [initX, initY, offsetX, offsetY, offsetx, offsety] = [27, 0, -13, 18, (51/4), (40/4)]
       let color = ['farm-cell-green', 'farm-cell-red', 'farm-cell-yellow']
       for (let [i, c] = [0, 0]; i < cells.length; i+=5, c++) {
@@ -50,7 +51,10 @@ export default {
           let [cellX, cellY, cellOrder] = [(firstCellX + offsetx * j), (firstCellY + offsety * j), (i + j)]
           cells[cellOrder].style.left = cellX + '%'
           cells[cellOrder].style.top = cellY + '%'
-          $(cells[cellOrder]).addClass(color[c])
+          // console.log(cellOrder)
+          if(this.lands[cellOrder].land.name === '金土地') {
+            $(cells[cellOrder]).addClass(color[c]);
+          }
         }
       }
     }

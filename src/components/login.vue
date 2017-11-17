@@ -52,26 +52,44 @@
         <div class="modal-head">注册</div>
         <div class="modal-content">
           <div class="content-item">
-            <div class="item-label">手机号</div>
+            <div class="item-label">游戏账号</div>
             <div class="item-input">
-              <input type="text" v-model="DLPhone" placeholder="请输入手机号">
+              <input type="number" v-model="DLPhone" placeholder="请输入手机号">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
             <div class="item-label">游戏昵称</div>
             <div class="item-input">
-              <input type="text" v-model="DLName" placeholder="请输入昵称">
+              <input type="text" v-model="DLNick" placeholder="请输入昵称">
             </div>
             <div class="item-star"></div>
           </div>
           <div class="content-item">
+            <div class="item-label">真实姓名</div>
+            <div class="item-input">
+              <input type="text" v-model="DLName" placeholder="请输入真实姓名">
+            </div>
+            <div class="item-star"></div>
+          </div>
+          <div class="content-item">
+            <div class="item-label">性别</div>
+            <div class="item-input">
+              <!-- <input type="text" v-model="sex" placeholder="请输入男或女"> -->
+              <div class="radioGroup">
+                <input type="radio" name="sex" value="1" v-model="sex">男
+                <input type="radio" name="sex" value="2" v-model="sex">女
+              </div>
+            </div>
+            <div class="item-star"></div>
+          </div>
+          <!-- <div class="content-item">
             <div class="item-label">激活码</div>
             <div class="item-input">
               <input type="text" v-model="DLJihuoma" placeholder="请输入激活码" @blur="yanzhengJiHuoMa">
             </div>
             <div class="item-star"></div>
-          </div>
+          </div> -->
           <div class="content-item">
             <div class="item-label">一级密码</div>
             <div class="item-input">
@@ -79,25 +97,32 @@
             </div>
             <div class="item-star"></div>
           </div>
-          <div class="content-item">
+          <!-- <div class="content-item">
             <div class="item-label">二级密码</div>
             <div class="item-input">
               <input type="text" v-model="DLSencondPassword" placeholder="请输入交易密码">
             </div>
             <div class="item-star"></div>
-          </div>
-          <div class="content-item">
+          </div> -->
+         <!--  <div class="content-item">
             <div class="item-label">微信账号</div>
             <div class="item-input">
               <input type="text" v-model="DLWeixin" placeholder="请输入微信号">
             </div>
             <div class="item-star"></div>
+          </div> -->
+          <div class="content-item">
+            <div class="item-label">推荐人ID</div>
+            <div class="item-input">
+              <input type="number" v-model="parentId" placeholder="请输入推荐人ID">
+            </div>
+            <div class="item-star"></div>
           </div>
-          <div class="content-item" v-if="is_DLJihuoma">
+          <div class="content-item">
             <div class="item-label">验证码</div>
             <div class="item-input">
               <div class="input-yanzheng">
-                <input type="text" v-model="DLYanzheng" placeholder="4位数字">
+                <input type="number" v-model="DLYanzheng" placeholder="4位数字">
               </div>
               <div class="btn-yanzheng">
                 <div class="yanzheng" @click="getYanzheng()">{{ ZCdaojishi ? ZCdaojishimiao : '获取验证码'}}</div>
@@ -181,6 +206,7 @@
         rememberPsw: true,
       // 注册的数据
       DLPhone: '',
+      DLNick: '',
       DLName: '',
       DLJihuoma: '',
       is_DLJihuoma: false,
@@ -189,6 +215,8 @@
       DLSencondPassword: '',
       DLWeixin: '',
       DLYanzheng: '',
+      sex: 1,
+      parentId: '',
       // 登录的数据
       dengluAccount: localStorage.userName ? localStorage.userName : '',
       dengluPassword: localStorage.password ? localStorage.password : '',
@@ -312,7 +340,11 @@
     },
     // 获取验证码
     getYanzheng ($event) {
-      registerSms(this.DLPhone, this.jihuo_code)
+      if(this.DLPhone === '') {
+        Bus.$emit('openTipModal', '请先输入手机号');
+        return;
+      }
+      registerSms(this.DLPhone)
       .then(function (respones) {
         Bus.$emit('openTipModal', respones.data.msg)
         this.ZCdaojishi = 60
@@ -333,12 +365,13 @@
     },
     // 注册请求
     postChuze () {
-      let full = (this.DLPhone != '') && (this.DLName != '') && (this.DLJihuoma != '') && (this.DLFirstPassword != '') && (this.DLSencondPassword != '') && (this.DLWeixin != '') && (this.DLYanzheng != '')
+      let full = (this.DLPhone != '') && (this.DLNick != '') && (this.DLName != '') && (this.sex != '') && (this.DLFirstPassword != '') && (this.DLYanzheng != '')
       if(!full) {
         Bus.$emit('openTipModal', '请填写完整注册信息')
         return
       }
-      register(this.DLPhone, this.DLYanzheng, this.DLJihuoma, this.DLFirstPassword, this.DLSencondPassword, this.DLName, this.DLWeixin)
+      
+      register(this.DLPhone, this.DLNick, this.DLName, this.sex, this.DLFirstPassword, this.parentId, this.DLYanzheng)
       .then(function (response) {
         this.DLPhone = ''
         this.DLName = ''
@@ -650,6 +683,14 @@
                   border-radius: 1.5rem;
                   line-height: 1.5rem;
                 }
+              }
+            }
+            .radioGroup {
+              width: 100%;
+              font-size: 1rem;
+
+              input {
+                display: inline-block;
               }
             }
             .item-star {
