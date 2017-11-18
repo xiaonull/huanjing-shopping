@@ -244,9 +244,54 @@ export function setNick (value) {
   })
 }
 
-// 微信修改-修改姓名
+// 姓名修改
+export function setPay_name (value) {
+  let url = 'user/update/pay_name'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      value
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 银行卡号修改
+export function setPay_number (value) {
+  let url = 'user/update/pay_number'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      value
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 银行信息修改
+export function setPay_type (value) {
+  let url = 'user/update/pay_type'
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {
+      value
+    },
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+// 微信修改
 export function setWeixin (value) {
-  let url = 'user/update/name'
+  let url = 'user/update/wx_name'
   return instance({
     'method': 'POST',
     'url': url,
@@ -483,7 +528,7 @@ export function jiaoyiAllData () {
 
 
 // 注册
-export function register (phone, nick, name, sex, password, parent_id, code) {
+export function register (phone, nick, pay_name, sex, password, parent_id, code) {
   let url = 'register'
   return instance({
     'method': 'POST',
@@ -491,7 +536,7 @@ export function register (phone, nick, name, sex, password, parent_id, code) {
     'data': {
       phone,
       code,
-      name,
+      pay_name,
       password,
       nick,
       parent_id,
@@ -727,11 +772,15 @@ export function loadOrderDetail() {
 }
 
 export function sureExchange(goodsId, addressId) {
-  let url = 'user/buy-goods/' + goodsId + '/' + addressId;
+  let url = 'user/buy-goods';
   return instance({
     'method': 'POST',
     'url': url,
-    'data': {},
+    'data': {
+      goods_id: goodsId,
+      add_id: addressId,
+      sum: 1
+    },
     'headers': {
       'X-CSRF-TOKEN': _getToken()
     }

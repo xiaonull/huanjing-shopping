@@ -138,6 +138,7 @@
   .password-modal {
     width: 20rem;
     color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
     .modal-head {
       height: 2.1rem;
       text-align: center;
@@ -166,7 +167,7 @@
             padding: 0 0.5rem;
             outline: none;
             border: 0;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(255, 255, 255, 0.4);
             line-height: 1.5rem;
             color: #fff;        
           }
@@ -186,6 +187,7 @@
           -ms-flex-align: center;
           align-items: center;
           height: 1.2rem;
+          line-height: 1.2rem;
           border-radius: 1.2rem;
           font-size: 0.8rem;
           background-color: #20acd6;

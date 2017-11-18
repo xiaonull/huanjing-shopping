@@ -9,7 +9,7 @@
 		<!-- 总收益 -->
 		<div class="earnings">总收益: {{ earnings }}</div>
 		<!-- 直推奖 -->
-		<div class="directPush">领导奖: {{ directPush }}</div>
+		<!-- <div class="directPush">领导奖: {{ directPush }}</div> -->
     <!-- 滚动公告 -->
     <notice-modal></notice-modal>
   </div>

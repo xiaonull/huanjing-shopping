@@ -2,12 +2,12 @@
   <div class="modal-mask" v-show="showModal">
     <div class="modal jihuo-modal">
       <div class="modal-close" @click="close($event)"></div>
-      <div class="modal-head">激活好友</div>
+      <div class="modal-head">激活账户</div>
       <div class="modal-content">
         <div class="tab-head">
-          <div class="tab-head-item" @click="clickTabHead(1)" :class="{'selected': tabIndex == 1}">激活码列表</div>
-          <div class="tab-head-item" @click="clickTabHead(2)" :class="{'selected': tabIndex == 2}">生成激活码</div>
-          <div class="tab-head-item" @click="clickTabHead(3)" :class="{'selected': tabIndex == 3}">为好友激活</div>
+         <!--  <div class="tab-head-item" @click="clickTabHead(1)" :class="{'selected': tabIndex == 1}">激活码列表</div>
+          <div class="tab-head-item" @click="clickTabHead(2)" :class="{'selected': tabIndex == 2}">生成激活码</div> -->
+          <div class="tab-head-item" @click="clickTabHead(3)" :class="{'selected': tabIndex == 3}">激活游戏账户</div>
         </div>
         <div class="tab-content">
           <div class="tab-content-item" v-show="tabIndex == 1">
@@ -47,7 +47,7 @@
           </div>
           <div class="tab-content-item" v-show="tabIndex == 3">
             <div class="form">
-              <div class="item-label">好友ID</div>
+              <div class="item-label">激活码</div>
               <div class="item-input">
                 <input type="text" v-model="friendID">
               </div>
@@ -73,7 +73,7 @@
     data () {
       return {
         showModal: true,
-        tabIndex: 1,
+        tabIndex: 3,
         codes: [],
         newCode: '',
         accountType: '1',
@@ -94,24 +94,24 @@
       }
     },
     watch: {
-      tabIndex(value) {
-        this.$nextTick(() => {
-          // 初始化scroll
-          if(!this.scroll) {
-            this.scroll = new iScroll('jihumaWrapper', {
-              scrollbarClass: 'myScrollbar',
-              hScroll: true,
-              hScrollbar: true,
-              vScroll: true,
-              vScrollbar: true,
-              hideScrollbar: false,  
-              preventDefault: false
-            }); 
-          }else {
-            this.scroll.refresh();
-          }
-        })
-      }
+      // tabIndex(value) {
+      //   this.$nextTick(() => {
+      //     // 初始化scroll
+      //     if(!this.scroll) {
+      //       this.scroll = new iScroll('jihumaWrapper', {
+      //         scrollbarClass: 'myScrollbar',
+      //         hScroll: true,
+      //         hScrollbar: true,
+      //         vScroll: true,
+      //         vScrollbar: true,
+      //         hideScrollbar: false,  
+      //         preventDefault: false
+      //       }); 
+      //     }else {
+      //       this.scroll.refresh();
+      //     }
+      //   })
+      // }
     },
     methods: {
       close () {
@@ -121,11 +121,11 @@
         this.showModal = false
         Bus.$on('openJihuoModal', function(){
           this.showModal = true
-          this.getJihuoma()
+          // this.getJihuoma()
         }.bind(this))
       },
       clickTabHead (index) {
-        this.tabIndex = index
+        // this.tabIndex = index
       },
       getJihuoma () {
         jihuoma()
@@ -183,13 +183,15 @@
       },
       sureJiHuo() {
         if(this.friendID === '') {
-          Bus.$emit('openTipModal', '请输入好友ID');
+          Bus.$emit('openTipModal', '请输入激活码');
           return;
         }
 
         jihuoForFriend(this.friendID)
         .then(function (response) {
           console.log(response);
+          Bus.$emit('refreshData');
+          this.showModal = false;
           Bus.$emit('openTipModal', response.data.msg)
         }.bind(this))
         .catch(function (err) {

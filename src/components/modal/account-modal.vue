@@ -63,24 +63,23 @@
             <div class="account-message-cell-content">
               <div class="cell-key">真实姓名</div>
               <div class="cell-value">
-                <div class="cell-value-label" v-show="!weixinEdit">{{ hereWeixin }}</div>
-                <input type="text" v-model="hereWeixin" ref="weixin" v-show="weixinEdit">
+                <div class="cell-value-label" v-show="!pay_nameEdit">{{ herePay_name }}</div>
+                <input type="text" v-model="herePay_name" ref="pay_name" v-show="pay_nameEdit">
               </div>
             </div>
             <div class="account-message-cell-edit" ref="cellEdit">
-              <div class="cell-btn" @click="operateWeixin()">{{ weixinEdit ? '保存' : '修改' }}</div>
+              <div class="cell-btn" @click="operatePay_name()">{{ pay_nameEdit ? '保存' : '修改' }}</div>
             </div>
           </div>
           <div class="account-message-cell">
             <div class="account-message-cell-content">
-              <div class="cell-key">银行卡号</div>
+              <div class="cell-key">银行卡</div>
               <div class="cell-value">
-                <div class="cell-value-label" v-show="!bankNumEdit">{{ hereBankNum }}</div>
-                <input type="text" v-model="hereBankNum" ref="bankNum" v-show="bankNumEdit">
+                <input type="text" v-model="hereBankNum" readonly>
               </div>
             </div>
             <div class="account-message-cell-edit" ref="cellEdit">
-              <div class="cell-btn" @click="operateBankNum()">{{ bankNumEdit ? '保存' : '修改' }}</div>
+              <div class="cell-btn" @click="operateBankNum()">修改</div>
             </div>
           </div>
           <div class="account-message-cell">
@@ -99,7 +98,7 @@
   </div>
 </template>
 <script>
-  import {setNick, setWeixin} from '@/js/allAxiosRequire'
+  import {setNick, setPay_name} from '@/js/allAxiosRequire'
   export default {
     name: 'account-modal',
     props: {
@@ -119,13 +118,25 @@
         type: String,
         default: ''
       },
-      weixin: {
-        type: String,
-        default: ''
-      },
       parentId: {
         type: [String, Number],
         default: '无'
+      },
+      payName: {
+        type: String,
+        default: ''
+      },
+      payNumber: {
+        type: String,
+        default: ''
+      },
+      payType: {
+        type: String,
+        default: ''
+      },
+      isSafePassword: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -141,11 +152,10 @@
         twoLevelPassword: '????????????',
         showModal: true,
         nickEdit: false,
-        weixinEdit: false,
+        pay_nameEdit: false,
         hereNick: '',
-        hereWeixin: '',
-        bankNumEdit: false,
-        hereBankNum: ''
+        herePay_name: '',
+        hereBankNum: '????????????'
       }
     },
     mounted () {
@@ -155,8 +165,8 @@
       if(this.nickEdit === true) {
         $(this.$refs.nick).focus()
       }
-      if(this.weixinEdit === true) {
-        $(this.$refs.weixin).focus()
+      if(this.pay_nameEdit === true) {
+        $(this.$refs.pay_name).focus()
       }
     },
     computed: {
@@ -176,13 +186,19 @@
     methods: {
       password (type) {
         Bus.$emit('openPasswordModal', type);
-        this.showModal = false
+        // this.showModal = false
       },
       chooseImage (e) {
         this.showModal = false
         Bus.$emit('openChooseImageModal')
       },
       close () {
+        // 没填写完整信息不可以关掉
+        if(this.userName === '' || this.payName === '' || this.payNumber === '' || this.payType === '' || this.isSafePassword === false) {
+          Bus.$emit('openTipModal', '请先完善个人信息')
+          return;
+        }
+
         this.showModal = false
       },
       bindModalEvent () {
@@ -214,12 +230,12 @@
         this.nickEdit = true
       }
     },
-    // 操作微信号
-    operateWeixin () {
-      if(this.weixinEdit === true) {
-        setWeixin(this.hereWeixin)
+    // 操作姓名
+    operatePay_name () {
+      if(this.pay_nameEdit === true) {
+        setPay_name(this.herePay_name)
         .then(function (response) {
-          this.weixinEdit = false
+          this.pay_nameEdit = false
           Bus.$emit('openTipModal', response.data.msg)
           Bus.$emit('refreshData')
         }.bind(this))
@@ -231,19 +247,19 @@
           }
         })
       }else{
-        this.weixinEdit = true
+        this.pay_nameEdit = true
       }
     },
     operateBankNum() {
-
+       Bus.$emit('openBankModal');
     }
   },
   watch : {
     userName (value) {
       this.hereNick = value
     },
-    weixin (value) {
-      this.hereWeixin = value
+    payName (value) {
+      this.herePay_name = value
     }
   } 
 }

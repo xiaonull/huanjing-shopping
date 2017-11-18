@@ -3,12 +3,14 @@
     <div class="xiaoxi" v-on:click="xiaoxi($event)">消息</div>
     <div class="youxidating" v-on:click="youxidating($event)">游戏大厅</div>
     <div class="shezhi" v-on:click="shezhi($event)">设置</div>
-    <div class="jihuohaoyou" v-on:click="jihuohaoyou($event)">激活好友</div>
+    <div class="jihuohaoyou" v-on:click="jihuohaoyou($event)" v-if="userType === 2">激活账户</div>
+    <div class="jihuohaoyou" @click="already" v-else>已激活</div>
 	</div>
 </template>
 <script>
 export default {
   name: 'left-setting',
+  props: ['userType'],
   data () {
     return {}
   },
@@ -39,6 +41,9 @@ export default {
     },
     jihuohaoyou (e) {
       Bus.$emit('openJihuoModal')
+    },
+    already() {
+      Bus.$emit('openTipModal', '该账户已经激活')
     }
   }
 }

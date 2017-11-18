@@ -12,9 +12,11 @@
 				<span>收货人：{{addressInfo.name}}</span>
 				<span class="phone">{{addressInfo.phone}}</span>
 			</p>
-			<p class="address">收货地址：{{addressInfo.province + addressInfo.city + addressInfo.area + addressInfo.desc}}</p>
+			<p class="address" v-if="exchangeInfo.id !== 1 && exchangeInfo.id !== 2">收货地址：{{addressInfo.province + addressInfo.city + addressInfo.area + addressInfo.desc}}</p>
+			<p class="address" v-if="exchangeInfo.id === 2">虚拟产品，请联系{{actService}}</p>
+			<p class="address" v-if="exchangeInfo.id === 1">虚拟产品</p>
 		</div>
-		<div class="footer">
+		<div class="footer" v-if="exchangeInfo.id !== 2">
 			<div class="modifyInfo btn" @click="modifyInfo">修改信息</div>
 			<div class="sureExchange btn" @click="sureExchange">确认兑换</div>
 		</div>
@@ -25,7 +27,7 @@
 	import { sureExchange } from '@/js/allAxiosRequire';
 
 	export default {
-		props: ['addressInfo', 'exchangeInfo'],
+		props: ['addressInfo', 'exchangeInfo', 'actService'],
 		data() {
 			return {
 				userHeadImg: ''
@@ -46,8 +48,13 @@
 			sureExchange() {
 				sureExchange(this.exchangeInfo.id, this.addressInfo.id)
 				.then(function (response) {
-					Bus.$emit('openTipModal', response.data.msg);
-					this.$emit('closeExchangeInfo');
+					if(response.data.data) {
+						Bus.$emit('openTipModal', response.data.data.info);
+						this.$emit('closeExchangeInfo');
+					}else {
+						Bus.$emit('openTipModal', response.data.msg);
+						this.$emit('closeExchangeInfo');
+					}
 				}.bind(this))
 				.catch(function (err) {
 					if(err && err.response) {
@@ -114,6 +121,11 @@
 
 			.phone {
 				float: right;
+			}
+
+			.address {
+				word-wrap: break-word;
+				word-break: break-all;
 			}
 		}
 

@@ -21,7 +21,9 @@
     :userName="userName"
     :userImage="userImage"></user-farm-message>
     <!-- 左侧系统操作 -->
-    <left-setting></left-setting>
+    <left-setting
+    :userType="userType"
+    ></left-setting>
     <!-- 右侧系统操作 -->
     <right-setting></right-setting>
     <!-- 下方农场操作层 -->
@@ -45,7 +47,9 @@
     <youxidating-modal></youxidating-modal>
     <!-- 商城模态窗 -->
     <!-- <shangcheng-modal></shangcheng-modal> -->
-    <shopping-modal></shopping-modal>
+    <shopping-modal
+    :actService="actService"
+    ></shopping-modal>
     <!-- 操作提示模态窗 -->
     <tip-modal></tip-modal>
     <!-- 账户信息模态窗 -->
@@ -56,11 +60,21 @@
     :userImage="userImage"
     :weixin="weixin"
     :parentId="parentId"
+    :payName="pay_name"
+    :payNumber="pay_number"
+    :payType="pay_type"
+    :isSafePassword="is_safe_password"
     ></account-modal>
     <!-- 选择头像模态窗 -->
     <choose-image-modal></choose-image-modal>
     <!-- 修改密码模态窗 -->
     <password-modal></password-modal>
+    <!-- 修改银行卡信息 -->
+    <bank-modal
+    :payName="pay_name"
+    :payNumber="pay_number"
+    :payType="pay_type"
+    ></bank-modal>
     <!-- 激活中心模态窗 -->
     <jihuo-modal
     :userType="userType"></jihuo-modal>
@@ -78,14 +92,14 @@
   </div>
 </template>
 <script>
-import Farm from '@/components/farm/farm'
-import UserFarmMessage from '@/components/user-farm-message/user-farm-message'
-import FarmOperation from '@/components/farm-operation/farm-operation'
-import LeftSetting from '@/components/setting/left-setting'
-import RightSetting from '@/components/setting/right-setting'
-import Spirit from '@/components/spirit/spirit'
-import KaidiModal from '@/components/modal/kaidi-modal'
-import ZengzhongModal from '@/components/modal/zengzhong-modal'
+  import Farm from '@/components/farm/farm'
+  import UserFarmMessage from '@/components/user-farm-message/user-farm-message'
+  import FarmOperation from '@/components/farm-operation/farm-operation'
+  import LeftSetting from '@/components/setting/left-setting'
+  import RightSetting from '@/components/setting/right-setting'
+  import Spirit from '@/components/spirit/spirit'
+  import KaidiModal from '@/components/modal/kaidi-modal'
+  import ZengzhongModal from '@/components/modal/zengzhong-modal'
 // import CellMessageModal from '@/components/modal/cell-message-modal'
 import TipModal from '@/components/modal/tip-modal'
 import ShouhuoModal from '@/components/modal/shouhuo-modal'
@@ -96,6 +110,7 @@ import ShoppingModal from '@/components/modal/shopping-modal'
 import AccountModal from '@/components/modal/account-modal'
 import ChooseImageModal from '@/components/modal/choose-image-modal'
 import PasswordModal from '@/components/modal/password-modal'
+import BankModal from '@/components/modal/bank-modal'
 import JihuoModal from '@/components/modal/jihuo-modal'
 import ShezhiModal from '@/components/modal/shezhi-modal'
 import FriendsModal from '@/components/modal/friends-modal'
@@ -125,9 +140,19 @@ export default {
       // 路由跳转都登录页
       this.$router.push('login')
     }else{
-      this.requireUserData()
       this.requireLandsData()
       this.requireGlobalMessage()
+
+      new Promise((resolve, reject) => {
+        this.requireUserData(resolve);
+      })
+      .then((response) => {
+        //判断信息是否填写完整
+        let userData = this.userData;
+        if(userData.nick === '' || userData.nick === null || userData.pay_name === '' || userData.pay_name === null || userData.pay_number === '' || userData.pay_number === null || userData.pay_type === '' || userData.pay_type === null || userData.is_safe_password === '' || userData.is_safe_password === null) {
+          Bus.$emit('openAccountModal');
+        }
+      });
     }
   },
   mounted () {
@@ -157,6 +182,7 @@ export default {
     AccountModal,
     ChooseImageModal,
     PasswordModal,
+    BankModal,
     JihuoModal,
     ShezhiModal,
     FriendsModal,
@@ -165,13 +191,16 @@ export default {
   },
   methods: {
     // 请求用户信息
-    requireUserData () {
+    requireUserData (resolve) {
       getUserDate()
       .then(function (response) {
         let data = response.data
         // console.log
         console.log(data.user)
         this.userData = data.user
+        if(resolve) {
+          resolve();
+        }
       }.bind(this))
       .catch(function (error) {
         // let data = arguments[0].response.data
@@ -315,9 +344,21 @@ export default {
     weixin () {
       return this.userData.wx_name || ''
     },
+    //注册的真实姓名
+    pay_name() {
+      return this.userData.pay_name || ''
+    },
+    // 银行卡号
+    pay_number() {
+      return this.userData.pay_number || ''
+    },
+    //银行信息
+    pay_type() {
+      return this.userData.pay_type || ''
+    },
     // 玩家的推荐人id
     parentId () {
-      return this.userData.parent_id || ''
+      return this.userData.parent_id || '无'
     },
     //玩家的手机号
     phone () {
@@ -326,49 +367,57 @@ export default {
     // 玩家账号类型
     userType () {
       return this.userData.type_id || ''
+    },
+    // 是否填写交易密码
+    is_safe_password() {
+      return this.userData.is_safe_password
+    },
+    // 客服微信号
+    actService() {
+      return this.globalMessage.act_service
     }
   }
 }
 </script>
 <style lang="less" type="text/less">
-// 模态框mask样式
-.modal-mask {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  left: 0;
-  top: 0;
-  z-index: 100;
-  width: 100%;
-  height: 100%;
-  .modal {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 1rem;
-    color: #fff;
-  }
-}
-.home-bg {
-  width: 100%;
-  height: 100%;
-  background: url('~@/assets/body-bg.jpg');
-  background-size: 100% 100%;
-  .modal {
+  // 模态框mask样式
+  .modal-mask {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    .modal-close {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 2.1rem;
-      height: 2.1rem;
-      border-radius: 50%;
-      background-image: url('~@/assets/close.png');
-      background-size: 100% auto;
-      background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    .modal {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 1rem;
+      color: #fff;
     }
   }
-}
+  .home-bg {
+    width: 100%;
+    height: 100%;
+    background: url('~@/assets/body-bg.jpg');
+    background-size: 100% 100%;
+    .modal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      .modal-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 50%;
+        background-image: url('~@/assets/close.png');
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+      }
+    }
+  }
 </style>

@@ -18,7 +18,7 @@
 									<div class="item">
 										<div class="imgContainer">
 											<img :src="'http://admin.juzhuange.cn/' + item.img" class="img">
-											<span class="stock">剩余{{item.sum}}件</span>
+											<span class="stock" v-if="item.sum !== -1">剩余{{item.sum}}件</span>
 										</div>
 										<div class="btn num">{{item.name + '：'}}{{parseInt(item.fruit)}}果子</div>
 										<div class="exchange" @click="exchange(item.sum, item.id, parseInt(item.fruit))">
@@ -29,7 +29,7 @@
 							</div>
 						</div>
 					</div>
-					<exchangeInfo-modal v-show="outerTabSelect === 5" :addressInfo="receivingAddress" :exchangeInfo="exchangeInfo" @modifyInfo="modifyInfo" @closeExchangeInfo="clickOuterTab(1)"></exchangeInfo-modal>
+					<exchangeInfo-modal v-if="outerTabSelect === 5" :addressInfo="receivingAddress" :exchangeInfo="exchangeInfo" @modifyInfo="modifyInfo" @closeExchangeInfo="clickOuterTab(1)" :actService="actService"></exchangeInfo-modal>
 					<div class="tabs-content-item orderPage" v-show="outerTabSelect === 2">
 						<div id="orderPageWrapper">
 							<div class="list">
@@ -93,6 +93,7 @@
 	import { getUserDate, loadGoodsData, loadAddressList, loadOrderList, sureReceipt, loadOrderDetail } from '@/js/allAxiosRequire';
 
 	export default {
+		props:['actService'],
 		data() {
 			return {
 				showModal: false,
@@ -122,6 +123,8 @@
 			modalEvent() {
 				Bus.$on('openShoppingModal', function() {
 					this.loadHeadImg();
+					this.loadGoodsData();
+					this.outerTabSelect = 1;
 					this.showModal = true;
 					this.createGoodsPageScroll();
 				}.bind(this))
@@ -215,11 +218,11 @@
 				this.outerTabSelect = index;
 			},
 			exchange(stock, id, price) {
-				if(stock <= 0) {
-					Bus.$emit('openTipModal', '该商品库存不足');
-					return;
-				}
-				if(this.addressList.length <= 0) {
+				// if(stock <= 0) {
+				// 	Bus.$emit('openTipModal', '该商品库存不足');
+				// 	return;
+				// }
+				if(this.addressList.length <= 0 && id !== 1 && id !== 2) {
 					Bus.$emit('openTipModal', '请先添加一个收货地址');
 					this.outerTabSelect = 4;
 				}else {
