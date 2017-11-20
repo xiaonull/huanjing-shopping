@@ -1,6 +1,6 @@
 <template>
 	<div class="noticeModal">
-		<p ref="noticeModalText">欢迎您进入精灵幻境，祝您游戏愉快！</p>
+		<p ref="noticeModalText">欢迎您进入七彩幻境，祝您游戏愉快！</p>
 	</div>
 </template>
 

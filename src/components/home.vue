@@ -16,6 +16,7 @@
     :fertilizer="fertilizer"
     :depot="depot"
     :earnings="earnings"
+    :isAgent="is_agent"
     :directPush="directPush"
     :userId="userId"
     :userName="userName"
@@ -43,6 +44,12 @@
     :cell.sync="currentCell"></shouhuo-modal>
     <!-- 消息模态窗 -->
     <xiaoxi-modal></xiaoxi-modal>
+    <!-- 分享游戏 -->
+    <share-modal
+    :userId="userId"
+    ></share-modal>
+    <!-- 确认模态框 -->
+    <confirm-modal></confirm-modal>
     <!-- 游戏大厅模态窗 -->
     <youxidating-modal></youxidating-modal>
     <!-- 商城模态窗 -->
@@ -64,6 +71,7 @@
     :payNumber="pay_number"
     :payType="pay_type"
     :isSafePassword="is_safe_password"
+    :userType="userType"
     ></account-modal>
     <!-- 选择头像模态窗 -->
     <choose-image-modal></choose-image-modal>
@@ -104,6 +112,8 @@
 import TipModal from '@/components/modal/tip-modal'
 import ShouhuoModal from '@/components/modal/shouhuo-modal'
 import XiaoxiModal from '@/components/modal/xiaoxi-modal'
+import ConfirmModal from '@/components/modal/confirm-modal'
+import ShareModal from '@/components/modal/share-modal'
 import YouxidatingModal from '@/components/modal/youxidating-modal'
 // import ShangchengModal from '@/components/modal/shangcheng-modal'
 import ShoppingModal from '@/components/modal/shopping-modal'
@@ -176,6 +186,8 @@ export default {
     TipModal,
     ShouhuoModal,
     XiaoxiModal,
+    ConfirmModal,
+    ShareModal,
     YouxidatingModal,
     // ShangchengModal,
     ShoppingModal,
@@ -322,6 +334,9 @@ export default {
     // 总收益
     earnings () {
       return this.userData.fruit_prod || 0
+    },
+    is_agent() {
+      return this.userData.is_agent || 0
     },
     // 直推奖
     directPush () {

@@ -9,6 +9,7 @@
     :fertilizer="fertilizer"
     :depot="depot"
     :earnings="earnings"
+    :isAgent="isAgent"
     :directPush="directPush"></farm-message>
 	</div>
 </template>
@@ -31,6 +32,10 @@ export default {
       default: 0
     },
     earnings: {
+      type: Number,
+      default: 0
+    },
+    isAgent: {
       type: Number,
       default: 0
     },

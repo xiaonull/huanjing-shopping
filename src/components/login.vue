@@ -114,7 +114,7 @@
           <div class="content-item">
             <div class="item-label">推荐人ID</div>
             <div class="item-input">
-              <input type="number" v-model="parentId" placeholder="请输入推荐人ID">
+            <input type="number" v-model="parentId" placeholder="请输入推荐人ID" :readonly="readonly">
             </div>
             <div class="item-star"></div>
           </div>
@@ -197,6 +197,17 @@
   import Vue from 'vue'
   import {Checkbox} from 'vue-checkbox-radio'
   Vue.component('checkbox', Checkbox);
+
+  function GetQueryString(name) {
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if(r != null) {
+      return unescape(r[2]);
+    } 
+
+    return null;
+  }
+
   export default {
     name: 'login',
     data () {
@@ -217,6 +228,7 @@
       DLYanzheng: '',
       sex: 1,
       parentId: '',
+      readonly: false,
       // 登录的数据
       dengluAccount: localStorage.userName ? localStorage.userName : '',
       dengluPassword: localStorage.password ? localStorage.password : '',
@@ -245,6 +257,7 @@
 
     sessionStorage.clear();
     this.moveDot();
+
   },
   components: {
     TipModal
@@ -259,6 +272,14 @@
         }else {
           clearInterval(timer)
           this.loginType = 'denglu'
+
+          let parent_id = GetQueryString('parent_id');
+          if(parent_id !== null) {
+            this.loginType = 'zhuce';
+            this.parentId = parent_id;
+            this.readonly = true;
+            // console.log(parent_id)
+          }
         }
       }.bind(this), 30)
     },

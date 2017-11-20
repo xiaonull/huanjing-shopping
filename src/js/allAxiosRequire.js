@@ -3,6 +3,7 @@ import util from '@/js/util'
 // 配置线上基地址
 // window.baseURL = 'http://admin.juzhuange.cn'
 window.baseURL = 'http://admin.juzhuange.cn'
+window.frontURL = 'http://www.juzhuange.cn'
 // 所有请求的全局配置
 var instance = axios.create({
   // baseURL: 'http://admin.juzhuange.cn',
@@ -789,6 +790,18 @@ export function sureExchange(goodsId, addressId) {
 
 export function sureReceipt(orderId) {
   let url = 'user/order-confirm/' + orderId;
+  return instance({
+    'method': 'POST',
+    'url': url,
+    'data': {},
+    'headers': {
+      'X-CSRF-TOKEN': _getToken()
+    }
+  })
+}
+
+export function applyAgent(orderId) {
+  let url = 'user/sub-agent';
   return instance({
     'method': 'POST',
     'url': url,

@@ -7,6 +7,7 @@
       <div class="modal-content">
         <div class="account-image">
           <img :src="imageSrc" @click="chooseImage($event)">
+          <span class="tips" v-if="showTips">请先完善个人信息</span>
         </div>
         <div class="account-message">
           <div class="account-message-cell">
@@ -138,6 +139,8 @@
         type: Boolean,
         default: false
       },
+      userType: {
+      }
     },
     data () {
       return {
@@ -172,16 +175,16 @@
     },
     computed: {
       twoLevelPassword(){
-          if(! this.isSafePassword) {
-            return '';
-          }
-          return '????????????';
+        if(! this.isSafePassword) {
+          return '';
+        }
+        return '????????????';
       },
       hereBankNum() {
         if(! this.payType) {
-            return '';
-          }
-          return this.payType;
+          return '';
+        }
+        return this.payType;
       },
       imageSrc () {
         if(this.userImage === '' || this.userImage === null || this.userImage === undefined){
@@ -191,6 +194,13 @@
           return this.defaultImages[this.userImage]
         }else{
           return window.baseURL + this.userImage
+        }
+      },
+      showTips() {
+        if((this.userName === '' || this.payName === '' || this.payNumber === '' || this.payType === '' || this.isSafePassword === false) && this.userType !== 2)  {
+          return true;
+        }else {
+          return false;
         }
       }
     },
@@ -207,7 +217,7 @@
       },
       close () {
         // 没填写完整信息不可以关掉
-        if(this.userName === '' || this.payName === '' || this.payNumber === '' || this.payType === '' || this.isSafePassword === false) {
+        if((this.userName === '' || this.payName === '' || this.payNumber === '' || this.payType === '' || this.isSafePassword === false) && this.userType !== 2)  {
           Bus.$emit('openTipModal', '请先完善个人信息')
           return;
         }
@@ -296,14 +306,20 @@
       flex: 1;
       padding: 1rem 2rem;
       .account-image {
+        position: relative;
         .flex-both-center();
-        height: 4rem;
+        height: 6rem;
         padding-bottom: 0.5rem;
         img {
           height: 4rem;
           width: 4rem;
           border-radius: 4rem;
         }
+        .tips {
+          position: absolute;
+          bottom: 0.3rem;
+          font-size: 0.8rem;
+        } 
       }
       .account-message {
         .account-message-cell {

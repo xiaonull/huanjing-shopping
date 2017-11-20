@@ -8,7 +8,7 @@
           <div class="tabs-head-item" :class="{'head-select': selectFriendType == 1}" @click="clickFriend('1', $event)">一代好友({{level1Num}})</div>
           <div class="tabs-head-item" :class="{'head-select': selectFriendType == 2}" @click="clickFriend('2', $event)">二代好友({{level2Num}})</div>
           <div class="tabs-head-item" :class="{'head-select': selectFriendType == 3}" @click="clickFriend('3', $event)">三代好友({{level3Num}})</div>
-          <div class="tabs-head-item" :class="{'head-select': selectFriendType == 5}" @click="clickLeaderReward($event)">领导奖提现</div>
+          <!-- <div class="tabs-head-item" :class="{'head-select': selectFriendType == 5}" @click="clickLeaderReward($event)">领导奖提现</div> -->
           <!-- <div class="tabs-head-item" :class="{'head-select': selectFriendType == 4}" @click="clickReward($event)">奖励明细</div> -->
         </div>
         <div class="tabs-content">
