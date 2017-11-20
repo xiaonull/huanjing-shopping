@@ -37,7 +37,7 @@
             </div>
             <!-- <span>{{isOneGather}}</span> -->
             <div class="isOneGather" v-show="isOneGather === 0">
-              您需要消耗10个果子开通一键采蜜功能！
+              您需要消耗{{oneGatherPrice}}个果子开通一键采蜜功能！
             </div>
             <div class="item-list-footer">
               <div class="list-footer-btn" @click="allGather($event)" :class="{'btn-disable': !hasCaimi}">一键采蜜</div>
@@ -104,7 +104,7 @@
 
   export default {
     name: 'frends-modal',
-    props: ['isOneGather'],
+    props: ['isOneGather', 'oneGatherPrice'],
     data () {
       return {
         showModal: false,

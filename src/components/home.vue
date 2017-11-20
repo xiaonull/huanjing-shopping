@@ -94,7 +94,10 @@
     <!-- 设置模态窗 -->
     <shezhi-modal></shezhi-modal>
     <!-- 好友列表模态窗 -->
-    <friends-modal :is-one-gather="userData.is_one_gather"></friends-modal>
+    <friends-modal 
+    :is-one-gather="userData.is_one_gather"
+    :oneGatherPrice="one_gather_price"
+    ></friends-modal>
     <!-- 交易所模态窗 -->
     <jiaoyi-modal
     :userPhone="phone"></jiaoyi-modal>
@@ -400,6 +403,9 @@ export default {
     },
     countAgent() {
       return this.userData.count_agent || 0
+    },
+    one_gather_price() {
+      return this.globalMessage.one_gather_price || 0
     }
   }
 }
