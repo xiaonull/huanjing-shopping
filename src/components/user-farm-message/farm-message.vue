@@ -12,7 +12,7 @@
     <!-- <div class="directPush">领导奖: {{ directPush }}</div> -->
     <div class="directPush" v-if="isAgent === 0" @click="apply">申请代理商</div>
     <div class="directPush" v-if="isAgent === 1">代理商申请中</div>
-    <div class="directPush" v-if="isAgent === 2">代理商收益：{{ directPush }}</div>
+    <div class="directPush" v-if="isAgent === 2" @click="detail">代理商收益：{{ directPush }}</div>
     <!-- 滚动公告 -->
     <notice-modal></notice-modal>
   </div>
@@ -71,6 +71,9 @@
        },
        apply() {
         Bus.$emit('openConfirmModal');
+       },
+       detail() {
+        Bus.$emit('openAgentDetailModal');
        }
     }
   }

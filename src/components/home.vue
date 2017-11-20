@@ -50,6 +50,11 @@
     ></share-modal>
     <!-- 确认模态框 -->
     <confirm-modal></confirm-modal>
+    <!-- 代理商详情 -->
+    <agentDetail-modal
+    :directPush="directPush"
+    :countAgent="countAgent"
+    ></agentDetail-modal>
     <!-- 游戏大厅模态窗 -->
     <youxidating-modal></youxidating-modal>
     <!-- 商城模态窗 -->
@@ -113,6 +118,7 @@ import TipModal from '@/components/modal/tip-modal'
 import ShouhuoModal from '@/components/modal/shouhuo-modal'
 import XiaoxiModal from '@/components/modal/xiaoxi-modal'
 import ConfirmModal from '@/components/modal/confirm-modal'
+import AgentDetailModal from '@/components/modal/agentDetail-modal'
 import ShareModal from '@/components/modal/share-modal'
 import YouxidatingModal from '@/components/modal/youxidating-modal'
 // import ShangchengModal from '@/components/modal/shangcheng-modal'
@@ -187,6 +193,7 @@ export default {
     ShouhuoModal,
     XiaoxiModal,
     ConfirmModal,
+    AgentDetailModal,
     ShareModal,
     YouxidatingModal,
     // ShangchengModal,
@@ -390,6 +397,9 @@ export default {
     // 客服微信号
     actService() {
       return this.globalMessage.act_service
+    },
+    countAgent() {
+      return this.userData.count_agent || 0
     }
   }
 }
