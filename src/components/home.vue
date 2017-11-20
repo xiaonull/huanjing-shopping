@@ -9,7 +9,9 @@
     <!-- 麦田层 -->
     <farm
     :lands="landsData"
-    :fertilizer="fertilizer"></farm>
+    :fertilizer="fertilizer"
+    :landLong="land_long"
+    ></farm>
     <!-- 用户农场信息层 -->
     <user-farm-message
     :seed="seed"
@@ -406,6 +408,9 @@ export default {
     },
     one_gather_price() {
       return this.globalMessage.one_gather_price || 0
+    },
+    land_long() {
+      return this.globalMessage.land_long || 0
     }
   }
 }

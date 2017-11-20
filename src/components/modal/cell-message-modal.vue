@@ -24,7 +24,7 @@
 <script>
   export default {
     name: 'cell-message-modal',
-    props: ['fertilizer'],
+    props: ['fertilizer', 'landLong'],
     data () {
       return {
         showModal: true,
@@ -112,7 +112,7 @@
         }
         let createDate = new Date(this.cell.tree.created_at.replace(/-/g,"/"))
         let thisDate = new Date()
-        return 60 - parseInt((thisDate/1000 - createDate/1000)/(3600*24));
+        return this.landLong - parseInt((thisDate/1000 - createDate/1000)/(3600*24));
       }
     },
     watch: {

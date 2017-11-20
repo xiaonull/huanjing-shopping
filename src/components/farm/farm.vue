@@ -1,7 +1,9 @@
 <template>
 	<div class="farm" ref="farm">
     <cell v-for="(item, index) in lands" :cell="item"></cell>
-    <cell-message-modal></cell-message-modal>
+    <cell-message-modal
+    :landLong="landLong"
+    ></cell-message-modal>
 	</div>
 </template>
 <script>
@@ -22,6 +24,9 @@ export default {
     'fertilizer': {
       type: Number,
       default: 0
+    },
+    'landLong': {
+
     }
   },
   data () {
