@@ -193,6 +193,9 @@
           Bus.$emit('refreshData');
           this.showModal = false;
           Bus.$emit('openTipModal', response.data.msg)
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         }.bind(this))
         .catch(function (err) {
           if(err && err.response) {

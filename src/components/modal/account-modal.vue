@@ -52,7 +52,7 @@
             <div class="account-message-cell-content">
               <div class="cell-key">二级密码</div>
               <div class="cell-value">
-                <input type="text" v-model="twoLevelPassword" readonly>
+                <input type="text" v-model="twoLevelPassword" placeholder="请输入二级密码" readonly>
               </div>
             </div>
             <div class="account-message-cell-edit" ref="cellEdit">
@@ -75,7 +75,7 @@
             <div class="account-message-cell-content">
               <div class="cell-key">银行卡</div>
               <div class="cell-value">
-                <input type="text" v-model="hereBankNum" readonly>
+                <input type="text" v-model="hereBankNum" placeholder="请输入银行卡信息" readonly>
               </div>
             </div>
             <div class="account-message-cell-edit" ref="cellEdit">
@@ -137,7 +137,7 @@
       isSafePassword: {
         type: Boolean,
         default: false
-      }
+      },
     },
     data () {
       return {
@@ -149,17 +149,18 @@
           '5': require('../../assets/portrait-tu05.png')
         },
         oneLevelPassword: '????????????',
-        twoLevelPassword: '????????????',
+        // : '????????????',
         showModal: true,
         nickEdit: false,
         pay_nameEdit: false,
         hereNick: '',
         herePay_name: '',
-        hereBankNum: '????????????'
+        // hereBankNum: '????????????'
       }
     },
     mounted () {
       this.bindModalEvent()
+      // console.log(this.isSafePassword)
     },
     updated () {
       if(this.nickEdit === true) {
@@ -170,6 +171,18 @@
       }
     },
     computed: {
+      twoLevelPassword(){
+          if(! this.isSafePassword) {
+            return '';
+          }
+          return '????????????';
+      },
+      hereBankNum() {
+        if(! this.payType) {
+            return '';
+          }
+          return this.payType;
+      },
       imageSrc () {
         if(this.userImage === '' || this.userImage === null || this.userImage === undefined){
           return this.defaultImages['1']
@@ -251,17 +264,17 @@
       }
     },
     operateBankNum() {
-       Bus.$emit('openBankModal');
-    }
+     Bus.$emit('openBankModal');
+   }
+ },
+ watch : {
+  userName (value) {
+    this.hereNick = value
   },
-  watch : {
-    userName (value) {
-      this.hereNick = value
-    },
-    payName (value) {
-      this.herePay_name = value
-    }
-  } 
+  payName (value) {
+    this.herePay_name = value
+  }
+} 
 }
 </script>
 <style scoped lang="less" type="text/less">
@@ -349,5 +362,26 @@
         }
       }
     }
+  }
+  ::-webkit-input-placeholder {
+
+    color: #F2F1F1;
+
+  }
+  :-moz-placeholder {/* Firefox 18- */
+
+    color: #F2F1F1;
+  }
+
+  ::-moz-placeholder{/* Firefox 19+ */
+
+    color: #F2F1F1;
+
+  }
+
+  :-ms-input-placeholder {
+
+    color: #F2F1F1;
+
   }
 </style>
