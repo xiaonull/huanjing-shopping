@@ -1,7 +1,7 @@
 <template>
 	<div class="farm-operation" ref="farmOperation">
     <div class="kaidi" ref="kaidi" @click="kaidi($event)"></div>
-    <div class="zengzhong" ref="zengzhong" v-on:click="zengzhong($event)"></div>
+    <!-- <div class="zengzhong" ref="zengzhong" v-on:click="zengzhong($event)"></div> -->
     <div class="shifei" ref="shifei" @click="shifei($event)"></div>
     <div class="jiaoshui" ref="jiaoshui" @click="jiaoshui($event)"></div>
     <div class="shouhuo" ref="shouhuo" @click="shouhuo($event)"></div>
@@ -29,9 +29,9 @@ export default {
     kaidi (e) {
       Bus.$emit('openKaidiModal')
     },
-    zengzhong (e) {
-      Bus.$emit('toggleZengzhongModal')
-    },
+    // zengzhong (e) {
+    //   Bus.$emit('toggleZengzhongModal')
+    // },
     shifei (e) {
       Bus.$emit('shifei')
     },
