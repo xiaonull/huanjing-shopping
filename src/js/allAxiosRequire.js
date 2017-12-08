@@ -17,6 +17,8 @@ var instance = axios.create({
 
 
 
+
+
 // 添加一个请求拦截器
 instance.interceptors.request.use(function(config){
   //在请求发送之前添加token
