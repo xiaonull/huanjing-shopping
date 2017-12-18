@@ -20,7 +20,11 @@
 											<img :src="'http://admin.juzhuange.cn/' + item.img" class="img">
 											<span class="stock" v-if="item.sum !== -1">剩余{{item.sum}}件</span>
 										</div>
-										<div class="btn num">{{item.name + '：'}}</div>
+										<div class="btn num" :class="{'smallBtn' : item.name.length < 16}">
+											<div class="numChild">
+												{{item.name.length > 30 ? item.name.slice(0, 30) + '...' : item.name }}
+											</div>
+										</div>
 										<div class="exchange" @click="exchange(item.sum, item.id, parseInt(item.fruit))">
 											{{parseInt(item.fruit)}}果子
 										</div>
@@ -415,7 +419,7 @@
 				}
 
 				.goodsPage {
-					width: 85%;
+					width: 93%;
 					/* height: 98%; */
 					padding-right: 0.3rem;
 					position: relative;
@@ -428,13 +432,13 @@
 						margin-bottom: 0.5rem;
 
 						.item {
-							width: 70%;
+							width: 80%;
 							height: 90%;
 							margin: 5% auto 0 auto;
 
 							.imgContainer {
-								width: 75%;
-								height: 4.8rem;
+								width: 80%;
+								height: 5.8rem;
 								margin: 0 auto 5% auto;
 								position: relative;
 
@@ -455,9 +459,9 @@
 							}
 
 							.btn {
-								width: 75%;
-								min-height: 1rem;
-								line-height: 1rem;
+								width: 80%;
+								height: 2rem;
+								/* line-height: 1rem; */
 								margin: 0.6rem auto 0 auto;
 								-webkit-text-size-adjust: none;
 								font-size: 0.7rem;
@@ -469,17 +473,36 @@
 								border-right-color: rgba(238, 158, 25, 0.5);
 								border-bottom-color: rgba(200, 210, 10, 0.5);
 								border-radius: 1rem;
+
+								position: relative;
+							}
+
+							.numChild {
+								position: absolute;
+								top: 0;
+								right: 0;
+								bottom: 0;
+								left: 0;
+								width: 100%;
+								margin: auto;
+								display: table;
+								text-align: center;
+							}
+
+							.smallBtn {
+								/* line-height: 2rem; */
 							}
 
 							.exchange {
-								width: 60%;
-								height: 1.1rem;
-								line-height: 1.1rem;
+								width: 70%;
+								height: 1.3rem;
+								line-height: 1.3rem;
 								margin: 0.7rem auto 0 auto;
 								font-size: 0.8rem;
 								text-align: center;
 								background-image: url('~@/assets/an-bg01.png');
 								background-size: 100% 100%;
+								white-space: nowrap;
 							}
 						}
 					}
