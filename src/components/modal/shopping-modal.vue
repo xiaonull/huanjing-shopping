@@ -20,9 +20,9 @@
 											<img :src="'http://admin.juzhuange.cn/' + item.img" class="img">
 											<span class="stock" v-if="item.sum !== -1">剩余{{item.sum}}件</span>
 										</div>
-										<div class="btn num">{{item.name + '：'}}{{parseInt(item.fruit)}}果子</div>
+										<div class="btn num">{{item.name + '：'}}</div>
 										<div class="exchange" @click="exchange(item.sum, item.id, parseInt(item.fruit))">
-											兑换
+											{{parseInt(item.fruit)}}果子
 										</div>
 									</div>
 								</div>
@@ -423,8 +423,9 @@
 					.itemContainer {
 						display: inline-block;
 						width: 50%;
-						height: 8.5rem;
+						min-height: 8.5rem;
 						float: left;
+						margin-bottom: 0.5rem;
 
 						.item {
 							width: 70%;
@@ -433,7 +434,7 @@
 
 							.imgContainer {
 								width: 75%;
-								height: 50%;
+								height: 4.8rem;
 								margin: 0 auto 5% auto;
 								position: relative;
 
@@ -455,13 +456,13 @@
 
 							.btn {
 								width: 75%;
-								height: 1rem;
+								min-height: 1rem;
 								line-height: 1rem;
 								margin: 0.6rem auto 0 auto;
 								-webkit-text-size-adjust: none;
 								font-size: 0.7rem;
 								text-align: center;
-								white-space: nowrap;
+								/* white-space: nowrap; */
 								border: 1px solid #000;
 								border-left-color: rgba(238, 158, 25, 0.5);
 								border-top-color: rgba(200, 210, 10, 0.5);
