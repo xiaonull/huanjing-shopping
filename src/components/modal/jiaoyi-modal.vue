@@ -49,13 +49,13 @@
                 <div class="content-yaoSell-content">
                   <div class="content-middle">
                     <div class="yaoSell-item">
-                      <div class="item-label">卖家账号</div>
+                      <div class="item-label">卖家ID号</div>
                       <div class="item-input">
-                        <input type="text" v-model="userPhone" readonly="true">
+                        <input type="text" v-model="userId" readonly="true">
                       </div>
                     </div>
                     <div class="yaoSell-item">
-                      <div class="item-label">买家账号</div>
+                      <div class="item-label">买家ID号</div>
                       <div class="item-input">
                         <input type="text" v-model="yaoAccount">
                       </div>
@@ -323,7 +323,7 @@
   import {dxSell, dxBuy, zyBuy, zySell, recordBuy, recordSell, recordBy, recordCancel, jiaoyiYanzhengma, woyaomai, sureBuyfang, cancelBuyfang, sureSellfang, cancelSellfang} from '@/js/allAxiosRequire'
   export default {
     name: 'jiaoyi-modal',
-    props: ['userPhone'],
+    props: ['userPhone', 'userId'],
     data () {
       return {
         showModal: false,

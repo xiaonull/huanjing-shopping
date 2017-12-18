@@ -102,7 +102,9 @@
     ></friends-modal>
     <!-- 交易所模态窗 -->
     <jiaoyi-modal
-    :userPhone="phone"></jiaoyi-modal>
+    :userPhone="phone"
+    :userId="userId"
+    ></jiaoyi-modal>
     <!-- 吐司信息显示框 -->
     <!-- <toast-modal :toast="toast"></toast-modal> -->
     <!-- 拆分图模态框 -->

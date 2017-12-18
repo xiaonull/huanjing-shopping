@@ -110,7 +110,8 @@ export default {
   left: 50%;
   top: 50%;
   transform: translateY(-50%);
-  height: 60%;
+  height: 1rem;
+  line-height: 1rem;
   left: 5px;
   right: 5px;
   background-color: rgba(0, 0, 0, 0.2);
