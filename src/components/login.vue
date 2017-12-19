@@ -65,13 +65,13 @@
             </div>
             <div class="item-star"></div>
           </div>
-          <div class="content-item">
+          <!-- <div class="content-item">
             <div class="item-label">真实姓名</div>
             <div class="item-input">
               <input type="text" v-model="DLName" placeholder="请输入真实姓名">
             </div>
             <div class="item-star"></div>
-          </div>
+          </div> -->
           <div class="content-item">
             <div class="item-label">性别</div>
             <div class="item-input">
@@ -386,13 +386,13 @@
     },
     // 注册请求
     postChuze () {
-      let full = (this.DLPhone != '') && (this.DLNick != '') && (this.DLName != '') && (this.sex != '') && (this.DLFirstPassword != '') && (this.DLYanzheng != '')
+      let full = (this.DLPhone != '') && (this.DLNick != '') && (this.sex != '') && (this.DLFirstPassword != '') && (this.DLYanzheng != '')
       if(!full) {
         Bus.$emit('openTipModal', '请填写完整注册信息')
         return
       }
       
-      register(this.DLPhone, this.DLNick, this.DLName, this.sex, this.DLFirstPassword, this.parentId, this.DLYanzheng)
+      register(this.DLPhone, this.DLNick, '', this.sex, this.DLFirstPassword, this.parentId, this.DLYanzheng)
       .then(function (response) {
         this.DLPhone = ''
         this.DLName = ''

@@ -4,7 +4,7 @@
     <!-- <div class="zengzhong" ref="zengzhong" v-on:click="zengzhong($event)"></div> -->
     <div class="jiaoshui" ref="jiaoshui" @click="jiaoshui($event)"></div>
     <div class="shifei" ref="shifei" @click="shifei($event)"></div>
-    <div class="shouhuo" ref="shouhuo" @click="shouhuo($event)"></div>
+    <!-- <div class="shouhuo" ref="shouhuo" @click="shouhuo($event)"></div> -->
 	</div>
 </template>
 <script>
@@ -71,7 +71,8 @@ export default {
     .nav-ico ('02');
   }
   .shifei {
-    .nav-ico ('03');
+    /* .nav-ico ('03'); */
+    .nav-ico ('05');
   }
   .jiaoshui {
     .nav-ico ('04');

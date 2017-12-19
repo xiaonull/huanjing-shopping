@@ -60,7 +60,7 @@
               <div class="cell-btn" @click="password('safe')">修改</div>
             </div>
           </div>
-          <div class="account-message-cell">
+          <!-- <div class="account-message-cell">
             <div class="account-message-cell-content">
               <div class="cell-key">真实姓名</div>
               <div class="cell-value">
@@ -71,8 +71,8 @@
             <div class="account-message-cell-edit" ref="cellEdit">
               <div class="cell-btn" @click="operatePay_name()">{{ pay_nameEdit ? '保存' : '修改' }}</div>
             </div>
-          </div>
-          <div class="account-message-cell">
+          </div> -->
+          <!-- <div class="account-message-cell">
             <div class="account-message-cell-content">
               <div class="cell-key">银行卡</div>
               <div class="cell-value">
@@ -82,7 +82,7 @@
             <div class="account-message-cell-edit" ref="cellEdit">
               <div class="cell-btn" @click="operateBankNum()">修改</div>
             </div>
-          </div>
+          </div> -->
           <div class="account-message-cell">
             <div class="account-message-cell-content">
               <div class="cell-key">推荐人ID</div>
@@ -217,7 +217,7 @@
       },
       close () {
         // 没填写完整信息不可以关掉
-        if((this.userName === '' || this.payName === '' || this.payNumber === '' || this.payType === '' || this.isSafePassword === false) && this.userType !== 2)  {
+        if((this.userName === '' || this.isSafePassword === false) && this.userType !== 2)  {
           Bus.$emit('openTipModal', '请先完善个人信息')
           return;
         }

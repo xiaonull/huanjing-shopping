@@ -172,7 +172,7 @@ export default {
       .then((response) => {
         //判断信息是否填写完整和是否激活
         let userData = this.userData;
-        if((userData.nick === '' || userData.nick === null || userData.pay_name === '' || userData.pay_name === null || userData.pay_number === '' || userData.pay_number === null || userData.pay_type === '' || userData.pay_type === null || userData.is_safe_password === '' || userData.is_safe_password === null) && userData.type_id !== 2) {
+        if((userData.nick === '' || userData.nick === null || userData.is_safe_password === '' || userData.is_safe_password === null) && userData.type_id !== 2) {
           Bus.$emit('openAccountModal');
         }
       });
