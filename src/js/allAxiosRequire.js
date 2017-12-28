@@ -1,13 +1,14 @@
 import axios from 'axios'
 import util from '@/js/util'
 // 配置线上基地址
-// window.baseURL = 'http://admin.juzhuange.cn'
-window.baseURL = 'http://admin.juzhuange.cn'
-window.frontURL = 'http://www.juzhuange.cn'
+// window.baseURL = 'http://admin.shanxiatown.top/'
+window.baseURL = 'http://admin.shanxiatown.top/'
+// 二维码链接
+// window.frontURL = 'http://www.shanxiatown.top/'
 // 所有请求的全局配置
 var instance = axios.create({
-  // baseURL: 'http://admin.juzhuange.cn',
-  baseURL: 'http://admin.juzhuange.cn',
+  // baseURL: 'http://admin.shanxiatown.top/',
+  baseURL: 'http://admin.shanxiatown.top/',
   timeout: 6000,
   // withCredentials: true,
   headers: {

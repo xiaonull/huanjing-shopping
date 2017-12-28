@@ -35,7 +35,8 @@
       },
       bindModalEvent () {
         Bus.$on('openShareModal', () => {
-          this.code = window.frontURL + '?parent_id=' + this.userId + '#/login';
+          // this.code = window.frontURL + '?parent_id=' + this.userId + '#/login';
+          this.code = window.location.protocol + '//' + window.location.host + '/?parent_id=' + this.userId + '#/login';
           console.log(this.code)
           this.showModal = true
         });

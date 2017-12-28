@@ -17,7 +17,7 @@
 								<div class="itemContainer" v-for="item in goodsData" :key="item.id">
 									<div class="item">
 										<div class="imgContainer">
-											<img :src="'http://admin.juzhuange.cn/' + item.img" class="img">
+											<img :src="imgUrl + item.img" class="img">
 											<span class="stock" v-if="item.sum !== -1">剩余{{item.sum}}件</span>
 										</div>
 										<div class="btn num" :class="{'smallBtn' : item.name.length < 16}">
@@ -100,6 +100,7 @@
 		props:['actService'],
 		data() {
 			return {
+				imgUrl: window.baseURL,
 				showModal: false,
 				outerTabSelect: 1,
 				userHeadImg: '',
